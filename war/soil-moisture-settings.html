@@ -58,16 +58,28 @@
           
           
           <div class="row">
+          
           <p>Enter sensor threshold:</p>
+         
           <div class="col-md-12">
           <div class="well">
-			  <textarea class="form-control" rows="3"></textarea>
+			  <select name="soilthreshold" class="form-control">
+			  <option value="0.7">0.7</option>
+			  <option value="0.8">0.8</option>
+			  <option value="0.9">0.9</option>
+			  <option value="0.95">0.95</option>
+			  <option value="1">1</option>
+			  <option value="0.6">0.66</option>
+			  </select>
 			  <a id="back" data-toggle="modal" class="btn btn-primary btn-large">Back</a>
 			  <a name="next" data-toggle="modal" class="btn btn-primary btn-large">Next</a>
           </div>	
           </div>
-
+		  
           </div><!--/row-->
+           <div class="alert alert-info">
+			  <p>Set a threshold below which irrigation is allowed to occur. The threshold generally corresponds to a portion of field capacity.</p>
+		  </div>
         </div><!--/span-->
 
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">

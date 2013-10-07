@@ -70,6 +70,7 @@ $(document).ready(function(){
 		
 		
 	});
+	
 	$("#step1").click(function(){
 		
 		//alert();
@@ -80,21 +81,80 @@ $(document).ready(function(){
 			alert("zipcode is null");
 			return false;
 		}else{
+			$.cookie("zipcode",zipcode,{ expires: 7});
+			if($.cookie("unit")&&$.cookie("unit")!=unit){
+				
+				$.cookie("unit2",$.cookie("unit"),{expires : 7});
+				$.cookie("unit",unit,{expires: 7});
+			}else{
+				
+				$.cookie("unit",unit,{ expires: 7});
+			}
 			
-		$.cookie("zipcode",zipcode,{ expires: 7});
-		$.cookie("unit",unit,{ expires: 7});
-		location.href="/form-2.html";
+			location.href="/form-2.html";
 		
 		}
 	});
-	
+	if($.cookie("zipcode")){
+		
+		$("#zipcode").val($.cookie("zipcode"));
+	}
+	if($.cookie("unit")){
+		var unit1=$.cookie("unit");
+		if(unit1=="English"){
+			
+			$("#optionRadios1").attr("checked","");
+			$("#optionsRadios2").attr("checked","checked");
+			var inches =Math.round(($("#rootDepth").val()/2.54)*1000)/1000;
+			$("#rootDepth").attr("placeholder","Root Depth in Inches").val(inches);
+		
+		}
+	}
+	if($.cookie("rd")){
+		var unit2 =$.cookie("unit");
+		$("#rootDepth").val($.cookie("rd"));
+		if($.cookie("unit2")){
+			
+			if(unit2=="Metric"){
+				
+				var rd=Math.round(($.cookie("rd")*2.54)*1000)/1000;
+				$("#rootDepth").val(rd);
+				$.cookie("rd",rd,{expires:7});
+				
+			}else{
+				
+				var rd=Math.round(($.cookie("rd")/2.54)*1000)/1000;
+				$("#rootDepth").val(rd);
+				$.cookie("rd",rd,{expires:7});
+			}
+			$.cookie("unit2","",{expires: -1});
+		}
+	}
+	if($.cookie("soilType")){
+		$("select[name='soiltype']").val($.cookie("soilType"));
+	}
+	if($.cookie("area")){
+		
+		$("#Area").val($.cookie("area"));
+	}
+	if($.cookie("rainsettings")){
+		$("select[name='rainsettings']").val($.cookie("rainsettings"));
+		
+	}
+	if($.cookie("soilthreshold")){
+		
+		$("select[name='soilthreshold']").val($.cookie("rainsettings"));
+	}
 	$("#step2").click(function(){
 		
 		//alert();
 		var rd=$("#rootDepth").val();
-		var soil=$("select[name='soil type']").val();
-		var area=$("#Aera").val();
+		var soil=$("select[name='soiltype']").val();
+		var area=$("#Area").val();
 		//alert(soil);
+		$.cookie("rd",rd,{ expires:7 });
+		$.cookie("soilType",soil,{ expires:7 });
+		$.cookie("area",area,{ expires: 7 });
 		location.href="/form-3.html";
 		return false;
 		
@@ -178,7 +238,7 @@ $(document).ready(function(){
 			var $li=$("a[href='soil-moisture-settings.html']");
 			$li.css("display","none");
 			$("button[name='next']").click(function(){
-				
+				$.cookie("rainsettings",$("select[name='rainsettings']").val(),{ expires : 7 });
 				location.href="/irrigation-system.html";
 				
 			});
@@ -186,7 +246,7 @@ $(document).ready(function(){
 		}else{
 			
 			$("button[name='next']").click(function(){
-				
+				$.cookie("rainsettings",$("select[name='rainsettings']").val(),{ expires : 7 });
 				location.href="/soil-moisture-settings.html";
 				
 			});
@@ -211,6 +271,11 @@ $(document).ready(function(){
 		
 	}
 	
+	$("a[name='next']").click(function(){
+		$.cookie("soilthreshold",$("select[name='soilthreshold']").val(),{ expires: 7 });
+		location.href="/irrigation-system.html";
+		
+	});
 	$("#back").click(function(){
 		
 		history.back();
@@ -255,11 +320,7 @@ $(document).ready(function(){
 		location.href="/thank-you.html";
 		
 	});
-	$("a[name='next']").click(function(){
-		
-		location.href="/irrigation-system.html";
-		
-	});
+	
 	
 	
 	
