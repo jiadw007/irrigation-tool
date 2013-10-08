@@ -49,7 +49,7 @@
     </div><!-- /.navbar -->
 
     <div class="container">
-		<h2>Soil moisture sensor detail</h2>
+		<h2>Soil Moisture Sensor Description</h2>
       <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-xs-12 col-sm-9">
           <p class="pull-right visible-xs">
@@ -64,12 +64,10 @@
           <div class="col-md-12">
           <div class="well">
 			  <select name="soilthreshold" class="form-control">
-			  <option value="0.7">0.7</option>
-			  <option value="0.8">0.8</option>
-			  <option value="0.9">0.9</option>
-			  <option value="0.95">0.95</option>
-			  <option value="1">1</option>
-			  <option value="0.6">0.66</option>
+			  <option value="0.6">60%</option>
+			  <option value="0.7">70%</option>
+			  <option value="0.8">80%</option>
+			  <option value="0.9">90%</option>
 			  </select>
 			  <hr />
 			  <a id="back" data-toggle="modal" class="btn btn-primary btn-large">Back</a>
@@ -79,7 +77,8 @@
 		  
           </div><!--/row-->
            <div class="alert alert-info">
-			  <p>Set a threshold below which irrigation is allowed to occur. The threshold generally corresponds to a portion of field capacity.</p>
+			  <p>Set a threshold below which irrigation is allowed to occur. The threshold generally corresponds to a portion of field capacity.
+			  Field capacity is the amount of water the soil can hold with no additional losses due to gravity.</p>
 		  </div>
         </div><!--/span-->
 

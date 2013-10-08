@@ -49,7 +49,7 @@
     </div><!-- /.navbar -->
 
     <div class="container">
-		<h2>Rain sensor detail</h2>
+		<h2>Rain Sensor Description</h2>
       <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-xs-12 col-sm-9">
           <p class="pull-right visible-xs">
@@ -58,16 +58,15 @@
           
           
           <div class="row">
-          <p>Enter rain sensor setting</p>
+          <p>Select rain sensor setting</p>
           <div class="col-md-12">
           <div class="well">
 			  <select name="rainsettings" class="form-control">
-			  <option value="1.27">1.27</option>
-			  <option value="2">2</option>
-			  <option value="3">3</option>
-			  <option value="4">4</option>
-			  <option value="5">5</option>
-			  <option value="6">6</option>
+			  <option value="0.125">0.125 in</option>
+			  <option value="0.25">0.25 in</option>
+			  <option value="0.5">0.5 in</option>
+			  <option value="0.75">0.75 in</option>
+			  <option value="1">1 in</option>
 			  </select>
 			  <hr />
 			  <button id="back" type="button" class="btn btn-primary">Back</button>
@@ -76,8 +75,12 @@
           
           </div>
           </div>	
-
+			
           </div><!--/row-->
+          <div class="alert alert-info">
+			  <p>Generally, rain sensors can be adjusted to correspond to different rainfall event depths 
+			  such that a setting of 0.25 in would theoretically not allow scheduled irrigation to occur if a rainfall event over 0.25 in is received.</p>
+		  </div>
         </div><!--/span-->
 
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">

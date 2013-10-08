@@ -851,7 +851,7 @@ additional css
 	background: #d5d5d5;
 	
 }
-.hour{
+.time{
 	display:none;
 }
 #additionalbar{
@@ -864,7 +864,7 @@ li.inactive,li.tool{
 	
 	
 }
-select[name=soiltype],select[name=rainsettings],select[name=soilthreshold]{
+select[name=soiltype],select[name=rainsettings],select[name=soilthreshold],#zipcode,#Area,#rootDepth,#irrigationDepth,#irrigationDuration{
 	
 	width:200px; 
 	
@@ -872,10 +872,5 @@ select[name=soiltype],select[name=rainsettings],select[name=soilthreshold]{
 input#irrigationDepth, div#irrigation-system{
 	
 	display:none;
-	
-}
-.floatLeft{
-	
-	
 	
 }

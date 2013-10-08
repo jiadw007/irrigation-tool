@@ -21,14 +21,7 @@
       <script src="../..js/respond.min.js"></script>
     <![endif]-->
     
-<script type="text/javascript">
 
-    $(document).ready(function() {
-
-        $('.tips').tooltip()
-    }); //END $(document).ready()
-
-</script> 
 </head>
 
   <body>
@@ -47,6 +40,11 @@
             <li class="active"><a href="/">Home</a></li>
             <li><a href="login.html">Login</a></li>
             <li><a href="contact.html">Contact</a></li>
+          </ul>
+          <ul id="additionalbar" class="nav navbar-nav">
+          
+          <li><a style="cursor:pointer" id="logout" >Logout</a></li>
+          
           </ul>
         </div><!-- /.nav-collapse -->
       </div><!-- /.container -->
@@ -69,13 +67,13 @@
 			  
 			  <div class="radio">
 				<label>
-				<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+				<input type="radio" name="correspondence" id="correspondence1" value="yes" checked>
 				Yes
 				</label>
 				</div>
 				<div class="radio">
 				<label>
-				<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+				<input type="radio" name="correspondence" id="correspondence2" value="no">
 				No
 				</label>
 			</div>

@@ -85,6 +85,7 @@ $(document).ready(function(){
 			if($.cookie("unit")&&$.cookie("unit")!=unit){
 				
 				$.cookie("unit2",$.cookie("unit"),{expires : 7});
+				$.cookie("unit3",$.cookie("unit"),{expires: 7});
 				$.cookie("unit",unit,{expires: 7});
 			}else{
 				
@@ -107,7 +108,7 @@ $(document).ready(function(){
 			$("#optionsRadios2").attr("checked","checked");
 			var inches =Math.round(($("#rootDepth").val()/2.54)*1000)/1000;
 			$("#rootDepth").attr("placeholder","Root Depth in Inches").val(inches);
-		
+			
 		}
 	}
 	if($.cookie("rd")){
@@ -119,16 +120,24 @@ $(document).ready(function(){
 				
 				var rd=Math.round(($.cookie("rd")*2.54)*1000)/1000;
 				$("#rootDepth").val(rd);
-				$.cookie("rd",rd,{expires:7});
+				$.cookie("rd",rd,{expires : 7});
 				
 			}else{
 				
 				var rd=Math.round(($.cookie("rd")/2.54)*1000)/1000;
 				$("#rootDepth").val(rd);
-				$.cookie("rd",rd,{expires:7});
+				$.cookie("rd",rd,{expires : 7});
 			}
 			$.cookie("unit2","",{expires: -1});
 		}
+	}
+	if($.cookie("unit")=="Metric"){
+		
+		$("select[name='rainsettings']").children("option[value='0.125']").val(0.3175).text("0.3175 cm");
+		$("select[name='rainsettings']").children("option[value='0.25']").val(0.635).text("0.635 cm");
+		$("select[name='rainsettings']").children("option[value='0.5']").val(1.27).text("1.27 cm");
+		$("select[name='rainsettings']").children("option[value='0.75']").val(1.905).text("1.905 cm");
+		$("select[name='rainsettings']").children("option[value='1']").val(2.54).text("2.54 cm");
 	}
 	if($.cookie("soilType")){
 		$("select[name='soiltype']").val($.cookie("soilType"));
@@ -138,14 +147,54 @@ $(document).ready(function(){
 		$("#Area").val($.cookie("area"));
 	}
 	if($.cookie("rainsettings")){
+		
 		$("select[name='rainsettings']").val($.cookie("rainsettings"));
+		if($.cookie("unit3")){
+			
+			if($.cookie("unit3")=='English'){
+				
+				var rain = $.cookie("rainsettings")*2.54;
+				
+				$("select[name='rainsettings']").val(rain);
+				$.cookie("rainsettings",rain,{expires : 7});
+			
+			}else{
+				
+				var rain = $.cookie("rainsettings")/2.54;
+				$("select[name='rainsettings']").val(rain);
+				$.cookie("rainsettings",rain,{expires : 7});
+				
+			}
+			$.cookie("unit3","",{expires: -1});
+			
+		}
+		
 		
 	}
 	if($.cookie("soilthreshold")){
 		
 		$("select[name='soilthreshold']").val($.cookie("soilthreshold"));
 	}
-	
+	if($.cookie("days")&&$.cookie("minutes")&&$.cookie("hours")){
+		
+		var days = $.cookie("days").split(",");
+		//alert(days);
+		var hours = $.cookie("hours").split(",");
+		var minutes = $.cookie("minutes").split(",");
+		for (day in days){
+			//alert(day);
+			$("input[name='schedule'][value='"+days[day]+"']").attr("checked","checked").parent().next().css("display","block");
+			$("input[name='schedule'][value='"+days[day]+"']").parent().next().children("select[name='startHour']").val(hours[day]);
+			$("input[name='schedule'][value='"+days[day]+"']").parent().next().children("select[name='startMinute']").val(minutes[day]);
+		}
+		
+		
+	}
+	if($.cookie("choice")&&$.cookie("choice")=="no"){
+		$("#correspondence2").attr("checked","checked");
+		$("#correspondence1").attr("checked","");
+		
+	}
 	
 	$("#step2").click(function(){
 		
@@ -272,9 +321,8 @@ $(document).ready(function(){
 		for(var i=0;i<systemSelection.length;i++){
 			
 			var str=systemSelection[i];
-			var $p=$("<p>The Result for "+str+" is: </p><p>Loss:value  &nbsp;  &nbsp; &nbsp; &nbsp;PerLoss:value</p><br/>");
-			var $sibling=$("#result p:first");
-			$sibling.before($p);
+			var $p=$("<p>The Result for "+str+" is: </p><p>Loss:value  &nbsp;  &nbsp;PerLoss:value&nbsp;  &nbsp;Water Volumes Applied and Not Used:value &nbsp;&nbsp; Water Stress Days:value &nbsp;&nbsp; Percent of Water Applied That Was Not Used:value &nbsp;&nbsp;</p><br/>");
+			$("#result").append($p);
 			
 		}
 		
@@ -312,7 +360,7 @@ $(document).ready(function(){
 		$(this).attr("checked","checked");
 		$("#irrigation-system").show();
 		if($.cookie("isystem")){
-			$("#irrigationDuration").val($.cookie("minutes"));
+			$("#irrigationDuration").val($.cookie("irriDuration"));
 			$("input[value='"+$.cookie("isystem")+"']").attr("checked","checked");
 			
 		}
@@ -333,10 +381,10 @@ $(document).ready(function(){
 		if("#patternRadio2:checked"){
 			var isystem=$("input[name='irrigation-system']:checked").val();
 			//alert(isystem);
-			var minutes=$("#irrigationDuration").val();
+			var irriDuration=$("#irrigationDuration").val();
 			//alert(minutes);
 			$.cookie("isystem",isystem,{ expires : 7});
-			$.cookie("minutes",minutes,{expires : 7});
+			$.cookie("irriDuration",irriDuration,{expires : 7});
 			$.cookie("irriDepth","",{ expires: -1});
 		}
 		
@@ -365,10 +413,31 @@ $(document).ready(function(){
 		
 	});
 	$("#step5").click(function(){
-	
+		var days=[];
+		var hours = [];
+		var minutes = [];
+		$("input[name='schedule']:checked").each(function(){
+			
+			var day=$(this).val();
+			var startHour=$(this).parent().next().children("select[name='startHour']").val();
+			var startMinute=$(this).parent().next().children("select[name='startMinute']").val();
+			days.push(day);
+			hours.push(startHour);
+			minutes.push(startMinute);
+		});
+		//alert(days);
+		//alert(hours);
+		//alert(minutes);
+		$.cookie("days",days.toString(),{ expires: 7});
+		$.cookie("hours",hours.toString(),{ expires: 7});
+		$.cookie("minutes",minutes.toString(),{expires: 7});
 		location.href="/correspondence.html";
 	});
 	$("#step6").click(function(){
+		
+		var choice = $("input[name='correspondence']:checked").val();
+		//alert(choice);
+		$.cookie("choice",choice,{ expires : 7});
 		
 		location.href="/thank-you.html";
 		
