@@ -869,3 +869,13 @@ select[name=soiltype],select[name=rainsettings],select[name=soilthreshold]{
 	width:200px; 
 	
 }
+input#irrigationDepth, div#irrigation-system{
+	
+	display:none;
+	
+}
+.floatLeft{
+	
+	
+	
+}

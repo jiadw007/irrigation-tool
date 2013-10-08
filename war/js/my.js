@@ -143,8 +143,10 @@ $(document).ready(function(){
 	}
 	if($.cookie("soilthreshold")){
 		
-		$("select[name='soilthreshold']").val($.cookie("rainsettings"));
+		$("select[name='soilthreshold']").val($.cookie("soilthreshold"));
 	}
+	
+	
 	$("#step2").click(function(){
 		
 		//alert();
@@ -223,15 +225,23 @@ $(document).ready(function(){
 		
 		if($.inArray("Time-based with rain sensor",systemSelection)!=-1){
 			$(".tool").children("a[href='rain-sensor-detail.html']").parent().css("display","block");
+			$("input[value='Time-based with rain sensor']").attr("checked","checked");
 			
 		}
 		if($.inArray("Time-based with soil moisture sensor",systemSelection)!=-1){
 			
-			
+			$("input[value='Time-based with soil moisture sensor']").attr("checked","checked")
 			$(".tool").children("a[href='soil-moisture-settings.html']").parent().css("display","block");
 		}
- 
-		
+		if($.inArray("Time-based",systemSelection)!=-1){
+			
+			$("input[value='Time-based']").attr("checked","checked");
+			
+		}
+		if($.inArray("Evapotranspiration Controller",systemSelection)!=-1){
+			$("input[value='Evapotranspiration Controller']").attr("checked","checked");
+			
+		}
 		
 		if($.inArray("Time-based with soil moisture sensor",systemSelection)==-1){
 			//alert();
@@ -282,11 +292,54 @@ $(document).ready(function(){
 		
 		
 	});
+	
+	$("#patternRadio1").click(function(){
+		
+		$("#irrigation-system").hide();
+		$(this).attr("checked","checked");
+		$("#irrigationDepth").show();
+		if($.cookie("irriDepth")){
+			
+			$("#irrigationDepth").val($.cookie("irriDepth"));
+			
+		}
+		
+		
+	});
+	$("#patternRadio2").click(function(){
+		
+		$("#irrigationDepth").hide();
+		$(this).attr("checked","checked");
+		$("#irrigation-system").show();
+		if($.cookie("isystem")){
+			$("#irrigationDuration").val($.cookie("minutes"));
+			$("input[value='"+$.cookie("isystem")+"']").attr("checked","checked");
+			
+		}
+		
+	});
 	$("#step4").click(function(){
 		
-		var irriDepth=$("#irrigationDepth").val();
-		var isystem=$("input[name='irrigation-system']:checked").val();
-		//alert(isystem);
+		
+		if("#patternRadio1:checked"){
+			var irriDepth=$("#irrigationDepth").val();
+			$.cookie("irriDepth",irriDepth,{ expires : 7 });
+			
+			$.cookie("isystem","",{expires: -1});
+			$.cookie("minutes","",{expires:-1});
+			
+		}  
+		
+		if("#patternRadio2:checked"){
+			var isystem=$("input[name='irrigation-system']:checked").val();
+			//alert(isystem);
+			var minutes=$("#irrigationDuration").val();
+			//alert(minutes);
+			$.cookie("isystem",isystem,{ expires : 7});
+			$.cookie("minutes",minutes,{expires : 7});
+			$.cookie("irriDepth","",{ expires: -1});
+		}
+		
 		location.href="/irrigation-schedule.html";
 		
 	});

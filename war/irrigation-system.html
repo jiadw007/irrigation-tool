@@ -65,23 +65,36 @@
 
 
 			  <form class="form-horizontal" role="form">
-			  <h4>Select your root depth <a href="#" data-toggle="tooltip" title="first tooltip" class="tips">?</a></h4>
+			  <h4>Select your Irrigation Pattern <a href="#" data-toggle="tooltip" title="This is the pattern for your irrigation amount applied in each event" class="tips">?</a></h4>
 			  
 			  <hr />
-			  
-			  <label>Enter irrigation depth/amount</label>
-			  <input type="text" class="form-control" id="irrigationDepth" placeholder="irrigation depth/amount">			  
-			  <hr />
-
-          <div class="row">
+			  <div class="radio">
+			  <label>
+			  <input type="radio" name="patternRadios" id="patternRadio1">Enter irrigation depth amount
+			  </label>
+			  </div>
+			  <input type="text" class="form-control" id="irrigationDepth" placeholder="irrigation depth/amount" value="1.27" />			  
+			<div class="radio">
+          <label>
+          <input type="radio" name="patternRadios" id="patternRadio2">Select Irrigation System Type
+          </label>
+          </div>
+          <div class="row" id="irrigation-system">
           <div class="col-xs-8">
-          <label>Select system</label>
+         
 			  <ul class="list-group">
+			    <li class="list-group-item">
+			    
+			    Enter Irrigation Duration(Minutes):<br /><br/>  <input type="text" class="form-control" id="irrigationDuration" placeholder="irrigation duration" />
+			    </li>
 				<li class="list-group-item">
-				<div class="checkbox">
+				<div class="checkbox" >
+				
+					
 					  <label>
 					    <input type="radio" name="irrigation-system" value="micro-irrigation-head">
 					    Micro Irrigation Head
+					    <p><img src="images/micro.jpg" alt="micro" id="microHead_button" title="Micro Irrigation" ></p>
 					  </label>
 					</div>
 				</li>
@@ -89,13 +102,15 @@
 					  <label>
 					    <input type="radio" name="irrigation-system" value="fixed-irrigation-head">
 					    Fixed Irrigation Head
+					    <p><img src="images/fixed.jpg" alt="fixed" id="fixedHead_button" title="fixed"></p>
 					  </label>
 					</div>
 				</li>
 				<li class="list-group-item"><div class="checkbox">
-					  <label>
+					   <label>
 					    <input type="radio" name="irrigation-system" value="gear-driven-irrigation-head">
 					    Gear Driven Irrigation Head
+					    <p><img src="images/gear.jpg" alt="gear" id="fixedRotary_button" title="gear" ></p>
 					  </label>
 					</div>
 				</li>
@@ -103,13 +118,15 @@
 					  <label>
 					    <input type="radio" name="irrigation-system" value="impact-irrigation-head">
 					    Impact Irrigation Head
+					    <p><img src="images/impact.jpg" alt="impact" id="rotaryHead_button" title="impact.jpg" ></p>
 					  </label>
 					</div>
 				</li>
 			</ul>
-          </div> </div>
+          </div> 
+          </div>
 			  
-
+	<hr />
 			    
 			    <button id="step4" type="button" class="btn btn-primary">Next</button>
 			</form>
