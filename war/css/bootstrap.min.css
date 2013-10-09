@@ -874,3 +874,10 @@ input#irrigationDepth, div#irrigation-system{
 	display:none;
 	
 }
+
+#step2Unit,#areaUnit {
+	
+	position:relative;
+	left:-480px;
+	top:12px;
+}

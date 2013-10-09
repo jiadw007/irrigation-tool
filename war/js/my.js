@@ -76,6 +76,7 @@ $(document).ready(function(){
 		//alert();
 		var zipcode=new String($("#zipcode").val());
 		var unit=$("input[name='optionsRadios']:checked").val();
+		
 		if(zipcode==""){
 			
 			alert("zipcode is null");
@@ -108,8 +109,9 @@ $(document).ready(function(){
 			$("#optionsRadios2").attr("checked","checked");
 			var inches =Math.round(($("#rootDepth").val()/2.54)*1000)/1000;
 			$("#rootDepth").attr("placeholder","Root Depth in Inches").val(inches);
-			
+			$("#step2Unit").text("inch");
 		}
+		
 	}
 	if($.cookie("rd")){
 		var unit2 =$.cookie("unit");
@@ -321,7 +323,7 @@ $(document).ready(function(){
 		for(var i=0;i<systemSelection.length;i++){
 			
 			var str=systemSelection[i];
-			var $p=$("<p>The Result for "+str+" is: </p><p>Loss:value  &nbsp;  &nbsp;PerLoss:value&nbsp;  &nbsp;Water Volumes Applied and Not Used:value &nbsp;&nbsp; Water Stress Days:value &nbsp;&nbsp; Percent of Water Applied That Was Not Used:value &nbsp;&nbsp;</p><br/>");
+			var $p=$("<p>The Result for "+str+" is: </p><p>Water Volumes Applied and Not Used:value</p><p>Water Stress Days:value</p><p>Percent of Water Applied That Was Not Used:value</p><p>weekly rainfall:value</p><br/>");
 			$("#result").append($p);
 			
 		}
@@ -439,7 +441,7 @@ $(document).ready(function(){
 		//alert(choice);
 		$.cookie("choice",choice,{ expires : 7});
 		
-		location.href="/thank-you.html";
+		location.href="/results.html";
 		
 	});
 	
