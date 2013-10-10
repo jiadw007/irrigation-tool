@@ -1,5 +1,7 @@
 $(document).ready(function(){
 	
+	
+	
 	$('.tips').tooltip();
 	
 	if($.cookie("email")!=null){
@@ -108,11 +110,15 @@ $(document).ready(function(){
 			$("#optionRadios1").attr("checked","");
 			$("#optionsRadios2").attr("checked","checked");
 			var inches =Math.round(($("#rootDepth").val()/2.54)*1000)/1000;
+			var area = Math.round($("#Area").val()*2.47105*1000)/1000;
 			$("#rootDepth").attr("placeholder","Root Depth in Inches").val(inches);
+			$("#Area").attr("placeholder","Irrigated Area in ha").val(area);
 			$("#step2Unit").text("inch");
+			$("#areaUnit").text("acres");
 		}
 		
 	}
+	
 	if($.cookie("rd")){
 		var unit2 =$.cookie("unit");
 		$("#rootDepth").val($.cookie("rd"));
@@ -130,6 +136,32 @@ $(document).ready(function(){
 				$("#rootDepth").val(rd);
 				$.cookie("rd",rd,{expires : 7});
 			}
+			
+		}
+	}
+	if($.cookie("area")){
+		var unit2 = $.cookie("unit");
+		$("#Area").val($.cookie("area"));
+		if($.cookie("unit2")){
+			
+			if(unit2=="Metric"){
+				
+				var area=Math.round(($.cookie("area")/2.47105)*1000)/1000;
+				$("#Area").val(area);
+				$.cookie("area",area,{ expires : 7});
+				
+				
+				
+			}else{
+				
+				var area = Math.round($.cookie("area")*2.47105*1000)/1000;
+				$("#Area").val(area);
+				$.cookie("area",area,{ expires: 7});
+				
+				
+				
+			}
+			
 			$.cookie("unit2","",{expires: -1});
 		}
 	}
@@ -144,10 +176,7 @@ $(document).ready(function(){
 	if($.cookie("soilType")){
 		$("select[name='soiltype']").val($.cookie("soilType"));
 	}
-	if($.cookie("area")){
-		
-		$("#Area").val($.cookie("area"));
-	}
+	
 	if($.cookie("rainsettings")){
 		
 		$("select[name='rainsettings']").val($.cookie("rainsettings"));
@@ -265,7 +294,7 @@ $(document).ready(function(){
 	});
 	if($.cookie("systemSelection")){
 		
-		var systemSelection=$.cookie("systemSelection").split(",").reverse();
+		var systemSelection=$.cookie("systemSelection").split(",");
 		//alert(systemSelection);
 		
 		//alert($.inArray("moisture",systemSelection));
@@ -323,7 +352,7 @@ $(document).ready(function(){
 		for(var i=0;i<systemSelection.length;i++){
 			
 			var str=systemSelection[i];
-			var $p=$("<p>The Result for "+str+" is: </p><p>Water Volumes Applied and Not Used:value</p><p>Water Stress Days:value</p><p>Percent of Water Applied That Was Not Used:value</p><p>weekly rainfall:value</p><br/>");
+			var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Water Volumes Applied and Not Used:value</p><p>Water Stress Days:value</p><p>Percent of Water Applied That Was Not Used:value</p><p>weekly rainfall:value</p><br/>");
 			$("#result").append($p);
 			
 		}
@@ -452,3 +481,4 @@ $(document).ready(function(){
 	
 	
 });
+
