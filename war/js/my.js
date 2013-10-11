@@ -366,7 +366,7 @@ $(document).ready(function(){
 		for(var i=0;i<systemSelection.length;i++){
 			
 			var str=systemSelection[i];
-			var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses:xxx gallons or xxx%</p><p>Number of water stress days: xxx</p><p>Weekly rainfall: xxx inches</p><br/>");
+			var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: xxx gallons or xxx%</p><p>Number of water stress days: xxx</p><p>Weekly rainfall: xxx inches</p><br/>");
 			$("#result").append($p);
 			
 		}
@@ -525,7 +525,16 @@ $(document).ready(function(){
 		location.href="/correspondence.html";
 	});
 	
-	
+	$("#step6").click(function(){
+		
+		var choice = $("input[name='correspondence']:checked").val();
+		//alert(choice);
+		$.cookie("choice",choice,{ expires : 7});
+		
+		location.href="/results.html";
+		
+		
+	});
 	
 	
 	
