@@ -869,7 +869,7 @@ select[name=soiltype],select[name=rainsettings],select[name=soilthreshold],#zipc
 	width:200px; 
 	
 }
-input#irrigationDepth, div#irrigation-system{
+input#irrigationDepth, div#irrigation-system,#irrigationUnit{
 	
 	display:none;
 	
@@ -880,4 +880,11 @@ input#irrigationDepth, div#irrigation-system{
 	position:relative;
 	left:-480px;
 	top:12px;
+}
+#durationUnit{
+	
+	position:relative;
+	left: 207px;
+	top: -35px;
+	
 }

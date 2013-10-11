@@ -73,7 +73,8 @@
 			  <input type="radio" name="patternRadios" id="patternRadio1">Enter irrigation depth amount
 			  </label>
 			  </div>
-			  <input type="text" class="form-control" id="irrigationDepth" placeholder="irrigation depth/amount" value="1.27" />			  
+			  <input type="text" class="form-control" id="irrigationDepth" placeholder="irrigation depth/amount" value="1.27" />
+			  <label id="irrigationUnit">cm</label>			  
 			<div class="radio">
           <label>
           <input type="radio" name="patternRadios" id="patternRadio2">Select Irrigation System Type
@@ -82,8 +83,9 @@
           </div>
           <div class="row" id="irrigation-system">
           <div class="col-lg-10">
-			      Enter Irrigation Duration(Minutes):
+			      Enter Irrigation Duration
 			    <input type="text" class="form-control" id="irrigationDuration" placeholder="irrigation duration" />
+			    <label id="durationUnit">mins</label>	
           </div>
           <div class="col-xs-8">
          
@@ -100,7 +102,7 @@
 					
 					  <label>
 					    <input type="radio" name="irrigation-system" value="micro-irrigation-head">
-					    <img src="images/multi-stream.png" alt="multi-stream" id="rotaryHead_button" title="multi-stream.png" height=20px width=20px>&nbsp;&nbsp;Micro Irrigation Head (0.25cm per hour)
+					    <img src="images/multi-stream.png" alt="multi-stream" id="rotaryHead_button" title="multi-stream.png" height=20px width=20px>&nbsp;&nbsp;<label id="microHead">Micro Irrigation Head (0.25 cm per hour)</label>
 					    
 					  </label>
 					</div>
@@ -108,7 +110,7 @@
 				<li class="list-group-item"><div class="checkbox">
 					  <label>
 					    <input type="radio" name="irrigation-system" value="fixed-irrigation-head">
-					   <img src="images/spray.png" alt="spray" id="rotaryHead_button" title="spray.png" height=20px width=20px>&nbsp;&nbsp; Fixed Irrigation Head (1.5cm per hour)
+					   <img src="images/spray.png" alt="spray" id="rotaryHead_button" title="spray.png" height=20px width=20px>&nbsp;&nbsp;<label id="fixedHead">Fixed Irrigation Head (1.5 cm per hour)</label>
 					   
 					  </label>
 					</div>
@@ -116,7 +118,7 @@
 				<li class="list-group-item"><div class="checkbox">
 					   <label>
 					    <input type="radio" name="irrigation-system" value="gear-driven-irrigation-head">
-					    <img src="images/gear.png" alt="gear" id="rotaryHead_button" title="gear.png" height=20px width=20px>&nbsp;&nbsp;Gear Driven Irrigation Head (0.5cm per hour)
+					    <img src="images/gear.png" alt="gear" id="rotaryHead_button" title="gear.png" height=20px width=20px>&nbsp;&nbsp;<label id="gearHead">Gear Driven Irrigation Head (0.5 cm per hour)</label>
 					    
 					  </label>
 					</div>
@@ -124,7 +126,7 @@
 				<li class="list-group-item"><div class="checkbox">
 					  <label>
 					    <input type="radio" name="irrigation-system" value="impact-irrigation-head">
-					    <img src="images/impact.png" alt="impact" id="rotaryHead_button" title="impact.png" height=20px width=20px>&nbsp;&nbsp;Impact Irrigation Head (0.5cm per hour)
+					    <img src="images/impact.png" alt="impact" id="rotaryHead_button" title="impact.png" height=20px width=20px>&nbsp;&nbsp;<label id="impactHead">Impact Irrigation Head (0.5 cm per hour)</label>
 					    
 					  </label>
 					</div>
