@@ -41,7 +41,8 @@ $(document).ready(function(){
 			return false;
 		}else{
 			
-			$.cookie("email",email,{ expires: 1 });
+			$.cookie("email",email,{ expires: 7 });
+			
 			//information.email = email;
 			//alert(email);
 			//alert($.cookie("email"));
@@ -52,7 +53,7 @@ $(document).ready(function(){
 			return false;
 		}else{
 			
-			$.cookie("password",password,{ expires: 1 });
+			$.cookie("password",password,{ expires: 7 });
 			//information.password = password;
 			
 		}
@@ -87,19 +88,19 @@ $(document).ready(function(){
 			alert("zipcode is null");
 			return false;
 		}else{
-			$.cookie("zipcode",zipcode,{ expires: 1});
+			$.cookie("zipcode",zipcode,{ expires: 7});
 			//information.zipcode  = zipcode;
 			if($.cookie("unit")&&$.cookie("unit")!=unit){
 				
 				$.cookie("unit2",$.cookie("unit"),{expires : 1});
-				//$.cookie("unit3",$.cookie("unit"),{expires: 1});
-				//$.cookie("unit4",$.cookie("unit"),{expires: 1});
+				$.cookie("unit3",$.cookie("unit"),{expires: 1});
+				$.cookie("unit4",$.cookie("unit"),{expires: 1});
 				$.cookie("unit",unit,{expires: 7});
 				//information.unit = unit;
 				
 			}else{
 				
-				$.cookie("unit",unit,{ expires: 1});
+				$.cookie("unit",unit,{ expires: 7});
 				//information.unit = unit;
 			}
 			
@@ -136,13 +137,13 @@ $(document).ready(function(){
 				
 				var rd=Math.round(($.cookie("rd")*2.54)*1000)/1000;
 				$("#rootDepth").val(rd);
-				$.cookie("rd",rd,{expires : 1});
+				$.cookie("rd",rd,{expires : 7});
 				
 			}else{
 				
 				var rd=Math.round(($.cookie("rd")/2.54)*1000)/1000;
 				$("#rootDepth").val(rd);
-				$.cookie("rd",rd,{expires : 1});
+				$.cookie("rd",rd,{expires : 7});
 			}
 			
 		}
@@ -156,7 +157,7 @@ $(document).ready(function(){
 				
 				var area=Math.round(($.cookie("area")/2.47105)*1000)/1000;
 				$("#Area").val(area);
-				$.cookie("area",area,{ expires : 1});
+				$.cookie("area",area,{ expires : 7});
 				
 				
 				
@@ -164,14 +165,13 @@ $(document).ready(function(){
 				
 				var area = Math.round($.cookie("area")*2.47105*1000)/1000;
 				$("#Area").val(area);
-				$.cookie("area",area,{ expires: 1});
-				
-				
+				$.cookie("area",area,{ expires: 7});
 				
 			}
 			
 			
 		}
+		$.cookie("unit2","",{expires: -1});
 	}
 	if($.cookie("unit")=="Metric"){
 		
@@ -188,25 +188,26 @@ $(document).ready(function(){
 	if($.cookie("rainsettings")){
 		
 		$("select[name='rainsettings']").val($.cookie("rainsettings"));
-		if($.cookie("unit2")){
+		if($.cookie("unit3")){
 			
-			if($.cookie("unit2")=='English'){
+			if($.cookie("unit3")=='English'){
 				
 				var rain = $.cookie("rainsettings")*2.54;
 				
 				$("select[name='rainsettings']").val(rain);
-				$.cookie("rainsettings",rain,{expires : 1});
+				$.cookie("rainsettings",rain,{expires : 7});
 			
 			}else{
 				
 				var rain = $.cookie("rainsettings")/2.54;
 				$("select[name='rainsettings']").val(rain);
-				$.cookie("rainsettings",rain,{expires : 1});
+				$.cookie("rainsettings",rain,{expires : 7});
 				
 			}
-			//$.cookie("unit3","",{expires: -1});
+			
 			
 		}
+		$.cookie("unit3","",{expires: -1});
 		
 		
 	}
@@ -375,7 +376,7 @@ $(document).ready(function(){
 	}
 	
 	$("a[name='next']").click(function(){
-		$.cookie("soilthreshold",$("select[name='soilthreshold']").val(),{ expires: 1 });
+		$.cookie("soilthreshold",$("select[name='soilthreshold']").val(),{ expires: 7 });
 		//information.soilthresholld = $("select[name='soilthreshold']").val();
 		location.href="/irrigation-system.html";
 		
@@ -389,28 +390,28 @@ $(document).ready(function(){
 	if($.cookie("irriDepth")){
 		
 		$("#irrigationDepth").val($.cookie("irriDepth"));
-		if($.cookie("unit2")){
+		if($.cookie("unit4")){
 			
 			
-			if($.cookie("unit2")=="English"){
+			if($.cookie("unit4")=="English"){
 				
 				var irriDepth = Math.round($.cookie("irriDepth")*2.54*1000)/1000;
 				
 				$("#irrigationDepth").val(irriDepth);
-				$.cookie("irriDepth",irriDepth,{expires : 1});
+				$.cookie("irriDepth",irriDepth,{expires : 7});
 			
 			}else{
 				
 				var irriDepth =Math.round(($.cookie("irriDepth")/2.54)*1000)/1000;
 				$("#irrigationDepth").val(irriDepth);
-				$.cookie("irriDepth",irriDepth,{expires : 1});
+				$.cookie("irriDepth",irriDepth,{expires : 7});
 				
 			}
 			
 			
 		}
-		//$.cookie("unit3","",{expires : -1});
-		$.cookie("unit2","",{expires: -1});
+		$.cookie("unit4","",{expires : -1});
+		//$.cookie("unit2","",{expires: -1});
 	}
 	$("#patternRadio1").click(function(){
 		
@@ -456,7 +457,7 @@ $(document).ready(function(){
 		
 		if($("#patternRadio1").prop("checked")){
 			var irriDepth=$("#irrigationDepth").val();
-			$.cookie("irriDepth",irriDepth,{ expires : 1 });
+			$.cookie("irriDepth",irriDepth,{ expires : 7 });
 			//information.irriDepth = irriDepth;
 			$.cookie("isystem","",{expires: -1});
 			$.cookie("irriDuration","",{expires:-1});
@@ -469,8 +470,8 @@ $(document).ready(function(){
 			//alert(isystem);
 			var irriDuration=$("#irrigationDuration").val();
 			//alert(minutes);
-			$.cookie("isystem",isystem,{ expires : 1});
-			$.cookie("irriDuration",irriDuration,{expires : 1});
+			$.cookie("isystem",isystem,{ expires : 7});
+			$.cookie("irriDuration",irriDuration,{expires : 7});
 			//information.isystem = isystem;
 			//information.irriDuration = irriDuration;
 			$.cookie("irriDepth","",{ expires: -1});
@@ -516,9 +517,9 @@ $(document).ready(function(){
 		//alert(days);
 		//alert(hours);
 		//alert(minutes);
-		$.cookie("days",days.toString(),{ expires: 1});
-		$.cookie("hours",hours.toString(),{ expires: 1});
-		$.cookie("minutes",minutes.toString(),{expires: 1});
+		$.cookie("days",days.toString(),{ expires: 7});
+		$.cookie("hours",hours.toString(),{ expires: 7});
+		$.cookie("minutes",minutes.toString(),{expires: 7});
 		//information.days = days;
 		//information.hours = hours;
 		//information.minutes = minutes;

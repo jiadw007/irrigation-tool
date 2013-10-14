@@ -1,15 +1,13 @@
 
-var information = new object();
+var information = new Object();
 
 $(document).ready(function(){
-	
+
 	$("#step6").click(function(){
 		
 		var choice = $("input[name='correspondence']:checked").val();
 		//alert(choice);
 		$.cookie("choice",choice,{ expires : 7});
-		//information.choice= choice;
-		//var json = $.toJSON(information);
 		information.email = $.cookie("email");
 		information.password = $.cookie("password");
 		information.unit = $.cookie("unit");
@@ -18,7 +16,7 @@ $(document).ready(function(){
 		information.soilType = $.cookie("soilType");
 	    information.area = $.cookie("area");
 	    information.systemSelection = $.cookie("systemSelection");
-		if($.cookie("rainsettings")){
+	    if($.cookie("rainsettings")){
 			information.rainsettings = $.cookie("rainsettings");
 			
 		}
@@ -31,7 +29,10 @@ $(document).ready(function(){
 			
 			information.irriDepth = $.cookie("irriDepth");
 			
-		}else{
+		}
+		
+		
+		if($.cookie("isystem")){
 			
 			information.isystem = $.cookie("isystem");
 			information.irriDuration = $.cookie("irriDuraion");
@@ -41,14 +42,30 @@ $(document).ready(function(){
 		information.days = $.cookie("days");
 		information.hours = $.cookie("hours");
 		information.minutes = $.cookie("minutes");
-		information.choice = choice;
+		information.choice = $.cookie("choice");
+		var evar =information.email.toString();
+		var json = $.toJSON(information);
+		$.cookie(eval("evar"),json, {expires : 1});
+		
+		
+		
 		location.href="/results.html";
 		
 		
-		
 	});
-	
-		
-	
+	//alert($.cookie("jiadw007@gmail.com"));
+
 });
+
+//
+		//alert();
+		//information.choice= choice;
+		//var json = $.toJSON(information);
+		//var evar =information.email.toString();
+		//$.cookie(eval("evar"),$.toJSON(information));
+		//alert($.toJSON(information));
+		//alert($.cookie("jiadw007@gmail.com"));
+		//var json = $.toJSON(information);
+	
+//
 
