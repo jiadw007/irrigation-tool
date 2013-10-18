@@ -215,17 +215,17 @@ $(document).ready(function(){
 		
 		$("select[name='soilthreshold']").val($.cookie("soilthreshold"));
 	}
-	if($.cookie("days")&&$.cookie("minutes")&&$.cookie("hours")){
+	if($.cookie("days")&&$.cookie("hours")){
 		
 		var days = $.cookie("days").split(",");
 		//alert(days);
 		var hours = $.cookie("hours").split(",");
-		var minutes = $.cookie("minutes").split(",");
+		//var minutes = $.cookie("minutes").split(",");
 		for (day in days){
 			//alert(day);
 			$("input[name='schedule'][value='"+days[day]+"']").attr("checked","checked").parent().next().css("display","block");
 			$("input[name='schedule'][value='"+days[day]+"']").parent().next().children("select[name='startHour']").val(hours[day]);
-			$("input[name='schedule'][value='"+days[day]+"']").parent().next().children("select[name='startMinute']").val(minutes[day]);
+			//$("input[name='schedule'][value='"+days[day]+"']").parent().next().children("select[name='startMinute']").val(minutes[day]);
 		}
 		
 		
@@ -504,22 +504,22 @@ $(document).ready(function(){
 	$("#step5").click(function(){
 		var days=[];
 		var hours = [];
-		var minutes = [];
+		//var minutes = [];
 		$("input[name='schedule']:checked").each(function(){
 			
 			var day=$(this).val();
 			var startHour=$(this).parent().next().children("select[name='startHour']").val();
-			var startMinute=$(this).parent().next().children("select[name='startMinute']").val();
+			//var startMinute=$(this).parent().next().children("select[name='startMinute']").val();
 			days.push(day);
 			hours.push(startHour);
-			minutes.push(startMinute);
+			//minutes.push(startMinute);
 		});
 		//alert(days);
 		//alert(hours);
 		//alert(minutes);
 		$.cookie("days",days.toString(),{ expires: 7});
 		$.cookie("hours",hours.toString(),{ expires: 7});
-		$.cookie("minutes",minutes.toString(),{expires: 7});
+		//$.cookie("minutes",minutes.toString(),{expires: 7});
 		//information.days = days;
 		//information.hours = hours;
 		//information.minutes = minutes;
