@@ -25,7 +25,8 @@ public class zipCode {
 	public zipCode(){
 		
 		try{
-			
+			//File file =new File(zippath);
+			//System.out.println(file);
 			FileInputStream fstream = new FileInputStream("./zips.txt");
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
@@ -75,12 +76,12 @@ public class zipCode {
 	}
 	public static void main(String[] args){
 		
-		zipCode zip = new zipCode();
-		for(String c:zipCode.city){
+		//zipCode zip = new zipCode();
+		//for(String c:zipCode.city){
 			
-			System.out.println(c);
+			//System.out.println(c);
 			
-		}
+		//}
 		
 		
 	}

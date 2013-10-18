@@ -2,6 +2,7 @@ package com.project.server;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +20,11 @@ public class calculateServlet extends HttpServlet{
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		
+		String zippath = req.getRealPath("./zips.txt");
+		String fawnpath = req.getRealPath("./fawn_zips.txt");
 		//Cookie[] cookies = req.getCookies();
 		//System.out.println(cookies[1]);
-		
+		System.out.println();
 		String information = req.getParameter("json");
 		//System.out.println(information);
 		try {

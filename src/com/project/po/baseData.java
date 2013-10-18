@@ -189,7 +189,7 @@ public class baseData {
 	
 	public Location getLocationByzipCode(String zipcode){
 		
-		int index = this.zipcodes.zipcode.indexOf("zipcode");
+		int index = this.zipcodes.zipcode.indexOf(zipcode);
 		if(index != -1){
 			
 			Float lat = this.zipcodes.lats.get(index);
@@ -220,13 +220,15 @@ public class baseData {
 		int length = this.zipcodes.fawnStnIDs.size();
 		int index = 0;
 		double distance = Math.pow((lat - this.zipcodes.fawnStnLats.get(0)),2.0)+Math.pow((lng - this.zipcodes.fawnStnLngs.get(0)), 2.0);
-		for(int i =1; i < length; i++){
+		for(int i =0; i < length; i++){
 			
-			double dist = Math.pow((lat - this.zipcodes.fawnStnLats.get(index)),2.0)+Math.pow((lng - this.zipcodes.fawnStnLngs.get(index)), 2.0);
-			if(dist <distance){
+			double dist = Math.pow((lat - this.zipcodes.fawnStnLats.get(i)),2.0)+Math.pow((lng - this.zipcodes.fawnStnLngs.get(i)), 2.0);
+			//System.out.println(dist);
+			if(dist < distance){
 				
 				index = i;
 				distance = dist;
+				//System.out.println(index);
 			}
 			
 		}

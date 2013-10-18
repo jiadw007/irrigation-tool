@@ -218,7 +218,7 @@ public class Location implements Comparator<Location>{
 	public void print(){
 		
 		System.out.println("zipcode: "+this.zip+",city: "+this.city+",lat: "+this.lat+",lng: "+this.lng+",zone: "+this.zone);
-		System.out.println("fawn id: "+this.fawnStnID+",lat: "+this.fawnStnLat+",lng: "+this.fawnStnLng);
+		System.out.println("fawn id: "+this.fawnStnID+",fawnStnName: "+this.fawnStnName+",fawnStnLat: "+this.fawnStnLat+",fawnStnLng: "+this.fawnStnLng+",distance: "+this.distance);
 		
 		
 		

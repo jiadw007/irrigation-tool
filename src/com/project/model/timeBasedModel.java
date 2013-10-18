@@ -8,12 +8,12 @@ import com.project.po.baseData;
 public class timeBasedModel {
 	
 	
-	protected baseData b;
-	private String soilType;
-	private Double area;
-	private Double rootDepth;
-	private Location location;
-	private String unit;
+	protected static baseData b = new baseData();
+	private String soilType;  // get from user input
+	private Double area;	  //get from user input
+	private Double rootDepth; //get from user input
+	private Location location;	//get from user input
+	private String unit;	    //get from user input
 	private ArrayList<Double> WB;
 	private ArrayList<Double> SWC;			//from calculation function 
 	private ArrayList<Double> ET;			//from calculation function
@@ -93,7 +93,7 @@ public class timeBasedModel {
 
 
 	public timeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit){
-		b=new baseData();
+		
 		this.soilType = soiltype;
 		this.unit = unit;
 		if(unit.equals("English")){
