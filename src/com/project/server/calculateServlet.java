@@ -10,7 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
+import com.project.model.ETControllerModel;
 import com.project.model.timeBasedModel;
+import com.project.model.timeBasedRainSensorModel;
+import com.project.model.timeBasedSoilSensorModel;
 import com.project.po.Data;
 
 public class calculateServlet extends HttpServlet{
@@ -20,8 +23,8 @@ public class calculateServlet extends HttpServlet{
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		
-		String zippath = req.getRealPath("./zips.txt");
-		String fawnpath = req.getRealPath("./fawn_zips.txt");
+		//String zippath = req.getRealPath("./zips.txt");
+		//String fawnpath = req.getRealPath("./fawn_zips.txt");
 		//Cookie[] cookies = req.getCookies();
 		//System.out.println(cookies[1]);
 		System.out.println();
@@ -93,14 +96,20 @@ public class calculateServlet extends HttpServlet{
 				}else if(system.equals("Time-based with rain sensor")){
 					
 					System.out.println("Time-based with rain sensor");
+					timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(soilType,area,rootDepth,zipcode,unit,rainsettings);
+					
 					
 				}else if(system.equals("Time-based with soil moisture sensor")){
 					
 					System.out.println("Time-based with soil moisture sensor");
+					timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(soilType,area,rootDepth,zipcode,unit,soilthreshold);
+					
+					
 					
 				}else{
 					
 					System.out.println("Evapotranspiration Controller");
+					ETControllerModel etcm = new ETControllerModel(soilType,area,rootDepth,zipcode,unit);
 					
 				}
 				

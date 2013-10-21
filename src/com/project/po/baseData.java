@@ -13,6 +13,14 @@ public class baseData {
 	public static HashMap<String,HashMap<String, Double>> soil=new HashMap<String,HashMap<String, Double>>();
 	public static HashMap<String,HashMap<String, Double>> Kc=new HashMap<String,HashMap<String, Double>>();
 	public static zipCode zipcodes;
+	public ArrayList<Double> Ihr;
+	public ArrayList<Double> ET0;
+	public ArrayList<Double> Rhr;
+	public ArrayList<String> Month;
+	public ArrayList<String> Hour;
+	public ArrayList<String> Date;
+	public ArrayList<String> Year;
+	public ArrayList<Integer> Ihrschedule;
 	
 	/**
 	public ArrayList<String> Date;			//from csv.file
@@ -29,7 +37,7 @@ public class baseData {
 	public baseData(){
 		
 		zipcodes = new zipCode();
-		/**
+		
 		Date=new ArrayList<String>();			
 		Year=new ArrayList<String>();			
 		Month=new ArrayList<String>();			
@@ -38,8 +46,8 @@ public class baseData {
 		Rhr=new ArrayList<Double>();			
 		Ihr=new ArrayList<Double>();			
 		ET0=new ArrayList<Double>();         
-		Ihrschedule=new ArrayList<Integer>();
-		*/
+		//Ihrschedule=new ArrayList<Integer>();
+		
 		/*edit data for the soil type table */
 		HashMap<String,Double> sand=new HashMap<String, Double>(8);
 		sand.put("MAD", 0.3);
@@ -147,43 +155,6 @@ public class baseData {
 		Kc.put("South Florida",southFlorida);
 		
 		
-		
-		
-		
-		/**
-		try { 
-			
-			File csv = new File("ET-inputdata.csv");  
-
-			BufferedReader br = new BufferedReader(new FileReader(csv)); 
-		    br.readLine();  
-			while (br.ready()) { 
-		        
-				String line = br.readLine(); 
-		        String item[]=line.split(",");
-		        Date.add(item[0]);
-		        Year.add(item[1]);
-		        Month.add(item[2]);
-		        Hour.add(item[3]);
-		        double rhr=Double.parseDouble(item[4]);
-		        Rhr.add(rhr);
-		        double ihr=Double.parseDouble(item[5]);
-		        Ihr.add(ihr);
-		        //double wb=rhr+ihr;
-		        //WB.add(wb);
-		        ET0.add(Double.parseDouble(item[7]));
-		        //System.out.println();
-		        //System.out.println(Integer.parseInt(item[10]));
-		    	Ihrschedule.add(Integer.parseInt(item[9]));
-			} 
-			br.close(); 
-		} catch (FileNotFoundException e) { 
-		      e.printStackTrace(); 
-		} catch (IOException e) { 
-		      e.printStackTrace(); 
-		} 
-		System.out.println("finish read file");
-		*/
 			
 	}
 	
