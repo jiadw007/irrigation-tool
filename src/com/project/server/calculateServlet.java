@@ -1,5 +1,9 @@
 package com.project.server;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.servlet.ServletContext;
@@ -60,16 +64,32 @@ public class calculateServlet extends HttpServlet{
 				
 				irriDepth = jsonObject.getDouble("irriDepth");
 				
-			}
-			if(jsonObject.has("isystem")){
+			}else if(jsonObject.has("isystem")){
 				
 				isystem = jsonObject.getString("isystem");
 				irriDuration = jsonObject.getInt("irriDuration");
-				
-				
+				//calculate the irriDepth for different system
+				if(isystem =="micro-irrigation-head"){
+					
+					irriDepth = 0.25 * irriDuration/60;
+					
+				}else if(isystem =="fixed-irrigation-head"){
+					
+					irriDepth = 1.5 *irriDuration/60;
+					
+				}else if(isystem =="gear-driven-irrigation-head"){
+					
+					irriDepth = 0.5 * irriDuration/60;
+					
+				}else if(isystem =="impact-irrigation-head"){
+					
+					irriDepth = 0.5 * irriDuration/60;
+					
+				}
 				
 			}
 			String[] days = jsonObject.getString("days").split(",");
+			
 			String[] hours = jsonObject.getString("hours").split(",");
 			//String[] minutes = jsonObject.getString("minutes").split(",");
 			String choice = jsonObject.getString("choice");
@@ -80,6 +100,8 @@ public class calculateServlet extends HttpServlet{
 					soilthreshold, irriDepth, isystem,
 					irriDuration);
 		    
+			
+			
 			for (String system : systemSelection){
 				
 				if (system.equals("Time-based")){
@@ -92,25 +114,39 @@ public class calculateServlet extends HttpServlet{
 					System.out.println(tbm.getArea());
 					System.out.println(tbm.getSoilType());
 					tbm.getLocation().print();
+					tbm.calculation();
+					
 					
 				}else if(system.equals("Time-based with rain sensor")){
 					
 					System.out.println("Time-based with rain sensor");
 					timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(soilType,area,rootDepth,zipcode,unit,rainsettings);
-					
+					System.out.println(tbrsm.getRootDepth());
+					System.out.println(tbrsm.getUnit());
+					System.out.println(tbrsm.getArea());
+					System.out.println(tbrsm.getSoilType());
+					tbrsm.getLocation().print();
 					
 				}else if(system.equals("Time-based with soil moisture sensor")){
 					
 					System.out.println("Time-based with soil moisture sensor");
 					timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(soilType,area,rootDepth,zipcode,unit,soilthreshold);
-					
+					System.out.println(tbssm.getRootDepth());
+					System.out.println(tbssm.getUnit());
+					System.out.println(tbssm.getArea());
+					System.out.println(tbssm.getSoilType());
+					tbssm.getLocation().print();
 					
 					
 				}else{
 					
 					System.out.println("Evapotranspiration Controller");
 					ETControllerModel etcm = new ETControllerModel(soilType,area,rootDepth,zipcode,unit);
-					
+					System.out.println(etcm.getRootDepth());
+					System.out.println(etcm.getUnit());
+					System.out.println(etcm.getArea());
+					System.out.println(etcm.getSoilType());
+					etcm.getLocation().print();
 				}
 				
 			}

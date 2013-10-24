@@ -5,8 +5,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Date;
 
 public class baseData {
 	
@@ -154,7 +158,38 @@ public class baseData {
 		southFlorida.put("12", 0.71);
 		Kc.put("South Florida",southFlorida);
 		
-		
+		try{
+			
+			File csv = new File("time-base-trial.csv");
+			BufferedReader br =new BufferedReader(new FileReader(csv));
+			br.readLine();
+			int i =1;
+			while(br.ready()&&i<=168){
+				
+				String line = br.readLine();
+				String item[] = line.split(",");
+				Date.add(item[0]);
+				Year.add(item[1]);
+				Month.add(item[2]);
+				Hour.add(item[3]);
+				double rhr = Double.parseDouble(item[4]);
+				Rhr.add(rhr);
+				double ihr = Double.parseDouble(item[5]);
+				Ihr.add(ihr);
+				ET0.add(Double.parseDouble(item[7]));
+				Ihrschedule.add(Integer.parseInt(item[10]));
+				
+				i++;
+			}
+			br.close();
+			
+			
+		}catch (FileNotFoundException e) { 
+		      e.printStackTrace(); 
+		} catch (IOException e) { 
+		      e.printStackTrace(); 
+		}
+		System.out.println("finish read file");
 			
 	}
 	
@@ -226,6 +261,19 @@ public class baseData {
 		return dist;
 		
 		
+	}
+	
+	
+	public String[] getLastSunday(){
+		
+		 Calendar cal = Calendar.getInstance();
+		 String sunday;
+		 cal.add(Calendar.DATE,-7);
+		 cal.set(Calendar.DAY_OF_WEEK,Calendar.SUNDAY);
+		 sunday = new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
+		 
+		 String[] date = sunday.split("-");
+		 return date;
 	}
 	
 	

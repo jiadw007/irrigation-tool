@@ -3,6 +3,15 @@ package com.project.model;
 
 
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -390,6 +399,7 @@ public class timeBasedModel {
 			}
 			
 		}
+		System.out.println("finish!");
 		
 	}
 	public void calculation(int i ){
@@ -536,6 +546,7 @@ public class timeBasedModel {
 		}
 		
 	}
+
 	
 	
 
