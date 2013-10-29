@@ -15,13 +15,15 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.appengine.labs.repackaged.org.json.JSONException;
+import com.google.appengine.labs.repackaged.org.json.JSONObject;
 import com.project.po.Location;
 import com.project.po.baseData;
 
 public class timeBasedModel {
 	
 	
-	protected static baseData b = new baseData();
+	protected static baseData b;
 	private int startIrrigationHour = 1;
 	private int lastIrrigationHour = 168;
 	private String soilType;  // get from user input
@@ -44,8 +46,9 @@ public class timeBasedModel {
 	private ArrayList<Double> wLostDay;
 	private ArrayList<Double> iLostHr;
 	private ArrayList<Double> iLostDay;
-	
-	
+	private double wLostWeek = 0;
+	private double iLostWeek = 0;
+	private int count = 0;
 	
 	
 	public int getStartIrrigationHour() {
@@ -190,6 +193,30 @@ public class timeBasedModel {
 	}
 
 
+	
+	public static baseData getB() {
+		return b;
+	}
+
+
+
+	public double getwLostWeek() {
+		return wLostWeek;
+	}
+
+
+
+	public double getiLostWeek() {
+		return iLostWeek;
+	}
+
+
+
+	public int getCount() {
+		return count;
+	}
+
+
 
 	public ArrayList<Double> getInF() {
 		return InF;
@@ -201,10 +228,64 @@ public class timeBasedModel {
 		InF = inF;
 	}
 
+	
+
+	public ArrayList<Double> getF() {
+		return F;
+	}
+
+
+
+	public ArrayList<Double> getRateF() {
+		return rateF;
+	}
+
+
+
+	public ArrayList<Double> getLoss() {
+		return Loss;
+	}
+
+
+
+	public ArrayList<Double> getPerLoss() {
+		return PerLoss;
+	}
+
+
+
+	public ArrayList<Double> getwLostHr() {
+		return wLostHr;
+	}
+
+
+
+	public ArrayList<Double> getwLostDay() {
+		return wLostDay;
+	}
+
+
+
+	public ArrayList<Double> getiLostHr() {
+		return iLostHr;
+	}
+
+
+
+	public ArrayList<Double> getiLostDay() {
+		return iLostDay;
+	}
+
+	
+
+	public ArrayList<Double> getDelta() {
+		return delta;
+	}
+
 
 
 	public timeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit){
-		
+		b=new baseData();
 		WB=new ArrayList<Double>();
 		SWC=new ArrayList<Double>();			//from calculation function 
 		ET=new ArrayList<Double>();			//from calculation function
@@ -245,15 +326,13 @@ public class timeBasedModel {
 			
 		//}
 		HashMap<String, Double> SOIL=b.soil.get(this.soilType);		//get the properties for the designated soil
+		//System.out.println(SOIL);
 		Double swc0=0.75*SOIL.get("FC")*this.rootDepth;
 		this.SWC.add(swc0);			//get the SWC0 value
 		
-		
-		
-		
 	}
 	
-	public void calculation(){
+	public JSONObject calculation(){
 		
 		HashMap<String, Double> SOIL=b.soil.get(soilType);
 					
@@ -399,9 +478,49 @@ public class timeBasedModel {
 			}
 			
 		}
+		
 		System.out.println("finish!");
+		int i =0;
+		for(String hour: b.Hour){
+			
+			if(hour.equals("23")){
+				
+				
+				System.out.println(i);
+				System.out.println(this.wLostDay.get(i)+","+this.iLostDay.get(i));
+				wLostWeek +=this.wLostDay.get(i);
+				iLostWeek +=this.iLostDay.get(i);
+				i++;
+				
+			}else{
+				i++;
+			}
+			
+		}
+		iLostWeek /= 7;
+		System.out.println(wLostWeek);
+		System.out.println(iLostWeek);
+		
+		
+		JSONObject resultJSON = new JSONObject();
+		try{
+			resultJSON.append("Hour", b.Hour).append("ET", this.ET).append("WB", this.WB).append("SWC", this.SWC)
+			.append("F", this.F).append("rateF", this.rateF).append("Q", this.Q).append("InF",this.InF).append("PERC",this.PERC)
+			.append("Loss",this.Loss).append("PerLoss",this.PerLoss).append("wLostHr",this.wLostHr).append("wLostDay",this.wLostDay)
+			.append("iLostHr",this.iLostHr).append("iLostDay",this.iLostDay);			
+			
+		}catch(JSONException e){
+			
+			e.printStackTrace();
+		}
+		
+		return resultJSON ;
+		
 		
 	}
+
+
+
 	public void calculation(int i ){
 		
 		HashMap<String, Double> SOIL=b.soil.get(soilType);

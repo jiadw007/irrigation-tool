@@ -50,7 +50,7 @@ public class baseData {
 		Rhr=new ArrayList<Double>();			
 		Ihr=new ArrayList<Double>();			
 		ET0=new ArrayList<Double>();         
-		//Ihrschedule=new ArrayList<Integer>();
+		Ihrschedule=new ArrayList<Integer>();
 		
 		/*edit data for the soil type table */
 		HashMap<String,Double> sand=new HashMap<String, Double>(8);

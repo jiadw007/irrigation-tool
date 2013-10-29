@@ -3,6 +3,9 @@ package com.project.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.appengine.labs.repackaged.org.json.JSONException;
+import com.google.appengine.labs.repackaged.org.json.JSONObject;
+
 public class ETControllerModel extends timeBasedModel{
 	
 	
@@ -58,11 +61,32 @@ public class ETControllerModel extends timeBasedModel{
 		this.Ihret.add(0.0);
 		
 	}
+	public ArrayList<Double> getIhret() {
+		return Ihret;
+	}
+	public ArrayList<Double> getRe() {
+		return Re;
+	}
+	public ArrayList<Integer> getIck1() {
+		return Ick1;
+	}
+	public ArrayList<Integer> getIck2() {
+		return Ick2;
+	}
+	public ArrayList<Double> getAWR() {
+		return AWR;
+	}
+	public ArrayList<Double> getAWRstep1() {
+		return AWRstep1;
+	}
+	public ArrayList<Integer> getAWRstep2() {
+		return AWRstep2;
+	}
 	/**
 	 * intital value: SWC AWR Rhr Re and ET	AWRstep1 AWRstep2 when i=i , output i
 	 * for the value in based model ,when i =i ,output i-1 
 	 * */
-	public void calculation(){
+	public JSONObject calculation(){
 		
 		HashMap<String,Double> SOIL = b.soil.get(this.getSoilType());
 		
@@ -156,7 +180,21 @@ public class ETControllerModel extends timeBasedModel{
 			super.calculation(i);
 			
 		}
+		System.out.println("finish !");
+		JSONObject resultJSON = new JSONObject();
+		try{
+			resultJSON.append("Hour", b.Hour).append("Rhr", b.Rhr).append("Re", this.Re).append("Ihrschedule", b.Ihrschedule).append("Ick1",this.Ick1).append("Ick2",this.Ick2)
+			.append("ET", this.getET()).append("AWRStep1",this.AWRstep1).append("AWRStep2", this.AWRstep2).append("AWR", this.AWR).append("Ihret",this.Ihret).append("WB", this.getWB()).append("SWC", this.getSWC()).append("DELTA",this.getDelta())
+			.append("F", this.getF()).append("rateF", this.getRateF()).append("Q", this.getQ()).append("InF",this.getInF()).append("PERC",this.getPERC())
+			.append("Loss",this.getLoss()).append("PerLoss",this.getPerLoss()).append("wLostHr",this.getwLostHr()).append("wLostDay",this.getwLostDay())
+			.append("iLostHr",this.getiLostHr()).append("iLostDay",this.getiLostDay());			
+			
+		}catch(JSONException e){
+			
+			e.printStackTrace();
+		}
 		
+		return resultJSON;
 		
 		
 	}

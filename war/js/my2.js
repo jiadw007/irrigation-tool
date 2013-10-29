@@ -44,16 +44,21 @@ $(document).ready(function(){
 	//var evar =information.email.toString();
 	var json = $.toJSON(information);
 	//alert(json);
+	/*
 	$("#step6").click(function(){
 		
 		$.ajax({
 			
 			url:"/calculate",
-			type:"get",
+			type:"post",
 			data:{"json":json},
-			success: function(){
+			dataType:"json",
+			success: function(data){
 				
-				alert("success");
+				var loss = data.Loss;
+				var hour = data.Hour;
+				alert(hour);
+				
 			},
 			error:function(){
 				
@@ -72,6 +77,7 @@ $(document).ready(function(){
 		
 		
 	});
+	*/
 	//alert($.cookie("jiadw007@gmail.com"));
 
 });
