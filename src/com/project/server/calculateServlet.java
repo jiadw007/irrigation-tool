@@ -371,7 +371,7 @@ public class calculateServlet extends HttpServlet{
 					System.out.println(resultJSON.get("wLostDay"));
 					System.out.println(resultJSON.get("Hour"));
 					resp.setContentType("text/csv");
-					String disposition = "attachment;fileName=rain-sensor-result.csv";
+					String disposition = "attachment;fileName=soil-sensor-result.csv";
 					resp.setHeader("Content-Disposition", disposition);
 					out = resp.getWriter();
 					
@@ -404,7 +404,7 @@ public class calculateServlet extends HttpServlet{
 					System.out.println(resultJSON.get("wLostDay"));
 					System.out.println(resultJSON.get("Hour"));
 					resp.setContentType("text/csv");
-					String disposition = "attachment;fileName=rain-sensor-result.csv";
+					String disposition = "attachment;fileName=ET-controller-result.csv";
 					resp.setHeader("Content-Disposition", disposition);
 					out = resp.getWriter();
 					
