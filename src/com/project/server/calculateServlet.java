@@ -203,6 +203,7 @@ public class calculateServlet extends HttpServlet{
 		String[] days = null;
 		String[] hours = null;
 		String choice = req.getParameter("correspondence");
+		
 		//System.out.println("choice: "+choice);
 		for(int i = 0; i< cookie.length; i++){
 			
@@ -471,6 +472,10 @@ public class calculateServlet extends HttpServlet{
 			}
 			
 		}
+		
+		Cookie cookie1 = new Cookie("choice",choice);
+		cookie1.setMaxAge(7*24*60*60);
+		cookie1.setPath("/");
 		resp.sendRedirect("/results.html");
 		
 	}
