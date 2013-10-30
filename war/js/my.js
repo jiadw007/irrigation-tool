@@ -364,14 +364,6 @@ $(document).ready(function(){
 			
 			
 		}
-		for(var i=0;i<systemSelection.length;i++){
-			
-			var str=systemSelection[i];
-			var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: xxx gallons or xxx%</p><p>Number of water stress days: xxx</p><p>Weekly rainfall: xxx inches</p><br/>");
-			$("#result").append($p);
-			
-		}
-		
 		
 	}
 	
@@ -525,7 +517,7 @@ $(document).ready(function(){
 		//information.minutes = minutes;
 		location.href="/correspondence.html";
 	});
-	
+	/*
 	$("#step6").click(function(){
 		
 		var choice = $("input[name='correspondence']:checked").val();
@@ -536,6 +528,46 @@ $(document).ready(function(){
 		
 		
 	});
+	*/
+	if($.cookie("time_base_waterLoss")){
+		
+			
+			var str="Time-based";
+			var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("time_base_waterLoss")+"</b> gallons or <b>"+$.cookie("time_base_iLoss")+"%</b></p><p>Number of water stress days: xxx</p><p>Weekly rainfall: xxx inches</p><br/>");
+			$("#result").append($p);
+			$.cookie("time_base_waterLoss","",{ expires: -1});
+			$.cookie("time_base_iLoss","",{ expires: -1});
+		
+	}
+	if($.cookie("rain_sensor_waterLoss")){
+		
+		
+		var str="Time-based with Rain Sensor";
+		var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("rain_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("rain_sensor_iLoss")+"%</b></p><p>Number of water stress days: xxx</p><p>Weekly rainfall: xxx inches</p><br/>");
+		$("#result").append($p);
+		$.cookie("rain_sensor_waterLoss","",{ expires: -1});
+		$.cookie("rain_sensor_iLoss","",{ expires: -1});
+	}
+	if($.cookie("soil_sensor_waterLoss")){
+		
+		
+		var str="Time-based with Soil Moisture Sensor";
+		var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("soil_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("soil_sensor_iLoss")+"%</b></p><p>Number of water stress days: xxx</p><p>Weekly rainfall: xxx inches</p><br/>");
+		$("#result").append($p);
+		$.cookie("soil_sensor_waterLoss","",{ expires: -1});
+		$.cookie("soil_sensor_iLoss","",{ expires: -1});
+	
+	}
+	if($.cookie("et_controller_waterLoss")){
+		
+		
+		var str="ET-Controller";
+		var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("et_controller_waterLoss")+"</b> gallons or <b>"+$.cookie("et_controller_iLoss")+"%</b></p><p>Number of water stress days: xxx</p><p>Weekly rainfall: xxx inches</p><br/>");
+		$("#result").append($p);
+		$.cookie("et_controller_waterLoss","",{ expires: -1});
+		$.cookie("et_controller_waterLoss","",{ expires: -1});
+	
+	}
 	
 	
 	

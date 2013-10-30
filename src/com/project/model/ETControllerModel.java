@@ -91,7 +91,7 @@ public class ETControllerModel extends timeBasedModel{
 		HashMap<String,Double> SOIL = b.soil.get(this.getSoilType());
 		
 		
-		for(int i =this.getStartIrrigationHour();i<=this.getLastIrrigationHour();i++){
+		for(int i =this.getStartIrrigationHour();i<this.getLastIrrigationHour();i++){
 			
 			
 			//calculate ETi 
@@ -181,6 +181,31 @@ public class ETControllerModel extends timeBasedModel{
 			
 		}
 		System.out.println("finish !");
+		int i =0;
+		for(String hour: b.Hour){
+			
+			if(hour.equals("23")){
+				
+				
+				//System.out.println(i);
+				//System.out.println(this.wLostDay.get(i)+","+this.iLostDay.get(i));
+				this.wLostWeek +=this.getwLostDay().get(i);
+				this.iLostWeek +=this.getiLostDay().get(i);
+				i++;
+				
+			}else{
+				i++;
+			}
+			
+		}
+		//System.out.println(this.wLostWeek);
+		//System.out.println(this.iLostWeek);
+		this.wLostWeek = (double) (Math.round(this.wLostWeek*1000)/1000.0);
+		
+		this.iLostWeek = (double) (Math.round((this.iLostWeek/7)*1000)/10.0);
+		System.out.println(this.wLostWeek);
+		System.out.println(this.iLostWeek);
+		
 		JSONObject resultJSON = new JSONObject();
 		try{
 			resultJSON.append("Hour", b.Hour).append("Rhr", b.Rhr).append("Re", this.Re).append("Ihrschedule", b.Ihrschedule).append("Ick1",this.Ick1).append("Ick2",this.Ick2)

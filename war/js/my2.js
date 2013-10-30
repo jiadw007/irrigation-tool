@@ -44,6 +44,11 @@ $(document).ready(function(){
 	//var evar =information.email.toString();
 	var json = $.toJSON(information);
 	//alert(json);
+	
+	
+	
+	
+	
 	/*
 	$("#step6").click(function(){
 		

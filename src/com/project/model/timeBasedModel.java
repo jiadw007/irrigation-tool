@@ -46,9 +46,9 @@ public class timeBasedModel {
 	private ArrayList<Double> wLostDay;
 	private ArrayList<Double> iLostHr;
 	private ArrayList<Double> iLostDay;
-	private double wLostWeek = 0;
-	private double iLostWeek = 0;
-	private int count = 0;
+	protected Double wLostWeek = 0.0;
+	protected Double iLostWeek = 0.0;
+	protected int count = 0;
 	
 	
 	public int getStartIrrigationHour() {
@@ -486,10 +486,10 @@ public class timeBasedModel {
 			if(hour.equals("23")){
 				
 				
-				System.out.println(i);
-				System.out.println(this.wLostDay.get(i)+","+this.iLostDay.get(i));
-				wLostWeek +=this.wLostDay.get(i);
-				iLostWeek +=this.iLostDay.get(i);
+				//System.out.println(i);
+				//System.out.println(this.wLostDay.get(i)+","+this.iLostDay.get(i));
+				this.wLostWeek +=this.wLostDay.get(i);
+				this.iLostWeek +=this.iLostDay.get(i);
 				i++;
 				
 			}else{
@@ -497,9 +497,13 @@ public class timeBasedModel {
 			}
 			
 		}
-		iLostWeek /= 7;
-		System.out.println(wLostWeek);
-		System.out.println(iLostWeek);
+		//System.out.println(this.wLostWeek);
+		//System.out.println(this.iLostWeek);
+		this.wLostWeek = (double) (Math.round(this.wLostWeek*1000)/1000.0);
+		
+		this.iLostWeek = (double) (Math.round((this.iLostWeek/7)*1000)/10.0);
+		System.out.println(this.wLostWeek);
+		System.out.println(this.iLostWeek);
 		
 		
 		JSONObject resultJSON = new JSONObject();
