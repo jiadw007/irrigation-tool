@@ -79,14 +79,22 @@ $(document).ready(function(){
 	
 	$("#step1").click(function(){
 		
+		var ex= /^\d+$/;
+		
 		//alert();
 		var zipcode=new String($("#zipcode").val());
 		var unit=$("input[name='optionsRadios']:checked").val();
 		
 		if(zipcode==""){
 			
-			alert("zipcode is null");
-			return false;
+			var errorText = "This field is required !";
+			$("#zipcode").next().text(errorText);
+			$("#zipcode").focus();
+		}else if(zipcode>34997||zipcode<32003||!ex.test(zipcode)){
+			
+			var errorText ="This doesn't look like a Florida zip code !";
+			$("#zipcode").next().text(errorText);
+			$("#zipcode").focus();
 		}else{
 			$.cookie("zipcode",zipcode,{ expires: 7});
 			//information.zipcode  = zipcode;
@@ -242,15 +250,42 @@ $(document).ready(function(){
 		var rd=$("#rootDepth").val();
 		var soil=$("select[name='soiltype']").val();
 		var area=$("#Area").val();
-		//alert(soil);
-		$.cookie("rd",rd,{ expires:7 });
-		$.cookie("soilType",soil,{ expires:7 });
-		$.cookie("area",area,{ expires: 7 });
-		//information.rd = rd;
-		//information.soilType = soil;
-		//information.area = area;
-		location.href="/form-3.html";
-		return false;
+		if(rd==""){
+			
+			var errorText = "This field is required !";
+			$("#rootDepth").next().text(errorText);
+			$("#rootDepth").focus();
+		}else if(isNaN(rd)||rd<0){
+			
+			var errorText = "It doesn't look like a root depth" ;
+			$("#rootDepth").next().text(errorText);
+			$("#rootDepth").focus();
+			
+		}else if(area==""){
+			
+			var errorText = "This field is required !";
+			$("#Area").next().text(errorText);
+			$("#Area").focus();
+		}else if(isNaN(area)||area<0){
+			
+			var errorText = "It doesn't like an area size !";
+			$("#Area").next().text(errorText);
+			$("#Area").focus();
+			
+		}else{
+			
+			//alert(soil);
+			$.cookie("rd",rd,{ expires:7 });
+			$.cookie("soilType",soil,{ expires:7 });
+			$.cookie("area",area,{ expires: 7 });
+			//information.rd = rd;
+			//information.soilType = soil;
+			//information.area = area;
+			location.href="/form-3.html";
+			return false;
+			
+		}
+		
 		
 	});
 	$("#step3").click(function(){
@@ -300,7 +335,9 @@ $(document).ready(function(){
 			}
 		}else{
 			
-			alert("please select irrigation technology");
+			var errorText = "Please select Irrigation Technology !";
+			$("input[value='Evapotranspiration Controller']").parent().parent().next().text(errorText);
+			
 		}
 		
 		
@@ -446,8 +483,13 @@ $(document).ready(function(){
 	});
 	$("#step4").click(function(){
 		
-		
-		if($("#patternRadio1").prop("checked")){
+		if(!$("#patternRadio1").prop("checked")&&!$("#patternRadio2").prop("checked")){
+			//alert($("#patternError").attr("id"));
+			var errorText = "Please select ONE Irrigation Pattern ";
+			$("#patternError").text(errorText);
+			$("a[href='#']").focus();
+			
+		}else if($("#patternRadio1").prop("checked")){
 			var irriDepth=$("#irrigationDepth").val();
 			$.cookie("irriDepth",irriDepth,{ expires : 7 });
 			//information.irriDepth = irriDepth;
@@ -455,9 +497,8 @@ $(document).ready(function(){
 			$.cookie("irriDuration","",{expires:-1});
 			//information.isystem = undefined;
 			//infrmation.minutes = undefined;
-		}  
-		
-		if($("#patternRadio2").prop("checked")){
+			location.href="/irrigation-schedule.html";
+		}else if($("#patternRadio2").prop("checked")){
 			var isystem=$("input[name='irrigation-system']:checked").val();
 			//alert(isystem);
 			var irriDuration=$("#irrigationDuration").val();
@@ -467,9 +508,10 @@ $(document).ready(function(){
 			//information.isystem = isystem;
 			//information.irriDuration = irriDuration;
 			$.cookie("irriDepth","",{ expires: -1});
+			location.href="/irrigation-schedule.html";
 		}
 		
-		location.href="/irrigation-schedule.html";
+		
 		
 	});
 	$("input[name='schedule']").each(function(){
@@ -506,16 +548,26 @@ $(document).ready(function(){
 			hours.push(startHour);
 			//minutes.push(startMinute);
 		});
-		//alert(days);
-		//alert(hours);
-		//alert(minutes);
-		$.cookie("days",days.toString(),{ expires: 7});
-		$.cookie("hours",hours.toString(),{ expires: 7});
-		//$.cookie("minutes",minutes.toString(),{expires: 7});
-		//information.days = days;
-		//information.hours = hours;
-		//information.minutes = minutes;
-		location.href="/correspondence.html";
+		if(days.length==0){
+			
+			var errorText = "Please arrange your Irrigation Schedule !";
+			$("#scheduleError").text(errorText);
+			
+		}else{
+			
+			//alert(days);
+			//alert(hours);
+			//alert(minutes);
+			$.cookie("days",days.toString(),{ expires: 7});
+			$.cookie("hours",hours.toString(),{ expires: 7});
+			//$.cookie("minutes",minutes.toString(),{expires: 7});
+			//information.days = days;
+			//information.hours = hours;
+			//information.minutes = minutes;
+			location.href="/correspondence.html";
+			
+		}
+		
 	});
 	/*
 	$("#step6").click(function(){
@@ -533,39 +585,43 @@ $(document).ready(function(){
 		
 			
 			var str="Time-based";
-			var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("time_base_waterLoss")+"</b> gallons or <b>"+$.cookie("time_base_iLoss")+"%</b></p><p>Number of water stress days: xxx</p><p>Weekly rainfall: xxx inches</p><br/>");
+			var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("time_base_waterLoss")+"</b> gallons or <b>"+$.cookie("time_base_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("time_base_wStressDays")+"</b></p><p>Weekly rainfall: xxx inches</p><br/>");
 			$("#result").append($p);
 			$.cookie("time_base_waterLoss","",{ expires: -1});
 			$.cookie("time_base_iLoss","",{ expires: -1});
+			$.cookie("time_base_wStreeDays","",{ expires: -1});
 		
 	}
 	if($.cookie("rain_sensor_waterLoss")){
 		
 		
 		var str="Time-based with Rain Sensor";
-		var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("rain_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("rain_sensor_iLoss")+"%</b></p><p>Number of water stress days: xxx</p><p>Weekly rainfall: xxx inches</p><br/>");
+		var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("rain_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("rain_sensor_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("rain_sensor_wStressDays")+"</b></p><p>Weekly rainfall: xxx inches</p><br/>");
 		$("#result").append($p);
 		$.cookie("rain_sensor_waterLoss","",{ expires: -1});
 		$.cookie("rain_sensor_iLoss","",{ expires: -1});
+		$.cookie("rain_sensor_wStreeDays","",{ expires: -1});
 	}
 	if($.cookie("soil_sensor_waterLoss")){
 		
 		
 		var str="Time-based with Soil Moisture Sensor";
-		var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("soil_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("soil_sensor_iLoss")+"%</b></p><p>Number of water stress days: xxx</p><p>Weekly rainfall: xxx inches</p><br/>");
+		var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("soil_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("soil_sensor_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("soil_sensor_wStressDays")+"</b></p><p>Weekly rainfall: xxx inches</p><br/>");
 		$("#result").append($p);
 		$.cookie("soil_sensor_waterLoss","",{ expires: -1});
 		$.cookie("soil_sensor_iLoss","",{ expires: -1});
+		$.cookie("soil_sensor_wStreeDays","",{ expires: -1});
 	
 	}
 	if($.cookie("et_controller_waterLoss")){
 		
 		
 		var str="ET-Controller";
-		var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("et_controller_waterLoss")+"</b> gallons or <b>"+$.cookie("et_controller_iLoss")+"%</b></p><p>Number of water stress days: xxx</p><p>Weekly rainfall: xxx inches</p><br/>");
+		var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("et_controller_waterLoss")+"</b> gallons or <b>"+$.cookie("et_controller_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("et_controller_wStressDays")+"</b></p><p>Weekly rainfall: xxx inches</p><br/>");
 		$("#result").append($p);
 		$.cookie("et_controller_waterLoss","",{ expires: -1});
 		$.cookie("et_controller_waterLoss","",{ expires: -1});
+		$.cookie("et_controller_wStreeDays","",{ expires: -1});
 	
 	}
 	

@@ -48,8 +48,8 @@ public class timeBasedModel {
 	private ArrayList<Double> iLostDay;
 	protected Double wLostWeek = 0.0;
 	protected Double iLostWeek = 0.0;
-	protected int count = 0;
-	
+	protected int wStressDays = 0;
+	protected double averW = 0.0;
 	
 	public int getStartIrrigationHour() {
 		return startIrrigationHour;
@@ -212,8 +212,18 @@ public class timeBasedModel {
 
 
 
-	public int getCount() {
-		return count;
+	
+
+
+
+	public int getwStressDays() {
+		return wStressDays;
+	}
+
+
+
+	public void setwStressDays(int wStressDays) {
+		this.wStressDays = wStressDays;
 	}
 
 
@@ -329,6 +339,8 @@ public class timeBasedModel {
 		//System.out.println(SOIL);
 		Double swc0=0.75*SOIL.get("FC")*this.rootDepth;
 		this.SWC.add(swc0);			//get the SWC0 value
+		this.averW = SOIL.get("FC")*this.rootDepth - SOIL.get("WP")*this.rootDepth;
+		
 		
 	}
 	
@@ -480,6 +492,7 @@ public class timeBasedModel {
 		}
 		
 		System.out.println("finish!");
+		//calculate the water loss per week
 		int i =0;
 		for(String hour: b.Hour){
 			
@@ -499,11 +512,37 @@ public class timeBasedModel {
 		}
 		//System.out.println(this.wLostWeek);
 		//System.out.println(this.iLostWeek);
+		
+		
 		this.wLostWeek = (double) (Math.round(this.wLostWeek*1000)/1000.0);
 		
 		this.iLostWeek = (double) (Math.round((this.iLostWeek/7)*1000)/10.0);
 		System.out.println(this.wLostWeek);
 		System.out.println(this.iLostWeek);
+		
+		//calculate the water stress day
+		double swcSum = 0.0;
+		for(int j =1;j<this.SWC.size();j++){
+			if(j%24 != 0){
+				
+				swcSum +=this.SWC.get(j);
+				
+				
+			}else{
+				swcSum +=this.SWC.get(j);
+				swcSum /=24.0;
+				System.out.println("swc : "+swcSum);
+				if(swcSum < this.averW){
+					
+					this.wStressDays++;
+				}
+				swcSum = 0.0;
+				
+			}
+			
+			
+		}
+		
 		
 		
 		JSONObject resultJSON = new JSONObject();

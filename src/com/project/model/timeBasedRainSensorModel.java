@@ -102,6 +102,29 @@ public class timeBasedRainSensorModel extends timeBasedModel{
 		this.iLostWeek = (double) (Math.round((this.iLostWeek/7)*1000)/10.0);
 		System.out.println(this.wLostWeek);
 		System.out.println(this.iLostWeek);
+		
+		//calculate the water stress day
+		double swcSum = 0.0;
+		for(int j =1;j<this.getSWC().size();j++){
+			if(j%24 != 0){
+						
+				swcSum +=this.getSWC().get(j);
+						
+						
+			}else{
+				swcSum +=this.getSWC().get(j);
+				swcSum /=24.0;
+				System.out.println("swc : "+swcSum);
+				if(swcSum < this.averW){
+							
+					this.wStressDays++;
+				}
+				swcSum = 0.0;
+						
+			}
+					
+					
+		}
 		JSONObject resultJSON = new JSONObject();
 		try{
 			resultJSON.append("Hour", b.Hour).append("Rhr", b.Rhr).append("rainSum", this.rainSum).append("IhrRain", this.IhrRain)

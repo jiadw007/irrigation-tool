@@ -309,8 +309,12 @@ public class calculateServlet extends HttpServlet{
 					Cookie time_base_iLoss = new Cookie("time_base_iLoss",String.valueOf(tbm.getiLostWeek()));
 					time_base_iLoss.setMaxAge(60*60);
 					time_base_iLoss.setPath("/");
+					Cookie wStressDays = new Cookie("time_base_wStressDays", String.valueOf(tbm.getwStressDays()));
+					wStressDays.setMaxAge(60*60);
+					wStressDays.setPath("/");
 					resp.addCookie(time_base_waterLoss);
 					resp.addCookie(time_base_iLoss);
+					resp.addCookie(wStressDays);
 					System.out.println(resultJSON.get("wLostDay"));
 					System.out.println(resultJSON.get("Hour"));
 					/*
@@ -357,8 +361,13 @@ public class calculateServlet extends HttpServlet{
 					Cookie rain_sensor_iLoss = new Cookie("rain_sensor_iLoss",String.valueOf(tbrsm.getiLostWeek()));
 					rain_sensor_iLoss.setMaxAge(60*60);
 					rain_sensor_iLoss.setPath("/");
+					Cookie wStressDays = new Cookie("rain_sensor_wStressDays", String.valueOf(tbrsm.getwStressDays()));
+					wStressDays.setMaxAge(60*60);
+					wStressDays.setPath("/");
+					resp.addCookie(wStressDays);
 					resp.addCookie(rain_sensor_waterLoss);
 					resp.addCookie(rain_sensor_iLoss);
+					
 					System.out.println(resultJSON.get("wLostDay"));
 					System.out.println(resultJSON.get("Hour"));
 					/*
@@ -401,6 +410,10 @@ public class calculateServlet extends HttpServlet{
 					Cookie soil_sensor_iLoss = new Cookie("soil_sensor_iLoss",String.valueOf(tbssm.getiLostWeek()));
 					soil_sensor_iLoss.setMaxAge(60*60);
 					soil_sensor_iLoss.setPath("/");
+					Cookie wStressDays = new Cookie("soil_sensor_wStressDays", String.valueOf(tbssm.getwStressDays()));
+					wStressDays.setMaxAge(60*60);
+					wStressDays.setPath("/");
+					resp.addCookie(wStressDays);
 					resp.addCookie(soil_sensor_waterLoss);
 					resp.addCookie(soil_sensor_iLoss);
 					System.out.println(resultJSON.get("wLostDay"));
@@ -444,6 +457,10 @@ public class calculateServlet extends HttpServlet{
 					Cookie et_controller_iLoss = new Cookie("et_controller_iLoss",String.valueOf(etcm.getiLostWeek()));
 					et_controller_iLoss.setMaxAge(60*60);
 					et_controller_iLoss.setPath("/");
+					Cookie wStressDays = new Cookie("et_controller_wStressDays", String.valueOf(etcm.getwStressDays()));
+					wStressDays.setMaxAge(60*60);
+					wStressDays.setPath("/");
+					resp.addCookie(wStressDays);
 					resp.addCookie(et_controller_waterLoss);
 					resp.addCookie(et_controller_iLoss);
 					System.out.println(resultJSON.get("wLostDay"));

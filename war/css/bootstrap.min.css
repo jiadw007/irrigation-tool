@@ -888,3 +888,15 @@ input#irrigationDepth, div#irrigation-system,#irrigationUnit{
 	top: -35px;
 	
 }
+.errorText{
+	
+	position:relative;
+	left:250px;
+	top:-40px;
+	color:red;
+}
+.errorText2{
+	
+	color:red;
+	
+}
