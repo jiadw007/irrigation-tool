@@ -69,7 +69,7 @@ $(document).ready(function(){
 		var email=$.cookie("email");
 		if(email==null){
 			
-			location.href="/login.html";
+			location.href="/login";
 			
 		}else{
 			
