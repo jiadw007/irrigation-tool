@@ -13,7 +13,7 @@ $(document).ready(function(){
 		var $sibling=$("#additionalbar li:first");
 		$sibling.before($welcome);
 		$("#additionalbar").css("display","block");
-		var $login=$("a[href='login.html']");
+		var $login=$("a[href='/login']");
 		$login.css("display","none");
 		$(".inactive").css("display","block");
 	}
@@ -22,7 +22,7 @@ $(document).ready(function(){
 		
 		$.cookie("email","",{ expires:-1 });
 		$.cookie("systemSelection","",{ expires:-1 });
-		var $login=$("a[href='login.html']");
+		//var $login=$("a[href='login.html']");
 		//$login.css("display","block");
 		//$(".inactive").css("display","none");
 		//$(".tool").css("display","none");
@@ -31,6 +31,7 @@ $(document).ready(function(){
 		location.href="/index.html";
 		
 	});
+	/*
 	$("#signIn").click(function(){
 		
 		var email= $("#exampleInputEmail1").val();
@@ -62,6 +63,7 @@ $(document).ready(function(){
 		
 		
 	});
+	*/
 	$("a[name='start']").click(function(){
 		
 		var email=$.cookie("email");
