@@ -1,10 +1,17 @@
 package com.project.po;
 
+
+
+
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,9 +21,12 @@ import java.util.Date;
 
 public class baseData {
 	
+	public static String mailServerURL = "http://fawn.ifas.ufl.edu/mail/send.php";
+	public static String dataServerURL = "http://fawn.ifas.ufl.edu/data/reports/?res";
 	public static HashMap<String,HashMap<String, Double>> soil=new HashMap<String,HashMap<String, Double>>();
 	public static HashMap<String,HashMap<String, Double>> Kc=new HashMap<String,HashMap<String, Double>>();
 	public static zipCode zipcodes;
+	
 	public ArrayList<Double> Ihr;
 	public ArrayList<Double> ET0;
 	public ArrayList<Double> Rhr;
@@ -25,7 +35,9 @@ public class baseData {
 	public ArrayList<String> Date;
 	public ArrayList<String> Year;
 	public ArrayList<Integer> Ihrschedule;
-	
+	public Calendar startDate;
+	public Calendar endDate;
+	public String stnID;
 	/**
 	public ArrayList<String> Date;			//from csv.file
 	public ArrayList<String> Year;			//from csv.file
@@ -37,8 +49,9 @@ public class baseData {
 	public ArrayList<Double> ET0;          //from csv.file
 	public ArrayList<Integer> Ihrschedule;   //from csv.file
 	public String Filename;
+	 * @throws Exception 
 	**/
-	public baseData(){
+	public baseData(String zipcode) throws Exception{
 		
 		zipcodes = new zipCode();
 		
@@ -158,6 +171,14 @@ public class baseData {
 		southFlorida.put("12", 0.71);
 		Kc.put("South Florida",southFlorida);
 		
+		this.setStartDate();
+		this.setEndDate();
+		this.stnID = this.getNearByFawnStnID(this.getLocationByzipCode(zipcode));
+		System.out.println("stnID : " +this.stnID);
+		this.requestRainData(startDate, endDate, stnID);
+		Ihr.add(0.0);
+		ET0.add(0.0);
+		Ihrschedule.add(0);
 		try{
 			
 			File csv = new File("time-base-trial.csv");
@@ -168,12 +189,6 @@ public class baseData {
 				
 				String line = br.readLine();
 				String item[] = line.split(",");
-				Date.add(item[0]);
-				Year.add(item[1]);
-				Month.add(item[2]);
-				Hour.add(item[3]);
-				double rhr = Double.parseDouble(item[4]);
-				Rhr.add(rhr);
 				double ihr = Double.parseDouble(item[5]);
 				Ihr.add(ihr);
 				ET0.add(Double.parseDouble(item[7]));
@@ -202,7 +217,7 @@ public class baseData {
 			Float lng = this.zipcodes.lngs.get(index);
 			String city = this.zipcodes.city.get(index);
 			Location currentLocation = new Location(zipcode,lat,lng,city);
-			this.getNearByFawnStn(currentLocation);
+			this.getNearByFawnStnID(currentLocation);
 			//currentLocation.setDistance(fawnStnLocation.getDistance());
 			//currentLocation.setFawnStnID(fawnStnLocation.getFawnStnID());
 			//currentLocation.setFawnStnName(fawnStnLocation.getFawnStnName());
@@ -219,7 +234,7 @@ public class baseData {
 		
 	}
 	
-	public void getNearByFawnStn(Location loc){
+	public String getNearByFawnStnID(Location loc){
 		
 		float lat = loc.getLat();
 		float lng = loc.getLng();
@@ -244,7 +259,7 @@ public class baseData {
 		loc.setFawnStnLng(this.zipcodes.fawnStnLngs.get(index));
 		double distanceMiles = this.distanceCalculation(lat, lng, this.zipcodes.fawnStnLats.get(index),this.zipcodes.fawnStnLngs.get(index));
 		loc.setDistance((float)distanceMiles);
-		
+		return loc.getFawnStnID();
 		
 	}
 	
@@ -264,19 +279,173 @@ public class baseData {
 	}
 	
 	
-	public String[] getLastSunday(){
+	public void setStartDate() {
 		
-		 Calendar cal = Calendar.getInstance();
-		 String sunday;
-		 cal.add(Calendar.DATE,-7);
-		 cal.set(Calendar.DAY_OF_WEEK,Calendar.SUNDAY);
-		 sunday = new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -14);
+		cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+		
+		this.startDate = cal;
+	}
+
+	public void setEndDate() {
+		
+		Calendar cal = Calendar.getInstance();
 		 
-		 String[] date = sunday.split("-");
-		 return date;
+		 cal.add(Calendar.DATE,-7);
+		 cal.set(Calendar.DAY_OF_WEEK,Calendar.SATURDAY);
+		 this.endDate = cal;
+	}	
+	
+	
+	
+	public void  requestRainData(Calendar startDate, Calendar endDate,String stnID) throws Exception{
+		
+		String urlParameter = this.buildRainRequest(startDate, endDate, stnID);
+		postRainRequest2ExternalServer(dataServerURL, urlParameter);
+		/*
+		for(int i =0;i<169;i++){
+			
+			System.out.println(this.Date.get(i)+","+this.Year.get(i)+","+this.Month.get(i)+","+this.Hour.get(i)+","+this.Rhr.get(i));
+				
+		}
+		*/
 	}
 	
+	public void requestETData(Calendar startDate, Calendar endDate,String stnID) throws Exception{
+		
+		String urlParameter = this.buildETRequest(startDate, endDate, stnID);
+		postETRequest2ExternalServer(dataServerURL, urlParameter);
+		
+		
+		
+	}
+	public String buildRainRequest(Calendar fromDate,Calendar toDate, String stnID) {
 	
+		int fromMonth = fromDate.get(Calendar.MONTH)+1;
+		int fromDay = fromDate.get(Calendar.DAY_OF_MONTH);
+		int fromYear = fromDate.get(Calendar.YEAR);
+		int toMonth = toDate.get(Calendar.MONTH)+1;
+		int toDay = toDate.get(Calendar.DAY_OF_MONTH);
+		int toYear = toDate.get(Calendar.YEAR);
+		
+		String urlParameters = "locs__" + stnID.trim() + "=on&fromDate_m=" + fromMonth +"&fromDate_d="+ fromDay +"&fromDate_y=" + fromYear +
+				"&toDate_m=" + toMonth +"&toDate_d=" + toDay +"&toDate_y=" + toYear +"&reportType=hourly&presetRange=dates&vars__Rainfall=on&format=.CSV+%28Excel%29";
+		return urlParameters;
+		
+		
+	}
+	public String buildETRequest(Calendar fromDate,Calendar toDate, String stnID){
+		
+		
+		int fromMonth = fromDate.get(Calendar.MONTH)+1;
+		int fromDay = fromDate.get(Calendar.DAY_OF_MONTH);
+		int fromYear = fromDate.get(Calendar.YEAR);
+		int toMonth = toDate.get(Calendar.MONTH)+1;
+		int toDay = toDate.get(Calendar.DAY_OF_MONTH);
+		int toYear = toDate.get(Calendar.YEAR);
+		
+		String urlParameters = "locs__" + stnID.trim() + "=on&fromDate_m=" + fromMonth +"&fromDate_d="+ fromDay +"&fromDate_y=" + fromYear +
+				"&toDate_m=" + toMonth +"&toDate_d=" + toDay +"&toDate_y=" + toYear +"&reportType=daily&presetRange=dates&vars__ET=on&format=.CSV+%28Excel%29";
+		return urlParameters;
+		
+		
+	}	
+	
+	public void postRainRequest2ExternalServer(String serverUrl, String postParams) throws Exception{
+		
+		URL url = new URL(serverUrl);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setDoOutput(true);
+		connection.setDoInput(true);
+		connection.setInstanceFollowRedirects(false);
+		connection.setRequestMethod("POST");
+		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		connection.setRequestProperty("charset", "utf-8");
+		connection.setRequestProperty("Content-Length", ""+ Integer.toString(postParams.getBytes().length));
+		connection.setUseCaches(false);
+		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+		//System.out.println(connection.getOutputStream());
+		wr.writeBytes(postParams);
+		wr.flush();
+		wr.close();
+		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		for(int i= 1;i<=24;i++){
+			
+			in.readLine();
+			
+		}
+		while(in.ready()){
+		
+			String[] inputs = in.readLine().split(",");
+			
+		    this.Date.add(inputs[1].replace("\"", ""));
+		    Date date = new Date(inputs[1].replace("\"", ""));
+		    this.Year.add(String.valueOf(date.getYear()+1900));
+		    this.Month.add(String.valueOf(date.getMonth()+1));
+		    this.Hour.add(String.valueOf(date.getHours()));
+		    this.Rhr.add(Double.parseDouble(inputs[2].equals("N/A") ? "0" : inputs[2].replace("\"", "")));
+		}
+		in.close();
+		
+		
+	}
+	public void postETRequest2ExternalServer(String serverUrl, String postParams) throws Exception{
+		
+		URL url = new URL(serverUrl);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setDoOutput(true);
+		connection.setDoInput(true);
+		connection.setInstanceFollowRedirects(false);
+		connection.setRequestMethod("POST");
+		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		connection.setRequestProperty("charset", "utf-8");
+		connection.setRequestProperty("Content-Length", ""+ Integer.toString(postParams.getBytes().length));
+		connection.setUseCaches(false);
+		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+		//System.out.println(connection.getOutputStream());
+		wr.writeBytes(postParams);
+		wr.flush();
+		wr.close();
+		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		in.readLine();
+		String[] inputs = in.readLine().split(",");
+		this.ET0.add(Double.parseDouble(inputs[3].replace("\"", "")));
+		while(in.ready()){
+			
+			String[] input = in.readLine().split(",");
+			for(int i =0;i<24;i++){
+				
+				this.ET0.add(Double.parseDouble(input[3].replace("\"", "")));
+				
+			}
+				
+		}
+		in.close();
+		
+	}
+	
+	public Double getRainFallPerWeek(){
+		Double rainsum = 0.0;
+		for(int i =0;i<168;i++){
+			
+			rainsum += this.Rhr.get(i);
+			
+		}
+		//rainsum = (double) (Math.round(rainsum*2.54*1000)/1000);
+		return rainsum;
+		
+	}
+	public static void main(String[] args) throws Exception{
+		
+		baseData b =new baseData("32565");
+		for(int i =0;i<169;i++){
+			
+			System.out.println(b.Date.get(i)+","+b.Year.get(i)+","+b.Month.get(i)+","+b.Hour.get(i)+","+b.Rhr.get(i));
+				
+		}
+		
+	}
 	
 
 }

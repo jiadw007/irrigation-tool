@@ -294,8 +294,10 @@ public class timeBasedModel {
 
 
 
-	public timeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit){
-		b=new baseData();
+	public timeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit) throws Exception{
+		
+		
+		b=new baseData(zipcode);
 		WB=new ArrayList<Double>();
 		SWC=new ArrayList<Double>();			//from calculation function 
 		ET=new ArrayList<Double>();			//from calculation function
@@ -328,7 +330,6 @@ public class timeBasedModel {
 		}
 		
 		this.location = b.getLocationByzipCode(zipcode);
-		
 		//for(int i =0;i<b.Rhr.size();i++){
 			
 			//double wb=b.Rhr.get(i)+b.Ihr.get(i);
@@ -346,6 +347,14 @@ public class timeBasedModel {
 	
 	public JSONObject calculation(){
 		
+		b.Date.remove(0);
+		b.Year.remove(0);
+		b.Month.remove(0);
+		b.Hour.remove(0);
+		b.Rhr.remove(0);
+		b.Ihr.remove(0);
+		b.ET0.remove(0);
+		b.Ihrschedule.remove(0);
 		HashMap<String, Double> SOIL=b.soil.get(soilType);
 					
 		for(int i=this.startIrrigationHour;i<=this.lastIrrigationHour;i++){
@@ -517,9 +526,9 @@ public class timeBasedModel {
 		this.wLostWeek = (double) (Math.round(this.wLostWeek*1000)/1000.0);
 		
 		this.iLostWeek = (double) (Math.round((this.iLostWeek/7)*1000)/10.0);
-		System.out.println(this.wLostWeek);
-		System.out.println(this.iLostWeek);
-		
+		System.out.println("wLostWeek: "+this.wLostWeek);
+		System.out.println("wLostWeek " +this.iLostWeek);
+		System.out.println("averW :"+this.averW);
 		//calculate the water stress day
 		double swcSum = 0.0;
 		for(int j =1;j<this.SWC.size();j++){
@@ -708,8 +717,90 @@ public class timeBasedModel {
 		}
 		
 	}
-
 	
-	
-
+	public void calculationET(int i ){
+		
+		HashMap<String, Double> SOIL=b.soil.get(soilType);
+		
+		if(this.WB.get(i-1)>0){  //calculate the rate(f),Q and PERC
+			//System.out.println(i);
+			double delta=SOIL.get("theta")-this.SWC.get(i-1)/this.rootDepth;  //get the value of delta for equation 2
+			this.delta.add(i-1,delta);
+			double psi=SOIL.get("psi");		//get the psi property of the soil
+			double k=SOIL.get("K");			//get the K property of the soil
+			newtonMethod nm=new newtonMethod(psi,delta,k);	
+			//double F=0.0;
+			if(nm.calculationMethod()){
+				
+				double F=nm.getResult();			//get the value of F for equation 1
+				//System.out.println("F: "+F);
+				this.F.add(i-1,F);
+				
+			}else{
+				
+				System.out.println("error calculation for F");
+				
+			}
+			//calculation for the rate(f)
+			
+			double f=k*(1+(psi*delta/this.F.get(i-1)));
+			this.rateF.add(i-1,f);
+			
+			//calculation for the Q
+			if(this.WB.get(i-1)>f){
+				double Q=this.WB.get(i-1)-f*1;
+				this.Q.add(i-1,Q);
+				this.InF.add(i-1,f*1);	
+			}else{
+				
+				this.Q.add(i-1,0.0);
+				this.InF.add(this.WB.get(i-1));
+				
+			}
+			//calculation for the PERC
+			double perc=this.SWC.get(i-1)+this.InF.get(i-1)-SOIL.get("FC")*this.rootDepth;
+			if(perc>0){
+				
+				this.PERC.add(perc);
+				
+			}else{
+				
+				this.PERC.add(0.0);
+			}
+			
+			
+			
+		}else{
+			this.delta.add(i-1,-1.0);		//we have no result for this property
+			this.F.add(i-1,-1.0);		//we have no result for this property
+			this.rateF.add(i-1,-1.0);		//we have no result for this property
+			this.Q.add(i-1,0.0);
+			this.PERC.add(i-1,0.0);
+			this.InF.add(i-1,0.0);
+			
+			
+		}
+		//calculate the ET
+		//double kc=b.Kc.get(this.district).get(b.Month.get(i-1));
+		//double et=b.ET0.get(i-1);
+		//this.ET.add(et*kc);
+		
+		//calculate SWC
+		
+		if(this.PERC.get(i-1)>0){
+			
+			this.SWC.add(i,SOIL.get("FC")*this.rootDepth);
+		}else if(this.PERC.get(i-1)==0&&(this.SWC.get(i-1)-this.ET.get(i-1)+this.InF.get(i-1))<SOIL.get("WP")*this.rootDepth*0.1){
+			
+			this.SWC.add(i,SOIL.get("WP")*this.rootDepth*0.1);
+			
+			
+		}else{
+			
+			this.SWC.add(i,this.SWC.get(i-1)+this.InF.get(i-1)-this.ET.get(i-1));
+			
+		}
+		
+		
+	}
 }

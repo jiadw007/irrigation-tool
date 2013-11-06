@@ -19,7 +19,7 @@ public class ETControllerModel extends timeBasedModel{
 	//private ArrayList<Double> AWRstep3;
 	
 	public ETControllerModel(String soilType, double area, double rootDepth,
-			String zipcode, String unit) {
+			String zipcode, String unit) throws Exception {
 		// TODO Auto-generated constructor stub
 		super(soilType, area, rootDepth, zipcode, unit);
 		Ihret=new ArrayList();
@@ -91,7 +91,7 @@ public class ETControllerModel extends timeBasedModel{
 		HashMap<String,Double> SOIL = b.soil.get(this.getSoilType());
 		
 		
-		for(int i =this.getStartIrrigationHour();i<this.getLastIrrigationHour();i++){
+		for(int i =this.getStartIrrigationHour();i<=this.getLastIrrigationHour();i++){
 			
 			
 			//calculate ETi 
@@ -177,10 +177,89 @@ public class ETControllerModel extends timeBasedModel{
 			
 			double wb = b.Rhr.get(i)+this.Ihret.get(i);			
 			this.getWB().add(wb);
-			super.calculation(i);
+			super.calculationET(i);
 			
 		}
 		System.out.println("finish !");
+		//remove initial value
+		b.Date.remove(0);
+		b.Year.remove(0);
+		b.Month.remove(0);
+		b.Hour.remove(0);
+		b.Rhr.remove(0);
+		b.Ihr.remove(0);
+		b.ET0.remove(0);
+		b.Ihrschedule.remove(0);
+		this.AWR.remove(0);
+		this.AWRstep1.remove(0);
+		this.AWRstep2.remove(0);
+		this.Ihret.remove(0);
+		this.Ick1.remove(0);
+		this.Ick2.remove(0);
+		//this.getiLostHr().remove(0);
+		//this.getiLostDay().remove(0);
+		for(int i =this.getStartIrrigationHour();i<=this.getLastIrrigationHour();i++){
+			
+			//calculate the water loss
+			double wloss=(this.getQ().get(i-1)+this.getPERC().get(i-1)-b.Rhr.get(i-1))*this.getArea();
+			this.getLoss().add(i-1,Math.abs(wloss));
+			double iloss=(this.getQ().get(i-1)+this.getPERC().get(i-1)-this.b.Rhr.get(i-1))/this.b.Ihr.get(i-1);
+			this.getPerLoss().add(i-1,Math.abs(iloss));
+			
+			//caculate the wLostHr
+			if(wloss>0){
+				this.getwLostHr().add(wloss);
+				
+			}else{
+				this.getwLostHr().add(0.0);
+			}
+			
+			
+			
+			//calculate the iLostHr
+			if(this.b.Ihr.get(i-1)>0){
+				
+				if(iloss>0){
+					
+					this.getiLostHr().add(iloss);
+				}else{
+					
+					this.getiLostHr().add(0.0);
+				}
+			}else{
+				this.getiLostHr().add(0.0);
+			}
+			
+			//calculate the wLostDay and iLostDay
+			if(i>24){
+						
+				if(Integer.parseInt(this.b.Hour.get(i-1))==0){
+					this.getwLostDay().add(0.0);
+					this.getiLostDay().add(0.0);
+							
+				}else if(Integer.parseInt(this.b.Hour.get(i-1))%23==0){
+							
+					double wsum=0;
+					double isum=0;
+					for(int j =i-23;j<=i;j++){
+								
+						wsum+=this.getwLostHr().get(j-1);
+						isum+=this.getiLostHr().get(j-1);
+					}
+					this.getwLostDay().add(wsum);
+					this.getiLostDay().add(isum);
+				}else{
+					this.getwLostDay().add(0.0);
+					this.getiLostDay().add(0.0);
+							
+				}
+						
+			}else{
+				this.getwLostDay().add(0.0);
+				this.getiLostDay().add(0.0);
+			}
+			
+		}
 		int i =0;
 		for(String hour: b.Hour){
 			
