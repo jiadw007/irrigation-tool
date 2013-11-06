@@ -35,6 +35,7 @@ public class baseData {
 	public ArrayList<String> Date;
 	public ArrayList<String> Year;
 	public ArrayList<Integer> Ihrschedule;
+	//public ArrayList<Integer> Ihrschedule1;
 	public Calendar startDate;
 	public Calendar endDate;
 	public String stnID;
@@ -51,7 +52,7 @@ public class baseData {
 	public String Filename;
 	 * @throws Exception 
 	**/
-	public baseData(String zipcode) throws Exception{
+	public baseData(String zipcode,String[]days, String[] hours) throws Exception{
 		
 		zipcodes = new zipCode();
 		
@@ -64,7 +65,7 @@ public class baseData {
 		Ihr=new ArrayList<Double>();			
 		ET0=new ArrayList<Double>();         
 		Ihrschedule=new ArrayList<Integer>();
-		
+		//Ihrschedule1=new ArrayList<Integer>();
 		/*edit data for the soil type table */
 		HashMap<String,Double> sand=new HashMap<String, Double>(8);
 		sand.put("MAD", 0.3);
@@ -178,7 +179,23 @@ public class baseData {
 		this.requestRainData(startDate, endDate, stnID);
 		Ihr.add(0.0);
 		ET0.add(0.0);
-		Ihrschedule.add(0);
+		//Ihrschedule1.add(0);
+		//set the value of Ihrschedule
+		
+		for(int i =0;i<169;i++){
+					
+			Ihrschedule.add(0);
+			
+		}
+		for(int i =0 ;i<days.length;i++){
+			
+			int day = Integer.parseInt(days[i])-1;
+			int hour = Integer.parseInt(hours[i])+1;
+			int index = 24 * day + hour;
+			Ihrschedule.set(index, 1);
+			
+		}
+		
 		try{
 			
 			File csv = new File("time-base-trial.csv");
@@ -192,7 +209,7 @@ public class baseData {
 				double ihr = Double.parseDouble(item[5]);
 				Ihr.add(ihr);
 				ET0.add(Double.parseDouble(item[7]));
-				Ihrschedule.add(Integer.parseInt(item[10]));
+				//Ihrschedule1.add(Integer.parseInt(item[10]));
 				
 				i++;
 			}
@@ -205,6 +222,11 @@ public class baseData {
 		      e.printStackTrace(); 
 		}
 		System.out.println("finish read file");
+		//for(int i =0;i<169;i++){
+			
+			//System.out.println(i+","+Ihrschedule.get(i)+","+Ihrschedule1.get(i));
+			
+		//}
 			
 	}
 	
@@ -384,7 +406,7 @@ public class baseData {
 		    this.Year.add(String.valueOf(date.getYear()+1900));
 		    this.Month.add(String.valueOf(date.getMonth()+1));
 		    this.Hour.add(String.valueOf(date.getHours()));
-		    this.Rhr.add(Double.parseDouble(inputs[2].equals("N/A") ? "0" : inputs[2].replace("\"", "")));
+		    this.Rhr.add(Double.parseDouble(inputs[2].equals("N/A") ? "0" : inputs[2].replace("\"", ""))*2.54);
 		}
 		in.close();
 		
@@ -429,23 +451,14 @@ public class baseData {
 		Double rainsum = 0.0;
 		for(int i =0;i<168;i++){
 			
-			rainsum += this.Rhr.get(i);
+			rainsum += this.Rhr.get(i)/2.54;
 			
 		}
 		//rainsum = (double) (Math.round(rainsum*2.54*1000)/1000);
 		return rainsum;
 		
 	}
-	public static void main(String[] args) throws Exception{
-		
-		baseData b =new baseData("32565");
-		for(int i =0;i<169;i++){
-			
-			System.out.println(b.Date.get(i)+","+b.Year.get(i)+","+b.Month.get(i)+","+b.Hour.get(i)+","+b.Rhr.get(i));
-				
-		}
-		
-	}
+	
 	
 
 }

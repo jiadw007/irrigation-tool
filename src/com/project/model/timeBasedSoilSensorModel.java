@@ -22,9 +22,9 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 	}
 
 	public timeBasedSoilSensorModel(String soilType, double area,
-			double rootDepth, String zipcode, String unit, double soilthreshold) throws Exception {
+			double rootDepth, String zipcode, String unit, double soilthreshold,String[] days, String[] hours) throws Exception {
 			
-		super(soilType,area,rootDepth,zipcode,unit);
+		super(soilType,area,rootDepth,zipcode,unit,days,hours);
 		this.soilThreshold = soilthreshold;
 		Ihrsoil = new ArrayList<Double>();
 		// TODO Auto-generated constructor stub
@@ -87,11 +87,11 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 		}
 		//System.out.println(this.wLostWeek);
 		//System.out.println(this.iLostWeek);
-		this.wLostWeek = (double) (Math.round(this.wLostWeek*1000)/1000.0);
+		this.wLostWeek = (double) (Math.round(this.wLostWeek*1000/3785.4)/1000.0);
 		
 		this.iLostWeek = (double) (Math.round((this.iLostWeek/7)*1000)/10.0);
-		System.out.println(this.wLostWeek);
-		System.out.println(this.iLostWeek);
+		System.out.println("wLostWeek: "+this.wLostWeek);
+		System.out.println("iLostWeek " +this.iLostWeek);
 		
 		//calculate the water stress day
 		//calculate the water stress day

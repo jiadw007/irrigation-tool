@@ -12,9 +12,9 @@ public class timeBasedRainSensorModel extends timeBasedModel{
 	private ArrayList<Double> rainSum;    //rainSum for last 24hours
 	private ArrayList<Double> IhrRain;	  //WB = Rhr +IhrRain
 	
-	public timeBasedRainSensorModel(String soilType, double area, double rootDepth, String zipcode, String unit, double rainsettings) throws Exception{
+	public timeBasedRainSensorModel(String soilType, double area, double rootDepth, String zipcode, String unit, double rainsettings,String[] days, String[] hours) throws Exception{
 		
-		super(soilType,area,rootDepth,zipcode,unit);
+		super(soilType,area,rootDepth,zipcode,unit,days, hours);
 		this.rainsettings = rainsettings;
 		rainSum = new ArrayList<Double>();
 		IhrRain = new ArrayList<Double>();
@@ -105,11 +105,11 @@ public class timeBasedRainSensorModel extends timeBasedModel{
 		}
 		//System.out.println(this.wLostWeek);
 		//System.out.println(this.iLostWeek);
-		this.wLostWeek = (double) (Math.round(this.wLostWeek*1000)/1000.0);
+		this.wLostWeek = (double) (Math.round(this.wLostWeek*1000/3785.4)/1000.0);
 		
 		this.iLostWeek = (double) (Math.round((this.iLostWeek/7)*1000)/10.0);
-		System.out.println(this.wLostWeek);
-		System.out.println(this.iLostWeek);
+		System.out.println("wLostWeek: "+this.wLostWeek);
+		System.out.println("iLostWeek " +this.iLostWeek);
 		
 		//calculate the water stress day
 		double swcSum = 0.0;

@@ -294,10 +294,10 @@ public class timeBasedModel {
 
 
 
-	public timeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit) throws Exception{
+	public timeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit,String days[],String hours[]) throws Exception{
 		
 		
-		b=new baseData(zipcode);
+		b=new baseData(zipcode,days,hours);
 		WB=new ArrayList<Double>();
 		SWC=new ArrayList<Double>();			//from calculation function 
 		ET=new ArrayList<Double>();			//from calculation function
@@ -441,7 +441,7 @@ public class timeBasedModel {
 			
 			
 			//calculate the water loss
-			double wloss=(this.Q.get(i-1)+this.PERC.get(i-1)-b.Rhr.get(i-1))*this.area;
+			double wloss=(this.Q.get(i-1)+this.PERC.get(i-1)-b.Rhr.get(i-1))*this.area*Math.pow(10.0, 4.0);
 			this.Loss.add(i-1,Math.abs(wloss));
 			double iloss=(this.Q.get(i-1)+this.PERC.get(i-1)-this.b.Rhr.get(i-1))/this.b.Ihr.get(i-1);
 			this.PerLoss.add(i-1,Math.abs(iloss));
@@ -523,11 +523,11 @@ public class timeBasedModel {
 		//System.out.println(this.iLostWeek);
 		
 		
-		this.wLostWeek = (double) (Math.round(this.wLostWeek*1000)/1000.0);
+		this.wLostWeek = (double) (Math.round(this.wLostWeek*1000/3785.4)/1000.0);
 		
 		this.iLostWeek = (double) (Math.round((this.iLostWeek/7)*1000)/10.0);
 		System.out.println("wLostWeek: "+this.wLostWeek);
-		System.out.println("wLostWeek " +this.iLostWeek);
+		System.out.println("iLostWeek " +this.iLostWeek);
 		System.out.println("averW :"+this.averW);
 		//calculate the water stress day
 		double swcSum = 0.0;
@@ -658,7 +658,7 @@ public class timeBasedModel {
 		
 		
 		//calculate the water loss
-		double wloss=(this.Q.get(i-1)+this.PERC.get(i-1)-b.Rhr.get(i-1))*this.area;
+		double wloss=(this.Q.get(i-1)+this.PERC.get(i-1)-b.Rhr.get(i-1))*this.area*Math.pow(10.0, 4.0);
 		this.Loss.add(i-1,Math.abs(wloss));
 		double iloss=(this.Q.get(i-1)+this.PERC.get(i-1)-this.b.Rhr.get(i-1))/this.b.Ihr.get(i-1);
 		this.PerLoss.add(i-1,Math.abs(iloss));
