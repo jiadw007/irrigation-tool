@@ -22,9 +22,9 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 	}
 
 	public timeBasedSoilSensorModel(String soilType, double area,
-			double rootDepth, String zipcode, String unit, double soilthreshold,String[] days, String[] hours) throws Exception {
+			double rootDepth, String zipcode, String unit, double soilthreshold,String[] days, String[] hours, Double irriDepth) throws Exception {
 			
-		super(soilType,area,rootDepth,zipcode,unit,days,hours);
+		super(soilType,area,rootDepth,zipcode,unit,days,hours, irriDepth);
 		this.soilThreshold = soilthreshold;
 		Ihrsoil = new ArrayList<Double>();
 		// TODO Auto-generated constructor stub
@@ -32,14 +32,7 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 	
 	public JSONObject calculation(){
 		
-		b.Date.remove(0);
-		b.Year.remove(0);
-		b.Month.remove(0);
-		b.Hour.remove(0);
-		b.Rhr.remove(0);
-		b.Ihr.remove(0);
-		b.ET0.remove(0);
-		b.Ihrschedule.remove(0);
+		b.removeInitialValue();
 		
 		HashMap<String, Double> SOIL=b.soil.get(this.getSoilType());
 		//this.setWB(new ArrayList<Double>());

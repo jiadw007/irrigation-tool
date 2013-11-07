@@ -52,7 +52,7 @@ public class baseData {
 	public String Filename;
 	 * @throws Exception 
 	**/
-	public baseData(String zipcode,String[]days, String[] hours) throws Exception{
+	public baseData(String zipcode,String[]days, String[] hours, Double irriDepth) throws Exception{
 		
 		zipcodes = new zipCode();
 		
@@ -177,7 +177,7 @@ public class baseData {
 		this.stnID = this.getNearByFawnStnID(this.getLocationByzipCode(zipcode));
 		System.out.println("stnID : " +this.stnID);
 		this.requestRainData(startDate, endDate, stnID);
-		Ihr.add(0.0);
+		
 		ET0.add(0.0);
 		//Ihrschedule1.add(0);
 		//set the value of Ihrschedule
@@ -185,7 +185,7 @@ public class baseData {
 		for(int i =0;i<169;i++){
 					
 			Ihrschedule.add(0);
-			
+			Ihr.add(0.0);
 		}
 		for(int i =0 ;i<days.length;i++){
 			
@@ -193,7 +193,7 @@ public class baseData {
 			int hour = Integer.parseInt(hours[i])+1;
 			int index = 24 * day + hour;
 			Ihrschedule.set(index, 1);
-			
+			Ihr.set(index, irriDepth);
 		}
 		
 		try{
@@ -207,7 +207,7 @@ public class baseData {
 				String line = br.readLine();
 				String item[] = line.split(",");
 				double ihr = Double.parseDouble(item[5]);
-				Ihr.add(ihr);
+				//Ihr.add(ihr);
 				ET0.add(Double.parseDouble(item[7]));
 				//Ihrschedule1.add(Integer.parseInt(item[10]));
 				
@@ -459,6 +459,19 @@ public class baseData {
 		
 	}
 	
+	public void removeInitialValue(){
+		
+		Date.remove(0);
+		Year.remove(0);
+		Month.remove(0);
+		Hour.remove(0);
+		Rhr.remove(0);
+		Ihr.remove(0);
+		ET0.remove(0);
+		Ihrschedule.remove(0);
+		
+		
+	}
 	
 
 }

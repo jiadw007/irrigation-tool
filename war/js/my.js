@@ -129,7 +129,7 @@ $(document).ready(function(){
 			$("#optionRadios1").attr("checked","");
 			$("#optionsRadios2").attr("checked","checked");
 			var inches =Math.round(($("#rootDepth").val()/2.54)*1000)/1000;
-			var area = Math.round($("#Area").val()*2.47105*1000)/1000;
+			var area = Math.round($("#Area").val()*0.0002471*1000)/1000;
 			$("#rootDepth").attr("placeholder","Root Depth in Inches").val(inches);
 			$("#Area").attr("placeholder","Irrigated Area in ha").val(area);
 			$("#step2Unit").text("inch");
@@ -165,7 +165,8 @@ $(document).ready(function(){
 			
 			if(unit2=="Metric"){
 				
-				var area=Math.round(($.cookie("area")/2.47105)*1000)/1000;
+				
+				var area=Math.round(($.cookie("area")*4046.85)*1000)/1000;
 				$("#Area").val(area);
 				$.cookie("area",area,{ expires : 7});
 				
@@ -173,7 +174,7 @@ $(document).ready(function(){
 				
 			}else{
 				
-				var area = Math.round($.cookie("area")*2.47105*1000)/1000;
+				var area = Math.round(($.cookie("area")/4046.85)*1000)/1000;
 				$("#Area").val(area);
 				$.cookie("area",area,{ expires: 7});
 				
@@ -464,12 +465,12 @@ $(document).ready(function(){
 	});
 	$("#patternRadio2").click(function(){
 		
-		if($.cookie("unit")=="English"){
+		if($.cookie("unit")=="Metric"){
 			
-			$("#microHead").text("Micro Irrigation Head (0.098 inch per hour)");
-			$("#fixedHead").text("Fixed Irrigation Head (0.591 inch per hour)");
-			$("#gearHead").text("Gear Driven Irrigation Head (0.197 inch per hour)");
-			$("#impactHead").text("Impact Irrigation Head (0.197 inch per hour)");
+			$("#microHead").text("Micro Irrigation Head (0.635cm per hour)");
+			$("#fixedHead").text("Fixed Irrigation Head (3.81cm per hour)");
+			$("#gearHead").text("Gear Driven Irrigation Head (1.27cm per hour)");
+			$("#impactHead").text("Impact Irrigation Head (1.27cm per hour)");
 		}
 		
 		$("#irrigationDepth").hide();

@@ -108,7 +108,7 @@ public class calculateServlet extends HttpServlet{
 					
 				}else if(isystem =="fixed-irrigation-head"){
 					
-					irriDepth = 1.5 *irriDuration/60;
+					irriDepth = 1.5 * irriDuration/60;
 					
 				}else if(isystem =="gear-driven-irrigation-head"){
 					
@@ -117,6 +117,11 @@ public class calculateServlet extends HttpServlet{
 				}else if(isystem =="impact-irrigation-head"){
 					
 					irriDepth = 0.5 * irriDuration/60;
+					
+				}
+				if(unit == "English"){
+					
+					irriDepth = irriDepth * 2.54;
 					
 				}
 				
@@ -142,7 +147,7 @@ public class calculateServlet extends HttpServlet{
 				
 				System.out.println("Time-based");
 				try{
-					timeBasedModel tbm = new timeBasedModel(soilType,area,rootDepth,zipcode,unit,days,hours);
+					timeBasedModel tbm = new timeBasedModel(soilType,area,rootDepth,zipcode,unit,days,hours,irriDepth);
 					System.out.println(tbm.getRootDepth());
 					System.out.println(tbm.getUnit());
 					System.out.println(tbm.getArea());
@@ -189,9 +194,10 @@ public class calculateServlet extends HttpServlet{
 						        +tbm.getwLostDay().get(i)+","+tbm.getiLostHr().get(i)+","+tbm.getiLostDay().get(i));
 						
 					}
-					*/
 					out.flush();
 					out.close();
+					*/
+					
 					
 				}catch(JSONException e){
 					e.printStackTrace();
@@ -205,7 +211,7 @@ public class calculateServlet extends HttpServlet{
 				
 				System.out.println("Time-based with rain sensor");
 				try{	
-					timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(soilType,area,rootDepth,zipcode,unit,rainsettings,days,hours);
+					timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(soilType,area,rootDepth,zipcode,unit,rainsettings,days,hours,irriDepth);
 					System.out.println(tbrsm.getRootDepth());
 					System.out.println(tbrsm.getUnit());
 					System.out.println(tbrsm.getArea());
@@ -263,7 +269,7 @@ public class calculateServlet extends HttpServlet{
 				
 				System.out.println("Time-based with soil moisture sensor");
 				try{
-					timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(soilType,area,rootDepth,zipcode,unit,soilthreshold,days,hours);
+					timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(soilType,area,rootDepth,zipcode,unit,soilthreshold,days,hours,irriDepth);
 					System.out.println(tbssm.getRootDepth());
 					System.out.println(tbssm.getUnit());
 					System.out.println(tbssm.getArea());
@@ -323,7 +329,7 @@ public class calculateServlet extends HttpServlet{
 				
 				System.out.println("Evapotranspiration Controller");
 				try{
-					ETControllerModel etcm = new ETControllerModel(soilType,area,rootDepth,zipcode,unit,days,hours);
+					ETControllerModel etcm = new ETControllerModel(soilType,area,rootDepth,zipcode,unit,days,hours,irriDepth);
 					System.out.println(etcm.getRootDepth());
 					System.out.println(etcm.getUnit());
 					System.out.println(etcm.getArea());
@@ -392,6 +398,7 @@ public class calculateServlet extends HttpServlet{
 		Cookie cookie1 = new Cookie("choice",choice);
 		cookie1.setMaxAge(7*24*60*60);
 		cookie1.setPath("/");
+		resp.addCookie(cookie1);
 		resp.sendRedirect("/results.html");
 		
 	}

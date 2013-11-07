@@ -12,9 +12,9 @@ public class timeBasedRainSensorModel extends timeBasedModel{
 	private ArrayList<Double> rainSum;    //rainSum for last 24hours
 	private ArrayList<Double> IhrRain;	  //WB = Rhr +IhrRain
 	
-	public timeBasedRainSensorModel(String soilType, double area, double rootDepth, String zipcode, String unit, double rainsettings,String[] days, String[] hours) throws Exception{
+	public timeBasedRainSensorModel(String soilType, double area, double rootDepth, String zipcode, String unit, double rainsettings,String[] days, String[] hours, Double irriDepth) throws Exception{
 		
-		super(soilType,area,rootDepth,zipcode,unit,days, hours);
+		super(soilType,area,rootDepth,zipcode,unit,days, hours,irriDepth);
 		this.rainsettings = rainsettings;
 		rainSum = new ArrayList<Double>();
 		IhrRain = new ArrayList<Double>();
@@ -38,15 +38,8 @@ public class timeBasedRainSensorModel extends timeBasedModel{
 	public JSONObject calculation(){
 		
 		//this.setWB(new ArrayList<Double>());
-		b.Date.remove(0);
-		b.Year.remove(0);
-		b.Month.remove(0);
-		b.Hour.remove(0);
-		b.Rhr.remove(0);
-		b.Ihr.remove(0);
-		b.ET0.remove(0);
-		b.Ihrschedule.remove(0);
 		
+		b.removeInitialValue();
 		for(int i =this.getStartIrrigationHour();i<=this.getLastIrrigationHour();i++){
 			
 			//calculate the ET

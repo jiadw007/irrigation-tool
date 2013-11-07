@@ -294,10 +294,10 @@ public class timeBasedModel {
 
 
 
-	public timeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit,String days[],String hours[]) throws Exception{
+	public timeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit,String days[],String hours[], double irriDepth) throws Exception{
 		
 		
-		b=new baseData(zipcode,days,hours);
+		b=new baseData(zipcode,days,hours,irriDepth);
 		WB=new ArrayList<Double>();
 		SWC=new ArrayList<Double>();			//from calculation function 
 		ET=new ArrayList<Double>();			//from calculation function
@@ -318,7 +318,7 @@ public class timeBasedModel {
 		this.unit = unit;
 		if(unit.equals("English")){
 			
-			this.area = (double) (Math.round(area*2.54*1000)/1000);
+			this.area = (double) (Math.round(area*4046.85*1000)/1000);
 			this.rootDepth = (double) (Math.round(rootDepth*2.54*1000)/1000);
 			
 			
@@ -347,14 +347,7 @@ public class timeBasedModel {
 	
 	public JSONObject calculation(){
 		
-		b.Date.remove(0);
-		b.Year.remove(0);
-		b.Month.remove(0);
-		b.Hour.remove(0);
-		b.Rhr.remove(0);
-		b.Ihr.remove(0);
-		b.ET0.remove(0);
-		b.Ihrschedule.remove(0);
+		b.removeInitialValue();
 		HashMap<String, Double> SOIL=b.soil.get(soilType);
 					
 		for(int i=this.startIrrigationHour;i<=this.lastIrrigationHour;i++){

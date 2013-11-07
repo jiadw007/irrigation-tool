@@ -19,9 +19,9 @@ public class ETControllerModel extends timeBasedModel{
 	//private ArrayList<Double> AWRstep3;
 	
 	public ETControllerModel(String soilType, double area, double rootDepth,
-			String zipcode, String unit, String[] days, String[] hours) throws Exception {
+			String zipcode, String unit, String[] days, String[] hours, Double irriDepth) throws Exception {
 		// TODO Auto-generated constructor stub
-		super(soilType, area, rootDepth, zipcode, unit, days, hours);
+		super(soilType, area, rootDepth, zipcode, unit, days, hours, irriDepth);
 		
 			
 		
@@ -190,14 +190,7 @@ public class ETControllerModel extends timeBasedModel{
 		}
 		System.out.println("finish !");
 		//remove initial value
-		b.Date.remove(0);
-		b.Year.remove(0);
-		b.Month.remove(0);
-		b.Hour.remove(0);
-		b.Rhr.remove(0);
-		b.Ihr.remove(0);
-		b.ET0.remove(0);
-		b.Ihrschedule.remove(0);
+		b.removeInitialValue();
 		this.AWR.remove(0);
 		this.AWRstep1.remove(0);
 		this.AWRstep2.remove(0);
