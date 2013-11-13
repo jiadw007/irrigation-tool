@@ -18,11 +18,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Date;
+import java.util.zip.GZIPInputStream;
+
+import com.google.appengine.labs.repackaged.org.json.JSONArray;
 
 public class baseData {
 	
 	public static String mailServerURL = "http://fawn.ifas.ufl.edu/mail/send.php";
 	public static String dataServerURL = "http://fawn.ifas.ufl.edu/data/reports/?res";
+	public static String ETdataServerURL = "http://test.fawn.ifas.ufl.edu/controller.php/lastWeekET/json/";
 	public static HashMap<String,HashMap<String, Double>> soil=new HashMap<String,HashMap<String, Double>>();
 	public static HashMap<String,HashMap<String, Double>> Kc=new HashMap<String,HashMap<String, Double>>();
 	public static zipCode zipcodes;
@@ -177,8 +181,8 @@ public class baseData {
 		this.stnID = this.getNearByFawnStnID(this.getLocationByzipCode(zipcode));
 		System.out.println("stnID : " +this.stnID);
 		this.requestRainData(startDate, endDate, stnID);
-		
-		ET0.add(0.0);
+		this.requestETData(this.stnID);
+		//ET0.add(0.0);
 		//Ihrschedule1.add(0);
 		//set the value of Ihrschedule
 		
@@ -195,7 +199,9 @@ public class baseData {
 			Ihrschedule.set(index, 1);
 			Ihr.set(index, irriDepth);
 		}
+		//get et value
 		
+		/*
 		try{
 			
 			File csv = new File("time-base-trial.csv");
@@ -221,6 +227,7 @@ public class baseData {
 		} catch (IOException e) { 
 		      e.printStackTrace(); 
 		}
+		*/
 		System.out.println("finish read file");
 		//for(int i =0;i<169;i++){
 			
@@ -334,12 +341,58 @@ public class baseData {
 		*/
 	}
 	
-	public void requestETData(Calendar startDate, Calendar endDate,String stnID) throws Exception{
+	public static void requestETData(String stnID) throws Exception{
 		
-		String urlParameter = this.buildETRequest(startDate, endDate, stnID);
-		postETRequest2ExternalServer(dataServerURL, urlParameter);
+		Util.postETRequest2ExternalServer(stnID);
 		
+	}
+	
+	public void postETRequest2ExternalServer(String stnID) throws Exception{
 		
+		URL url = new URL(ETdataServerURL+stnID);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		//System.out.println(connection.getDoInput());
+		connection.setDoOutput(true);
+		connection.setDoInput(true);
+		connection.setRequestMethod("GET");
+		connection.setRequestProperty("Content-Type", "text/plain");
+		connection.setRequestProperty("charset", "utf-8");
+		//connection.setRequestProperty("Content-Encoding", "gzip");
+		//connection.setRequestProperty("Content-Length", "541");
+		connection.setUseCaches(false);
+		
+		BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));
+		
+		/*
+		while(in.ready()){
+			try{
+				//System.out.print(in.readLine());
+				JSONArray jsonarray = new JSONArray(in.readLine());
+				for(int i =0; i<jsonarray.length();i++){
+					
+					System.out.println(jsonarray.getJSONObject(i));//.get("et_FAO56_mm"));
+					count++;
+					
+				}
+				
+			}catch(Exception e){
+				
+				e.printStackTrace();
+				
+			}
+			System.out.println(count);
+			
+			
+			
+		}
+		*/
+		JSONArray jsonarray = new JSONArray(in.readLine());
+		System.out.println("jsonarray length: "+jsonarray.length());
+		for(int i =0;i<jsonarray.length();i++){
+			
+			ET0.add(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm"));
+			
+		}
 		
 	}
 	public String buildRainRequest(Calendar fromDate,Calendar toDate, String stnID) {
@@ -357,22 +410,7 @@ public class baseData {
 		
 		
 	}
-	public String buildETRequest(Calendar fromDate,Calendar toDate, String stnID){
-		
-		
-		int fromMonth = fromDate.get(Calendar.MONTH)+1;
-		int fromDay = fromDate.get(Calendar.DAY_OF_MONTH);
-		int fromYear = fromDate.get(Calendar.YEAR);
-		int toMonth = toDate.get(Calendar.MONTH)+1;
-		int toDay = toDate.get(Calendar.DAY_OF_MONTH);
-		int toYear = toDate.get(Calendar.YEAR);
-		
-		String urlParameters = "locs__" + stnID.trim() + "=on&fromDate_m=" + fromMonth +"&fromDate_d="+ fromDay +"&fromDate_y=" + fromYear +
-				"&toDate_m=" + toMonth +"&toDate_d=" + toDay +"&toDate_y=" + toYear +"&reportType=daily&presetRange=dates&vars__ET=on&format=.CSV+%28Excel%29";
-		return urlParameters;
-		
-		
-	}	
+	
 	
 	public void postRainRequest2ExternalServer(String serverUrl, String postParams) throws Exception{
 		
@@ -412,40 +450,7 @@ public class baseData {
 		
 		
 	}
-	public void postETRequest2ExternalServer(String serverUrl, String postParams) throws Exception{
-		
-		URL url = new URL(serverUrl);
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setDoOutput(true);
-		connection.setDoInput(true);
-		connection.setInstanceFollowRedirects(false);
-		connection.setRequestMethod("POST");
-		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		connection.setRequestProperty("charset", "utf-8");
-		connection.setRequestProperty("Content-Length", ""+ Integer.toString(postParams.getBytes().length));
-		connection.setUseCaches(false);
-		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-		//System.out.println(connection.getOutputStream());
-		wr.writeBytes(postParams);
-		wr.flush();
-		wr.close();
-		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		in.readLine();
-		String[] inputs = in.readLine().split(",");
-		this.ET0.add(Double.parseDouble(inputs[3].replace("\"", "")));
-		while(in.ready()){
-			
-			String[] input = in.readLine().split(",");
-			for(int i =0;i<24;i++){
-				
-				this.ET0.add(Double.parseDouble(input[3].replace("\"", "")));
-				
-			}
-				
-		}
-		in.close();
-		
-	}
+	
 	
 	public Double getRainFallPerWeek(){
 		Double rainsum = 0.0;

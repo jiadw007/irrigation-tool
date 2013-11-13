@@ -567,6 +567,7 @@ $(document).ready(function(){
 			//information.days = days;
 			//information.hours = hours;
 			//information.minutes = minutes;
+			
 			location.href="/correspondence.html";
 			
 		}
