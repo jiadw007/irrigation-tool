@@ -19,8 +19,10 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
+import com.google.appengine.labs.repackaged.org.json.JSONObject;
 
 public class baseData {
 	
@@ -43,6 +45,7 @@ public class baseData {
 	public Calendar startDate;
 	public Calendar endDate;
 	public String stnID;
+	private static final Logger logger = Logger.getLogger(baseData.class.getName());
 	/**
 	public ArrayList<String> Date;			//from csv.file
 	public ArrayList<String> Year;			//from csv.file
@@ -227,14 +230,14 @@ public class baseData {
 		} catch (IOException e) { 
 		      e.printStackTrace(); 
 		}
-		*/
+		
 		System.out.println("finish read file");
 		//for(int i =0;i<169;i++){
 			
 			//System.out.println(i+","+Ihrschedule.get(i)+","+Ihrschedule1.get(i));
 			
 		//}
-			
+		*/	
 	}
 	
 	public Location getLocationByzipCode(String zipcode){
@@ -332,24 +335,25 @@ public class baseData {
 		
 		String urlParameter = this.buildRainRequest(startDate, endDate, stnID);
 		postRainRequest2ExternalServer(dataServerURL, urlParameter);
-		/*
-		for(int i =0;i<169;i++){
+		
+		//for(int i =0;i<169;i++){
 			
-			System.out.println(this.Date.get(i)+","+this.Year.get(i)+","+this.Month.get(i)+","+this.Hour.get(i)+","+this.Rhr.get(i));
+			//System.out.println(this.Date.get(i)+","+this.Year.get(i)+","+this.Month.get(i)+","+this.Hour.get(i)+","+this.Rhr.get(i));
 				
-		}
-		*/
+		//}
+		
 	}
 	
-	public static void requestETData(String stnID) throws Exception{
+	public void requestETData(String stnID) throws Exception{
 		
-		Util.postETRequest2ExternalServer(stnID);
+		this.postETRequest2ExternalServer(stnID);
 		
 	}
 	
 	public void postETRequest2ExternalServer(String stnID) throws Exception{
 		
 		URL url = new URL(ETdataServerURL+stnID);
+		logger.log(Level.INFO,ETdataServerURL+stnID);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		//System.out.println(connection.getDoInput());
 		connection.setDoOutput(true);
@@ -360,39 +364,42 @@ public class baseData {
 		//connection.setRequestProperty("Content-Encoding", "gzip");
 		//connection.setRequestProperty("Content-Length", "541");
 		connection.setUseCaches(false);
-		
-		BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));
-		
-		/*
-		while(in.ready()){
-			try{
-				//System.out.print(in.readLine());
-				JSONArray jsonarray = new JSONArray(in.readLine());
-				for(int i =0; i<jsonarray.length();i++){
-					
-					System.out.println(jsonarray.getJSONObject(i));//.get("et_FAO56_mm"));
-					count++;
-					
-				}
-				
-			}catch(Exception e){
-				
-				e.printStackTrace();
-				
-			}
-			System.out.println(count);
-			
-			
-			
-		}
-		*/
-		JSONArray jsonarray = new JSONArray(in.readLine());
-		System.out.println("jsonarray length: "+jsonarray.length());
-		for(int i =0;i<jsonarray.length();i++){
+		System.out.println(connection.getInputStream());
+		//BufferedReader in1 = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		//System.out.println(in1.readLine());
+		//BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
+		BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
+		String str = in.readLine();
+		JSONArray jsonarray = new JSONArray(str);
+		logger.log(Level.INFO, String.valueOf(jsonarray.length()));
+		for(int i = 0 ; i<jsonarray.length();i++){
 			
 			ET0.add(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm"));
 			
 		}
+		in.close();
+			/*
+			String str = in.readLine();
+			System.out.println(str);
+			StringBuilder sb = new StringBuilder();
+			sb.append("{\"ET\":");
+			sb.append(str);
+			sb.append("}");
+			String json = sb.toString();
+			System.out.println(json);
+			JSONObject jsonobject = new JSONObject(json);
+			JSONArray jsonarray = jsonobject.getJSONArray("ET");
+			//System.out.println("jsonarray length: "+jsonarray.length());
+			logger.log(Level.INFO, String.valueOf(jsonarray.length()));
+			for(int i =0;i<jsonarray.length();i++){
+				logger.log(Level.INFO,String.valueOf(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")));
+				//System.out.println(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm"));
+				
+			}
+		
+		in.close();
+		*/
+		
 		
 	}
 	public String buildRainRequest(Calendar fromDate,Calendar toDate, String stnID) {

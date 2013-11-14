@@ -520,7 +520,7 @@ public class timeBasedModel {
 		
 		this.iLostWeek = (double) (Math.round((this.iLostWeek/7)*1000)/10.0);
 		System.out.println("wLostWeek: "+this.wLostWeek);
-		System.out.println("iLostWeek " +this.iLostWeek);
+		System.out.println("iLostWeek: " +this.iLostWeek);
 		System.out.println("averW :"+this.averW);
 		//calculate the water stress day
 		double swcSum = 0.0;

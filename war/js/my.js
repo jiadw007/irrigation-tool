@@ -629,7 +629,14 @@ $(document).ready(function(){
 	
 	}
 	
-	
+	if($.cookie("stnId")){
+		
+		var $p ="<p>Each irrigation technology selected is listed below with the model results using weather data from <b>"+$.cookie("startDate")+"</b> to <b>"+$.cookie("endDate")+"</b>. Remember that the weather station used for this data is FAWN-<b>"+$.cookie("stnId")+"</b>.</p>";
+		$("#resultIntro").append($p);
+		$.cookie("stndId","",{expires: -1});
+		$.cookie("startDate","",{expires: -1});
+		$.cookie("endDate","",{expires: -1});
+	}
 	
 	
 	
