@@ -36,7 +36,7 @@ public class baseData {
 	public ArrayList<Double> Ihr;
 	public ArrayList<Double> ET0;
 	public ArrayList<Double> Rhr;
-	public ArrayList<String> Month;
+	public ArrayList<String> Month;   
 	public ArrayList<String> Hour;
 	public ArrayList<String> Date;
 	public ArrayList<String> Year;
@@ -364,7 +364,7 @@ public class baseData {
 		//connection.setRequestProperty("Content-Encoding", "gzip");
 		//connection.setRequestProperty("Content-Length", "541");
 		connection.setUseCaches(false);
-		System.out.println(connection.getInputStream());
+		//System.out.println(connection.getInputStream());
 		//BufferedReader in1 = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		//System.out.println(in1.readLine());
 		//BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
@@ -374,7 +374,7 @@ public class baseData {
 		logger.log(Level.INFO, String.valueOf(jsonarray.length()));
 		for(int i = 0 ; i<jsonarray.length();i++){
 			
-			ET0.add(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm"));
+			ET0.add(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")/10.0);
 			
 		}
 		in.close();

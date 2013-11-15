@@ -98,7 +98,7 @@ public class timeBasedRainSensorModel extends timeBasedModel{
 		}
 		//System.out.println(this.wLostWeek);
 		//System.out.println(this.iLostWeek);
-		this.wLostWeek = (double) (Math.round(this.wLostWeek*1000/3785.4)/1000.0);
+		this.wLostWeek = (double) (Math.round(this.wLostWeek*1000/378.54)/1000.0);
 		
 		this.iLostWeek = (double) (Math.round((this.iLostWeek/7)*1000)/10.0);
 		System.out.println("wLostWeek: "+this.wLostWeek);

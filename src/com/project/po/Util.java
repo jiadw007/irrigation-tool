@@ -64,10 +64,9 @@ class Util{
 	}
 	public static void main(String[] args) throws Exception{
 		
-		Util u = new Util();
-		u.requestETData("350");
-		Calendar cal =Calendar.getInstance();
-		System.out.println(DateFormat.getDateInstance().format(cal.getTime()));
+		String[] days = {"1","2"};
+		String str = days.toString();
+		System.out.println(str);
 		
 		
 	}

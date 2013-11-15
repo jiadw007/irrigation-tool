@@ -25,6 +25,7 @@ import com.project.model.timeBasedModel;
 import com.project.model.timeBasedRainSensorModel;
 import com.project.model.timeBasedSoilSensorModel;
 import com.project.po.Data;
+import com.project.po.DataBase;
 
 public class calculateServlet extends HttpServlet{
 	
@@ -140,8 +141,13 @@ public class calculateServlet extends HttpServlet{
 				
 			}*/
 		}
+		Data data = new Data(email,unit,zipcode,soilType,rootDepth,area,systemSelection,days,hours,choice,rainsettings,soilthreshold,irriDepth);
+		DataBase db = new DataBase("User");
+		db.insertIntoDataBase(data);
+		
 		//System.out.println("days" + days);
 		//System.out.println("hours" + hours);
+		
 		for (String system : systemSelection){
 			
 			if (system.equals("Time-based")){
@@ -198,12 +204,12 @@ public class calculateServlet extends HttpServlet{
 					
 					//ut.print("sdsdf");
 					//out.write(resultJSON.toString());
-					out.println("Hour,Rhr,Ihr,ET,WB,SWC,DELTA,F,rateF,Q,Inf,PERC,Loss,PerLoss,Rhr,wLostHr,wLostDay,iLostHr,iLostDay");
+					out.println("Hour,Rhr(cm),Ihr(cm),ET0(cm),ET(cm),WB(cm),SWC(cm),DELTA(cm),F(cm),rateF(cm),Q(cm),Inf,PERC,Loss(cm3),PerLoss,wLostHr(cm3),wLostDay(cm3),iLostHr,iLostDay");
 					for(int i =0;i<tbm.getB().Hour.size();i++){
 						
-						out.println(tbm.getB().Hour.get(i)+","+tbm.getB().Rhr.get(i)+","+tbm.getB().Ihr.get(i)+","+tbm.getET().get(i)+","+tbm.getWB().get(i)+","+tbm.getSWC().get(i+1)+","+tbm.getDelta().get(i)+","
+						out.println(tbm.getB().Hour.get(i)+","+tbm.getB().Rhr.get(i)+","+tbm.getB().Ihr.get(i)+","+tbm.getB().ET0.get(i)+","+tbm.getET().get(i)+","+tbm.getWB().get(i)+","+tbm.getSWC().get(i+1)+","+tbm.getDelta().get(i)+","
 						        +tbm.getF().get(i)+","+tbm.getRateF().get(i)+","+tbm.getQ().get(i)+","
-						        +tbm.getInF().get(i)+","+tbm.getPERC().get(i)+","+tbm.getLoss().get(i)+","+tbm.getPerLoss().get(i)+","+tbm.getB().Rhr.get(i)+","+tbm.getwLostHr().get(i)+","
+						        +tbm.getInF().get(i)+","+tbm.getPERC().get(i)+","+tbm.getLoss().get(i)+","+tbm.getPerLoss().get(i)+","+tbm.getwLostHr().get(i)+","
 						        +tbm.getwLostDay().get(i)+","+tbm.getiLostHr().get(i)+","+tbm.getiLostDay().get(i));
 						
 					}
@@ -271,10 +277,10 @@ public class calculateServlet extends HttpServlet{
 					
 					//ut.print("sdsdf");
 					//out.write(resultJSON.toString());
-					out.println("Hour,Rhr,Ihr,RainSum,IhrRain,ET,WB,SWC,DELTA,F,rateF,Q,Inf,PERC,Loss,PerLoss,wLostHr,wLostDay,iLostHr,iLostDay");
+					out.println("Hour,Rhr(cm),Ihr(cm),ET0(cm),RainSum(cm),IhrRain(cm),ET(cm),WB(cm),SWC(cm),DELTA(cm),F(cm),rateF(cm),Q,Inf,PERC,Loss(cm),PerLoss,wLostHr(cm3),wLostDay(cm3),iLostHr,iLostDay");
 					for(int i =0;i<tbrsm.getB().Hour.size();i++){
 						
-						out.println(tbrsm.getB().Hour.get(i)+","+tbrsm.getB().Rhr.get(i)+","+tbrsm.getB().Ihr.get(i)+","+tbrsm.getRainSum().get(i)+","+tbrsm.getIhrRain().get(i)+","+tbrsm.getET().get(i)+","+tbrsm.getWB().get(i)+","+tbrsm.getSWC().get(i+1)+","+tbrsm.getDelta().get(i)+","
+						out.println(tbrsm.getB().Hour.get(i)+","+tbrsm.getB().Rhr.get(i)+","+tbrsm.getB().Ihr.get(i)+","+tbrsm.getB().ET0.get(i)+","+tbrsm.getRainSum().get(i)+","+tbrsm.getIhrRain().get(i)+","+tbrsm.getET().get(i)+","+tbrsm.getWB().get(i)+","+tbrsm.getSWC().get(i+1)+","+tbrsm.getDelta().get(i)+","
 						        +tbrsm.getF().get(i)+","+tbrsm.getRateF().get(i)+","+tbrsm.getQ().get(i)+","
 						        +tbrsm.getInF().get(i)+","+tbrsm.getPERC().get(i)+","+tbrsm.getLoss().get(i)+","+tbrsm.getPerLoss().get(i)+","+tbrsm.getwLostHr().get(i)+","
 						        +tbrsm.getwLostDay().get(i)+","+tbrsm.getiLostHr().get(i)+","+tbrsm.getiLostDay().get(i));
@@ -343,10 +349,10 @@ public class calculateServlet extends HttpServlet{
 					
 					//ut.print("sdsdf");
 					//out.write(resultJSON.toString());
-					out.println("Hour,Rhr,Ihr,IhrSoil,ET,WB,SWC,DELTA,F,rateF,Q,Inf,PERC,Loss,PerLoss,wLostHr,wLostDay,iLostHr,iLostDay");
+					out.println("Hour,Rhr(cm),Ihr(cm),ET0(cm),IhrSoil(cm),ET(cm),WB(cm),SWC(cm),DELTA(cm),F(cm),rateF(cm),Q,Inf,PERC,Loss(cm3),PerLoss,wLostHr(cm3),wLostDay(cm3),iLostHr,iLostDay");
 					for(int i =0;i<tbssm.getB().Hour.size();i++){
 						
-						out.println(tbssm.getB().Hour.get(i)+","+tbssm.getB().Rhr.get(i)+","+tbssm.getB().Ihr.get(i)+","+tbssm.getIhrsoil().get(i)+","+tbssm.getET().get(i)+","+tbssm.getWB().get(i)+","+tbssm.getSWC().get(i+1)+","+tbssm.getDelta().get(i)+","
+						out.println(tbssm.getB().Hour.get(i)+","+tbssm.getB().Rhr.get(i)+","+tbssm.getB().Ihr.get(i)+","+tbssm.getB().ET0.get(i)+","+tbssm.getIhrsoil().get(i)+","+tbssm.getET().get(i)+","+tbssm.getWB().get(i)+","+tbssm.getSWC().get(i+1)+","+tbssm.getDelta().get(i)+","
 						        +tbssm.getF().get(i)+","+tbssm.getRateF().get(i)+","+tbssm.getQ().get(i)+","
 						        +tbssm.getInF().get(i)+","+tbssm.getPERC().get(i)+","+tbssm.getLoss().get(i)+","+tbssm.getPerLoss().get(i)+","+tbssm.getwLostHr().get(i)+","
 						        +tbssm.getwLostDay().get(i)+","+tbssm.getiLostHr().get(i)+","+tbssm.getiLostDay().get(i));
@@ -422,10 +428,10 @@ public class calculateServlet extends HttpServlet{
 					
 					//ut.print("sdsdf");
 					//out.write(resultJSON.toString());
-					out.println("Hour,Rhr,Ihr,Re,Ihrshcdule,ET,Ick1,Ick2,AWRSTEP1,AWRSTEP2,AWR,Ihret,WB,SWC,DELTA,F,rateF,Q,Inf,PERC,Loss,PerLoss,wLostHr,wLostDay,iLostHr,iLostDay");
+					out.println("Hour,Rhr(cm),Ihr(cm),ET0(cm),Re,Ihrshcdule,ET,Ick1,Ick2,AWRSTEP1,AWRSTEP2,AWR,Ihret,WB(cm),SWC(cm),DELTA(cm),F(cm),rateF(cm),Q,Inf,PERC,Loss(cm3),PerLoss,wLostHr(cm3),wLostDay(cm3),iLostHr,iLostDay");
 					for(int i =0;i<etcm.getB().Hour.size();i++){
 						
-						out.println(etcm.getB().Hour.get(i)+","+etcm.getB().Rhr.get(i)+","+etcm.getB().Ihr.get(i)+","+etcm.getRe().get(i)+","+etcm.getB().Ihrschedule.get(i)+","+etcm.getET().get(i)+","+etcm.getIck1().get(i)+","+etcm.getIck2().get(i)+","+etcm.getAWRstep1().get(i)+","+etcm.getAWRstep2().get(i)+","+etcm.getAWR().get(i)+","+etcm.getIhret().get(i)+","+etcm.getWB().get(i)+","+etcm.getSWC().get(i+1)+","+etcm.getDelta().get(i)+","
+						out.println(etcm.getB().Hour.get(i)+","+etcm.getB().Rhr.get(i)+","+etcm.getB().Ihr.get(i)+","+etcm.getRe().get(i)+","+etcm.getB().ET0.get(i)+","+etcm.getB().Ihrschedule.get(i)+","+etcm.getET().get(i)+","+etcm.getIck1().get(i)+","+etcm.getIck2().get(i)+","+etcm.getAWRstep1().get(i)+","+etcm.getAWRstep2().get(i)+","+etcm.getAWR().get(i)+","+etcm.getIhret().get(i)+","+etcm.getWB().get(i)+","+etcm.getSWC().get(i+1)+","+etcm.getDelta().get(i)+","
 						        +etcm.getF().get(i)+","+etcm.getRateF().get(i)+","+etcm.getQ().get(i)+","
 						        +etcm.getInF().get(i)+","+etcm.getPERC().get(i)+","+etcm.getLoss().get(i)+","+etcm.getPerLoss().get(i)+","+etcm.getwLostHr().get(i)+","
 						        +etcm.getwLostDay().get(i)+","+etcm.getiLostHr().get(i)+","+etcm.getiLostDay().get(i));
@@ -450,6 +456,7 @@ public class calculateServlet extends HttpServlet{
 		resp.addCookie(cookie1);
 		
 		resp.sendRedirect("/results.html");
+		
 		
 	}
 	
