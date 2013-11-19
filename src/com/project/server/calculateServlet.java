@@ -10,6 +10,10 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -17,6 +21,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.project.po.Util;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
@@ -29,8 +35,15 @@ import com.project.po.DataBase;
 
 public class calculateServlet extends HttpServlet{
 	
+	
+	private static final Logger logger = Logger.getLogger(calculateServlet.class.getCanonicalName());
 	@SuppressWarnings("deprecation")
 	@Override
+	
+	
+	
+	
+	
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
@@ -100,30 +113,29 @@ public class calculateServlet extends HttpServlet{
 				
 				irriDepth = Double.parseDouble(cookie[i].getValue());
 				
+			}else if(cookie[i].getName().equals("irriDuration")){
+				
+				irriDuration = Integer.parseInt(cookie[i].getValue());
+				
 			}else if(cookie[i].getName().equals("isystem")){
 				
 				isystem = URLDecoder.decode(cookie[i].getValue(),"UTF-8");
-				irriDuration = Integer.parseInt(cookie[i].getValue());
-				if(isystem =="micro-irrigation-head"){
+				
+				if(isystem.equals("micro-irrigation-head")){
 					
 					irriDepth = 0.25 * irriDuration/60;
 					
-				}else if(isystem =="fixed-irrigation-head"){
+				}else if(isystem.equals("fixed-irrigation-head")){
 					
 					irriDepth = 1.5 * irriDuration/60;
 					
-				}else if(isystem =="gear-driven-irrigation-head"){
+				}else if(isystem.equals("gear-driven-irrigation-head")){
 					
 					irriDepth = 0.5 * irriDuration/60;
 					
-				}else if(isystem =="impact-irrigation-head"){
+				}else if(isystem.equals("impact-irrigation-head")){
 					
 					irriDepth = 0.5 * irriDuration/60;
-					
-				}
-				if(unit == "English"){
-					
-					irriDepth = irriDepth * 2.54;
 					
 				}
 				
@@ -144,9 +156,16 @@ public class calculateServlet extends HttpServlet{
 		Data data = new Data(email,unit,zipcode,soilType,rootDepth,area,systemSelection,days,hours,choice,rainsettings,soilthreshold,irriDepth);
 		DataBase db = new DataBase("User");
 		db.insertIntoDataBase(data);
-		
+		Data d1 = db.fetch(data.getEmail());
+		System.out.println(d1.getEmail());
 		//System.out.println("days" + days);
 		//System.out.println("hours" + hours);
+		if(unit.equals("English")){
+			
+			irriDepth = irriDepth * 2.54;
+			
+		}
+		System.out.println(irriDepth);
 		
 		for (String system : systemSelection){
 			
@@ -194,7 +213,7 @@ public class calculateServlet extends HttpServlet{
 					
 					//System.out.println(resultJSON.get("wLostDay"));
 					//System.out.println(resultJSON.get("Hour"));
-					/*
+					
 					resp.setContentType("text/csv");
 					
 					String disposition = "attachment;fileName=time-base-result.csv";
@@ -215,7 +234,7 @@ public class calculateServlet extends HttpServlet{
 					}
 					out.flush();
 					out.close();
-					*/
+					
 					
 					
 				}catch(JSONException e){
@@ -269,7 +288,7 @@ public class calculateServlet extends HttpServlet{
 					
 					//System.out.println(resultJSON.get("wLostDay"));
 					//System.out.println(resultJSON.get("Hour"));
-					/*
+					
 					resp.setContentType("text/csv");
 					String disposition = "attachment;fileName=rain-sensor-result.csv";
 					resp.setHeader("Content-Disposition", disposition);
@@ -288,7 +307,7 @@ public class calculateServlet extends HttpServlet{
 					}
 					out.flush();
 					out.close();
-					*/
+					
 				}catch(JSONException e){
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -341,7 +360,7 @@ public class calculateServlet extends HttpServlet{
 					
 					//System.out.println(resultJSON.get("wLostDay"));
 					//System.out.println(resultJSON.get("Hour"));
-					/*
+					
 					resp.setContentType("text/csv");
 					String disposition = "attachment;fileName=soil-sensor-result.csv";
 					resp.setHeader("Content-Disposition", disposition);
@@ -360,7 +379,7 @@ public class calculateServlet extends HttpServlet{
 					}
 					out.flush();
 					out.close();
-					*/
+					
 				}catch(JSONException e){
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -420,7 +439,7 @@ public class calculateServlet extends HttpServlet{
 						
 					}
 					*/
-					/*
+					
 					resp.setContentType("text/csv");
 					String disposition = "attachment;fileName=ET-controller-result.csv";
 					resp.setHeader("Content-Disposition", disposition);
@@ -439,7 +458,7 @@ public class calculateServlet extends HttpServlet{
 					}
 					out.flush();
 					out.close();
-					*/
+					
 				}catch(JSONException e){
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -455,7 +474,153 @@ public class calculateServlet extends HttpServlet{
 		cookie1.setPath("/");
 		resp.addCookie(cookie1);
 		
-		resp.sendRedirect("/results.html");
+		//resp.sendRedirect("/results.html");
+		
+		
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		super.doGet(req, resp);
+		PrintWriter out = resp.getWriter();
+		String path = req.getServletPath();
+		Hashtable<String,Data> records = new Hashtable<String,Data>();
+		logger.log(Level.INFO, path);
+		if(path.contains("/weeklyReport")){
+			
+			DataBase db = new DataBase("User");
+			records = db.fecthAll();
+			//System.out.println(records.size());
+			if(records != null){
+				
+				Enumeration<String> enumeration = records.keys();
+				while(enumeration.hasMoreElements()){
+					
+					String email = (String) enumeration.nextElement();
+					//logger.log(Level.INFO, "Calculating "+ email + "'s water use");
+					Data data = db.fetch(email);
+					String choice = data.getChoice();
+					if(choice.equals("no")){
+						
+						logger.log(Level.INFO, email + " is unsubscribed");
+						continue;	
+					}else{
+						
+						logger.log(Level.INFO, "Calculating " + email +" 's water use");
+						//StringBuilder sb = new StringBuilder();
+						Hashtable<String,String> results = new Hashtable<String,String>();
+						//sb.append("Technology , waterLoss(gallons) , waterLossPercentgae , waterStressDays , rainfall(inch)\r\n");
+						String[] systemSelection = data.getSystemSelection();
+						for(String system : systemSelection){
+							
+							if(system.equals("Time-based")){
+								
+								logger.log(Level.INFO, "Time-based");
+								try{
+									
+									timeBasedModel tbm = new timeBasedModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
+									tbm.calculation();
+									Double waterLoss = tbm.getwLostWeek();
+									Double iLoss = tbm.getiLostWeek();
+									Double rainfall = tbm.getB().getRainFallPerWeek();
+									int wStressDays = tbm.getwStressDays();
+									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
+									results.put("Time-based",String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+String.valueOf(rainfall));
+									
+								}catch(Exception e){
+									
+									logger.log(Level.WARNING, e.getMessage());
+								}
+								
+								
+							}else if(system.equals("Time-based with rain sensor")){
+								logger.log(Level.INFO, "Time-based with rain sensor");
+								
+								try{
+									
+									timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getRainsettings(),data.getDays(),data.getHours(),data.getIrriDepth());
+									tbrsm.calculation();
+									Double waterLoss = tbrsm.getwLostWeek();
+									Double iLoss = tbrsm.getiLostWeek();
+									Double rainfall = tbrsm.getB().getRainFallPerWeek();
+									int wStressDays = tbrsm.getwStressDays();
+									//sb.append("Time-based with Rain Sensor, "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
+									results.put("Time-based with Rain Sensor", String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+String.valueOf(rainfall));
+								}catch(Exception e){
+									
+									logger.log(Level.WARNING, e.getMessage());
+									
+									
+								}
+								
+								
+							}else if(system.equals("Time-based with soil moisture sensor")){
+								
+								logger.log(Level.INFO, "Time-based with soil moisture sensor");
+								try{
+									
+									timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getSoilthreshold(),data.getDays(),data.getHours(),data.getIrriDepth());
+									tbssm.calculation();
+									Double waterLoss = tbssm.getwLostWeek();
+									Double iLoss = tbssm.getiLostWeek();
+									Double rainfall = tbssm.getB().getRainFallPerWeek();
+									int wStressDays = tbssm.getwStressDays();
+									//sb.append("Time-based with Soil Sensor, "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
+									results.put("Time-based with Soil Sensor", String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+String.valueOf(rainfall));
+									
+								}catch(Exception e){
+									
+									logger.log(Level.WARNING, e.getMessage());
+									
+								}
+								
+							}else{
+								
+								logger.log(Level.INFO, "Evaprtranspiration Controller");
+								
+								try{
+									
+									ETControllerModel etcm = new ETControllerModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
+									etcm.calculation();
+									Double waterLoss = etcm.getwLostWeek();
+									Double iLoss = etcm.getiLostWeek();
+									Double rainfall = etcm.getB().getRainFallPerWeek();
+									int wStressDays = etcm.getwStressDays();
+									//sb.append("ET_Controller , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
+									results.put("ET_Controller", String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+String.valueOf(rainfall));
+									
+								}catch(Exception e){
+									
+									logger.log(Level.WARNING, e.getMessage());
+								}
+								
+							}
+														
+						}
+						try {
+							
+							String sent = Util.requestWeeklyReport(results, email);
+							
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							logger.log(Level.WARNING , e.getMessage());
+						}
+						logger.log(Level.INFO, "Sending email to "+ email);
+						
+						
+						
+					}
+					
+				}
+				
+				
+			}
+			
+			
+			
+		}
 		
 		
 	}

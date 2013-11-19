@@ -1,76 +1,84 @@
 package com.project.po;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
+import com.project.server.calculateServlet;
 
 
-class Util{
+public class Util{
 	
-	private String ETdataServerURL = "http://test.fawn.ifas.ufl.edu/controller.php/lastWeekET/json/";
+	private static String mailServerURL = "http://fawn.ifas.ufl.edu/mail/send.php";
+	public static TimeZone timeZoneUsed = TimeZone.getTimeZone("America/New_York");
+	public static int EMAIL_INTRO = 0;
+	public static int EMAIL_WEEKLY_REPORT = 1;
+	private static final Logger logger = Logger.getLogger(calculateServlet.class.getCanonicalName());
 	
-	public void requestETData(String stnID) throws Exception{
+	public static String requestWeeklyReport(Hashtable<String,String> results, String email) throws Exception{
 		
-		this.postETRequest2ExternalServer(stnID);
+		String urlParameters = buildWeeklyReportParameters(results, email);
+		return  postRequest2ExternalServer(mailServerURL, urlParameters);
 		
 	}
 	
-	public void postETRequest2ExternalServer(String stnID) throws Exception{
+	public static String buildWeeklyReportParameters(Hashtable<String,String> results,String email) throws Exception{
 		
-		URL url = new URL(ETdataServerURL+stnID);
+		String timestamp = Long.toString(System.nanoTime());
+		
+		
+		
+		
+	}
+	public static String postRequest2ExternalServer(String serverURL,
+			String postParas) throws IOException {
+		URL url = new URL(serverURL);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		//System.out.println(connection.getDoInput());
 		connection.setDoOutput(true);
 		connection.setDoInput(true);
-		connection.setRequestMethod("GET");
-		connection.setRequestProperty("Content-Type", "text/plain");
+		connection.setInstanceFollowRedirects(false);
+		connection.setRequestMethod("POST");
+		connection.setRequestProperty("Content-Type",
+				"application/x-www-form-urlencoded");
 		connection.setRequestProperty("charset", "utf-8");
-		//connection.setRequestProperty("Content-Encoding", "gzip");
-		//connection.setRequestProperty("Content-Length", "541");
+		connection.setRequestProperty("Content-Length",
+				"" + Integer.toString(postParas.getBytes().length));
 		connection.setUseCaches(false);
-		
-		BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));
-		
-			
-			while(in.ready()){
-				
-				String str = in.readLine();
-				System.out.println(str);
-				StringBuilder sb = new StringBuilder();
-				sb.append("{\"ET\":");
-				sb.append(str);
-				sb.append("}");
-				String json = sb.toString();
-				System.out.println(json);
-				JSONObject jsonobject = new JSONObject(json);
-				JSONArray jsonarray = jsonobject.getJSONArray("ET");
-				System.out.println("jsonarray length: "+jsonarray.length());
-				for(int i =0;i<jsonarray.length();i++){
-					
-					System.out.println(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm"));
-					
-				}
-			}
-			in.close();
-		
-		
-		
+		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+		wr.writeBytes(postParas);
+		wr.flush();
+		wr.close();
+		BufferedReader in = new BufferedReader(new InputStreamReader(
+				connection.getInputStream()));
+
+		StringBuilder response = new StringBuilder();
+		while (in.ready()) {
+
+			response.append(in.readLine()+"\n");
+		}
+		in.close();
+		connection.disconnect();
+		if (response.length() == 0) {
+			// fail
+			logger.log(Level.WARNING, "Fail to get response from request "
+					+ serverURL);
+			return null;
+		}
+		return response.toString();
 	}
-	public static void main(String[] args) throws Exception{
-		
-		String[] days = {"1","2"};
-		String str = days.toString();
-		System.out.println(str);
-		
-		
-	}
-	
 	
 	
 }

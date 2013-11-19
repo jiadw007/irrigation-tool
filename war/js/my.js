@@ -82,20 +82,22 @@ $(document).ready(function(){
 	$("#step1").click(function(){
 		
 		var ex= /^\d+$/;
-		
+		$("#zipcodeErrorText").remove();
 		//alert();
-		var zipcode=new String($("#zipcode").val());
+		var zipcode=$("#zipcode").val();
 		var unit=$("input[name='optionsRadios']:checked").val();
 		
 		if(zipcode==""){
 			
 			var errorText = "This field is required !";
-			$("#zipcode").next().text(errorText);
+			$p = $("<label id= 'zipcodeErrorText'>" + errorText + "</label>");
+			$("#zipcode").after($p);
 			$("#zipcode").focus();
 		}else if(zipcode>34997||zipcode<32003||!ex.test(zipcode)){
 			
 			var errorText ="This doesn't look like a Florida zip code !";
-			$("#zipcode").next().text(errorText);
+			$p = $("<label id= 'zipcodeErrorText'>" + errorText + "</label>");
+			$("#zipcode").after($p);
 			$("#zipcode").focus();
 		}else{
 			$.cookie("zipcode",zipcode,{ expires: 7});
@@ -249,6 +251,8 @@ $(document).ready(function(){
 	
 	$("#step2").click(function(){
 		
+		$("#rootDepthErrorText").remove();
+		$("#areaErrorText").remove();
 		//alert();
 		var rd=$("#rootDepth").val();
 		var soil=$("select[name='soiltype']").val();
@@ -256,23 +260,27 @@ $(document).ready(function(){
 		if(rd==""){
 			
 			var errorText = "This field is required !";
-			$("#rootDepth").next().text(errorText);
+			$p = $("<label id= 'rootDepthErrorText'>" + errorText + "</label>");
+			$("#rootDepth").after($p);
 			$("#rootDepth").focus();
 		}else if(isNaN(rd)||rd<0){
 			
 			var errorText = "It doesn't look like a root depth" ;
-			$("#rootDepth").next().text(errorText);
+			$p = $("<label id= 'rootDepthErrorText'>" + errorText + "</label>");
+			$("#rootDepth").after($p);
 			$("#rootDepth").focus();
 			
 		}else if(area==""){
 			
 			var errorText = "This field is required !";
-			$("#Area").next().text(errorText);
+			$p = $("<label id= 'areaErrorText'>" + errorText + "</label>");
+			$("#Area").after($p);
 			$("#Area").focus();
 		}else if(isNaN(area)||area<0){
 			
 			var errorText = "It doesn't like an area size !";
-			$("#Area").next().text(errorText);
+			$p = $("<label id= 'areaErrorText'>" + errorText + "</label>");
+			$("#Area").after($p);
 			$("#Area").focus();
 			
 		}else{
@@ -292,7 +300,8 @@ $(document).ready(function(){
 		
 	});
 	$("#step3").click(function(){
-		    
+		
+		$("#ITErrorText").remove();
 	    var systemSelection=[];  
 		$("input[name='checkbox']:checked").each(function(){
 			//alert();
@@ -339,7 +348,9 @@ $(document).ready(function(){
 		}else{
 			
 			var errorText = "Please select Irrigation Technology !";
-			$("input[value='Evapotranspiration Controller']").parent().parent().next().text(errorText);
+			$p = $("<label id= 'ITErrorText'>" + errorText + "</label>");
+			$("#IT").after($p);
+			$("#IT").focus();
 			
 		}
 		
@@ -447,6 +458,10 @@ $(document).ready(function(){
 	}
 	$("#patternRadio1").click(function(){
 		
+		$("#ISErrorText").remove();
+		$("#irriDurationErrorText").remove();
+		$("isystemErrorText").remove();
+		$("irrigationDepth").focus();
 		if($.cookie("unit")){
 			
 			if($.cookie("unit")=="English"){
@@ -465,6 +480,9 @@ $(document).ready(function(){
 	});
 	$("#patternRadio2").click(function(){
 		
+		$("#ISErrorText").remove();
+		$("#irriDepthErrorText").remove();
+		$("#irriDuration").focus();
 		if($.cookie("unit")=="Metric"){
 			
 			$("#microHead").text("Micro Irrigation Head (0.635cm per hour)");
@@ -486,36 +504,90 @@ $(document).ready(function(){
 	});
 	$("#step4").click(function(){
 		
+		var ex= /^\d+$/;
+		$("#ISErrorText").remove();
+		$("#irriDepthErrorText").remove();
+		$("#irriDurationErrorText").remove();
+		$("#isystemErrorText").remove();
 		if(!$("#patternRadio1").prop("checked")&&!$("#patternRadio2").prop("checked")){
 			//alert($("#patternError").attr("id"));
 			var errorText = "Please select ONE Irrigation Pattern ";
-			$("#patternError").text(errorText);
-			$("a[href='#']").focus();
+			$p = $("<label id= 'ISErrorText'>" + errorText + "</label>");
+			$("#IS").after($p);
+			$("#IS").focus();
 			
 		}else if($("#patternRadio1").prop("checked")){
+			
+			
 			var irriDepth=$("#irrigationDepth").val();
-			$.cookie("irriDepth",irriDepth,{ expires : 7 });
-			//information.irriDepth = irriDepth;
-			$.cookie("isystem","",{expires: -1});
-			$.cookie("irriDuration","",{expires:-1});
-			//information.isystem = undefined;
-			//infrmation.minutes = undefined;
-			location.href="/irrigation-schedule.html";
+			if(irriDepth ==""){
+				
+				var errorText = "This field is required !";
+				var $p = $("<label id = 'irriDepthErrorText'>" + errorText + "</label>");
+				$("#irrigationUnit").after($p);
+				$("#irrigationDepth").focus();
+				
+			}else if(isNaN(irriDepth)||irriDepth<0){
+				
+				var errorText = "It doesn't look like a irrigation depth" ;
+				var $p = $("<label id = 'irriDepthErrorText'>" + errorText +"</label>");
+				$("#irrigationUnit").after($p);
+				$("#irrigationDepth").focus();
+				
+			}else{
+				
+				$.cookie("irriDepth",irriDepth,{ expires : 7 });
+				//information.irriDepth = irriDepth;
+				$.cookie("isystem","",{expires: -1});
+				$.cookie("irriDuration","",{expires:-1});
+				//information.isystem = undefined;
+				//infrmation.minutes = undefined;
+				location.href="/irrigation-schedule.html";
+				
+			}
+			
 		}else if($("#patternRadio2").prop("checked")){
+			
+			
 			var isystem=$("input[name='irrigation-system']:checked").val();
 			//alert(isystem);
 			var irriDuration=$("#irrigationDuration").val();
 			//alert(minutes);
-			$.cookie("isystem",isystem,{ expires : 7});
-			$.cookie("irriDuration",irriDuration,{expires : 7});
-			//information.isystem = isystem;
-			//information.irriDuration = irriDuration;
-			$.cookie("irriDepth","",{ expires: -1});
-			location.href="/irrigation-schedule.html";
+			if(isystem ==null){
+				
+				var errorText = "Please choose one irrigation system !";
+				var $p = $("<label id='isystemErrorText'>" + errorText +"</label>");
+				$("#durationUnit").after($p);
+				$("input[name='irrigation-system']").focus();
+				
+				
+			}else if(irriDuration ==""){
+				
+				var errorText = "This field is required !";
+				var $p = $("<label id = 'irriDurationErrorText'>" + errorText +"</label>");
+				$("#durationUnit").after($p);
+				$("#irrigationDuration").focus();
+				
+			}else if(!ex.test(irriDuration)||irriDuration < 0){
+				
+				var errorText = "It doesn't look like a time duration" ;
+				var $p = $("<label id = 'irriDurationErrorText'>" + errorText +"</label>");
+				$("#durationUnit").after($p);
+				$("#irrigationDuration").focus();
+				
+			}else{
+				
+				$.cookie("isystem",isystem,{ expires : 7});
+				$.cookie("irriDuration",irriDuration,{expires : 7});
+				//information.isystem = isystem;
+				//information.irriDuration = irriDuration;
+				$.cookie("irriDepth","",{ expires: -1});
+				location.href="/irrigation-schedule.html";
+				
+			}
+			
 		}
-		
-		
-		
+			
 	});
 	$("input[name='schedule']").each(function(){
 		
@@ -539,6 +611,8 @@ $(document).ready(function(){
 		
 	});
 	$("#step5").click(function(){
+		
+		$("#IscheduleErrorText").remove();
 		var days=[];
 		var hours = [];
 		//var minutes = [];
@@ -554,7 +628,9 @@ $(document).ready(function(){
 		if(days.length==0){
 			
 			var errorText = "Please arrange your Irrigation Schedule !";
-			$("#scheduleError").text(errorText);
+			var $p = $("<label id = 'IscheduleErrorText'>" + errorText +"</label>");
+			$("#Ischedule").after($p);
+			$("#Ischedule").focus();
 			
 		}else{
 			

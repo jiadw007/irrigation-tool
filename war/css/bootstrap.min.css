@@ -888,14 +888,33 @@ input#irrigationDepth, div#irrigation-system,#irrigationUnit{
 	top: -35px;
 	
 }
-.errorText{
+#zipcodeErrorText,#rootDepthErrorText,#areaErrorText{
 	
 	position:relative;
 	left:250px;
-	top:-40px;
+	top:-37px;
 	color:red;
 }
-.errorText2{
+#ITErrorText,#ISErrorText,#IscheduleErrorText{
+	color:red;
+	
+}
+#irriDepthErrorText{
+	
+	position : relative;
+	left: 10px;
+	color: red;
+	
+}
+#irriDurationErrorText{
+	
+	position: relative;
+	left : 220px;
+	top: -35px;
+	color: red;
+	
+}
+#isystemErrorText{
 	
 	color:red;
 	

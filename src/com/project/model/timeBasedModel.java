@@ -435,15 +435,22 @@ public class timeBasedModel {
 			
 			//calculate the water loss
 			double wloss=(this.Q.get(i-1)+this.PERC.get(i-1)-b.Rhr.get(i-1))*this.area*Math.pow(10.0, 4.0);
-			this.Loss.add(i-1,Math.abs(wloss));
 			double iloss=(this.Q.get(i-1)+this.PERC.get(i-1)-this.b.Rhr.get(i-1))/this.b.Ihr.get(i-1);
-			this.PerLoss.add(i-1,Math.abs(iloss));
-			//caculate the wLostHr
+			//caculate the wLostHr and water loss
 			if(wloss>0){
-				this.wLostHr.add(i-1,wloss);
+				this.wLostHr.add(wloss);
+				this.Loss.add(wloss);
+			}else{
+				this.wLostHr.add(0.0);
+				this.Loss.add(0.0);
+			}
+			if(iloss>0){
+				
+				this.PerLoss.add(iloss);
 				
 			}else{
-				this.wLostHr.add(i-1, 0.0);
+				
+				this.PerLoss.add(0.0);
 			}
 			
 			
@@ -652,16 +659,22 @@ public class timeBasedModel {
 		
 		//calculate the water loss
 		double wloss=(this.Q.get(i-1)+this.PERC.get(i-1)-b.Rhr.get(i-1))*this.area*Math.pow(10.0, 4.0);
-		this.Loss.add(i-1,Math.abs(wloss));
 		double iloss=(this.Q.get(i-1)+this.PERC.get(i-1)-this.b.Rhr.get(i-1))/this.b.Ihr.get(i-1);
-		this.PerLoss.add(i-1,Math.abs(iloss));
-		
-		//caculate the wLostHr
+		//caculate the wLostHr and water loss
 		if(wloss>0){
 			this.wLostHr.add(wloss);
-			
+			this.Loss.add(wloss);
 		}else{
 			this.wLostHr.add(0.0);
+			this.Loss.add(0.0);
+		}
+		if(iloss>0){
+			
+			this.PerLoss.add(iloss);
+			
+		}else{
+			
+			this.PerLoss.add(0.0);
 		}
 		
 		

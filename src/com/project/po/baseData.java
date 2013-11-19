@@ -75,7 +75,7 @@ public class baseData {
 		//Ihrschedule1=new ArrayList<Integer>();
 		/*edit data for the soil type table */
 		HashMap<String,Double> sand=new HashMap<String, Double>(8);
-		sand.put("MAD", 0.3);
+		sand.put("MAD", 0.5);
 		sand.put("Porosity", 0.44);
 		sand.put("Bulk Density", 1.48);
 		sand.put("FC", 0.08);
@@ -367,8 +367,8 @@ public class baseData {
 		//System.out.println(connection.getInputStream());
 		//BufferedReader in1 = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		//System.out.println(in1.readLine());
-		//BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
-		BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
+		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
+		//BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
 		String str = in.readLine();
 		JSONArray jsonarray = new JSONArray(str);
 		logger.log(Level.INFO, String.valueOf(jsonarray.length()));
@@ -378,6 +378,7 @@ public class baseData {
 			
 		}
 		in.close();
+		connection.disconnect();
 			/*
 			String str = in.readLine();
 			System.out.println(str);
@@ -454,7 +455,7 @@ public class baseData {
 		    this.Rhr.add(Double.parseDouble(inputs[2].equals("N/A") ? "0" : inputs[2].replace("\"", ""))*2.54);
 		}
 		in.close();
-		
+		connection.disconnect();
 		
 	}
 	

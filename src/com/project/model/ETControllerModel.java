@@ -203,18 +203,27 @@ public class ETControllerModel extends timeBasedModel{
 			
 			//calculate the water loss
 			double wloss=(this.getQ().get(i-1)+this.getPERC().get(i-1)-b.Rhr.get(i-1))*this.getArea()*Math.pow(10.0, 4.0);
-			this.getLoss().add(i-1,Math.abs(wloss));
+			//this.getLoss().add(i-1,Math.abs(wloss));
 			double iloss=(this.getQ().get(i-1)+this.getPERC().get(i-1)-this.b.Rhr.get(i-1))/this.b.Ihr.get(i-1);
-			this.getPerLoss().add(i-1,Math.abs(iloss));
+			//this.getPerLoss().add(i-1,Math.abs(iloss));
 			
 			//caculate the wLostHr
 			if(wloss>0){
 				this.getwLostHr().add(wloss);
-				
+				this.getLoss().add(i-1,wloss);
 			}else{
 				this.getwLostHr().add(0.0);
+				this.getLoss().add(0.0);
 			}
-			
+			if(iloss > 0 ){
+				
+				this.getPerLoss().add(i-1,iloss);
+				
+			}else{
+				
+				this.getPerLoss().add(i-1, 0.0);
+				
+			}
 			
 			
 			//calculate the iLostHr
