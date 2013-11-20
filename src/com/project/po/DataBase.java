@@ -17,6 +17,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Text;
 
 
 import net.sf.jsr107cache.Cache;
@@ -35,7 +36,25 @@ import net.sf.jsr107cache.CacheManager;
 		
 		
 	}
-	
+	public void replace(String userID, String colName, String colValue) throws ServletException{
+		
+		
+		logger.log(Level.INFO, "Putting user " + userID
+				+ "'s setting information to Datastore");
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+	    Key clientKey = KeyFactory.createKey(dbName, userID);
+		Entity entity = new Entity(clientKey);
+		Text textValue = new Text(colValue);
+		entity.setProperty(colName, textValue);
+		Key key = datastore.put(entity);
+		logger.log(Level.INFO, "Putting user " + userID
+				+ "'s setting information to Cache key"+ key);
+		cache = createCache();
+		cache.put(KeyFactory.keyToString(clientKey), entity);
+		
+		
+	}
 	public void insertIntoDataBase(Data data) throws ServletException{
 		
 		logger.log(Level.INFO,"Inserting user "+ data.getEmail() + "'s settings into datastore");
@@ -121,6 +140,38 @@ import net.sf.jsr107cache.CacheManager;
 		return data;
 		
 	}
+	
+	public String fetch(String key, String colName) throws ServletException {
+		logger.log(Level.INFO, "Retrieving user " + key
+				+ "'s setting information from Cache");
+		cache = createCache();
+		Key clientKey = KeyFactory.createKey(this.dbName, key);
+		Entity entity = (Entity) cache.get(KeyFactory.keyToString(clientKey));
+		String info = "";
+		if (entity == null) {
+			try {
+				logger.log(Level.INFO,
+						"Can not find in Cache, so retrieving user " + key
+								+ "'s setting information from Datastore");
+				DatastoreService datastore = DatastoreServiceFactory
+						.getDatastoreService();
+				Entity result = datastore.get(clientKey);
+
+				Text text = (Text)result.getProperty(colName);
+				info = text.getValue();
+			} catch (Exception e) {
+				info = null;
+				logger.log(Level.WARNING, e.getMessage());
+			}
+
+		}else{
+			Text text = (Text)entity.getProperty(colName);
+			info = text.getValue();
+		}
+
+		return info;
+	}
+	
 	private Cache createCache() throws ServletException{
 		// TODO Auto-generated method stub
 		Map<String,Object> props = Collections.emptyMap();

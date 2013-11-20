@@ -144,6 +144,9 @@ public class Data {
 	public double getIrriDepth() {
 		return irriDepth;
 	}
+	public void setChoice(String choice) {
+		this.choice = choice;
+	}
 	
 	
 	

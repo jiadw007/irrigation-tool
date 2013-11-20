@@ -10,6 +10,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.logging.Level;
@@ -39,11 +40,6 @@ public class calculateServlet extends HttpServlet{
 	private static final Logger logger = Logger.getLogger(calculateServlet.class.getCanonicalName());
 	@SuppressWarnings("deprecation")
 	@Override
-	
-	
-	
-	
-	
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
@@ -482,145 +478,8 @@ public class calculateServlet extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		super.doGet(req, resp);
-		PrintWriter out = resp.getWriter();
-		String path = req.getServletPath();
-		Hashtable<String,Data> records = new Hashtable<String,Data>();
-		logger.log(Level.INFO, path);
-		if(path.contains("/weeklyReport")){
-			
-			DataBase db = new DataBase("User");
-			records = db.fecthAll();
-			//System.out.println(records.size());
-			if(records != null){
-				
-				Enumeration<String> enumeration = records.keys();
-				while(enumeration.hasMoreElements()){
-					
-					String email = (String) enumeration.nextElement();
-					//logger.log(Level.INFO, "Calculating "+ email + "'s water use");
-					Data data = db.fetch(email);
-					String choice = data.getChoice();
-					if(choice.equals("no")){
-						
-						logger.log(Level.INFO, email + " is unsubscribed");
-						continue;	
-					}else{
-						
-						logger.log(Level.INFO, "Calculating " + email +" 's water use");
-						//StringBuilder sb = new StringBuilder();
-						Hashtable<String,String> results = new Hashtable<String,String>();
-						//sb.append("Technology , waterLoss(gallons) , waterLossPercentgae , waterStressDays , rainfall(inch)\r\n");
-						String[] systemSelection = data.getSystemSelection();
-						for(String system : systemSelection){
-							
-							if(system.equals("Time-based")){
-								
-								logger.log(Level.INFO, "Time-based");
-								try{
-									
-									timeBasedModel tbm = new timeBasedModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
-									tbm.calculation();
-									Double waterLoss = tbm.getwLostWeek();
-									Double iLoss = tbm.getiLostWeek();
-									Double rainfall = tbm.getB().getRainFallPerWeek();
-									int wStressDays = tbm.getwStressDays();
-									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-									results.put("Time-based",String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+String.valueOf(rainfall));
-									
-								}catch(Exception e){
-									
-									logger.log(Level.WARNING, e.getMessage());
-								}
-								
-								
-							}else if(system.equals("Time-based with rain sensor")){
-								logger.log(Level.INFO, "Time-based with rain sensor");
-								
-								try{
-									
-									timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getRainsettings(),data.getDays(),data.getHours(),data.getIrriDepth());
-									tbrsm.calculation();
-									Double waterLoss = tbrsm.getwLostWeek();
-									Double iLoss = tbrsm.getiLostWeek();
-									Double rainfall = tbrsm.getB().getRainFallPerWeek();
-									int wStressDays = tbrsm.getwStressDays();
-									//sb.append("Time-based with Rain Sensor, "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-									results.put("Time-based with Rain Sensor", String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+String.valueOf(rainfall));
-								}catch(Exception e){
-									
-									logger.log(Level.WARNING, e.getMessage());
-									
-									
-								}
-								
-								
-							}else if(system.equals("Time-based with soil moisture sensor")){
-								
-								logger.log(Level.INFO, "Time-based with soil moisture sensor");
-								try{
-									
-									timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getSoilthreshold(),data.getDays(),data.getHours(),data.getIrriDepth());
-									tbssm.calculation();
-									Double waterLoss = tbssm.getwLostWeek();
-									Double iLoss = tbssm.getiLostWeek();
-									Double rainfall = tbssm.getB().getRainFallPerWeek();
-									int wStressDays = tbssm.getwStressDays();
-									//sb.append("Time-based with Soil Sensor, "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-									results.put("Time-based with Soil Sensor", String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+String.valueOf(rainfall));
-									
-								}catch(Exception e){
-									
-									logger.log(Level.WARNING, e.getMessage());
-									
-								}
-								
-							}else{
-								
-								logger.log(Level.INFO, "Evaprtranspiration Controller");
-								
-								try{
-									
-									ETControllerModel etcm = new ETControllerModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
-									etcm.calculation();
-									Double waterLoss = etcm.getwLostWeek();
-									Double iLoss = etcm.getiLostWeek();
-									Double rainfall = etcm.getB().getRainFallPerWeek();
-									int wStressDays = etcm.getwStressDays();
-									//sb.append("ET_Controller , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-									results.put("ET_Controller", String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+String.valueOf(rainfall));
-									
-								}catch(Exception e){
-									
-									logger.log(Level.WARNING, e.getMessage());
-								}
-								
-							}
-														
-						}
-						try {
-							
-							String sent = Util.requestWeeklyReport(results, email);
-							
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							logger.log(Level.WARNING , e.getMessage());
-						}
-						logger.log(Level.INFO, "Sending email to "+ email);
-						
-						
-						
-					}
-					
-				}
-				
-				
-			}
-			
-			
-			
-		}
+		
 		
 		
 	}

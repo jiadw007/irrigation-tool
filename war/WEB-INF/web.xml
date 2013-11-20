@@ -9,6 +9,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>calculateAction</servlet-name>
 		<servlet-class>com.project.server.calculateServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>controller</servlet-name>
+		<servlet-class>com.project.server.controllerServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>calculateAction</servlet-name>
 		<url-pattern>/calculate</url-pattern>
@@ -31,9 +35,21 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	<servlet-mapping>
 	
-		<servlet-name>calculateAction</servlet-name>
+		<servlet-name>controller</servlet-name>
 		<url-pattern>/weeklyReport</url-pattern>
 	
+	</servlet-mapping>
+	<servlet-mapping>
+	
+		<servlet-name>controller</servlet-name>
+		<url-pattern>/unsubscribe</url-pattern>
+		
+	</servlet-mapping>
+	<servlet-mapping>
+	
+		<servlet-name>controller</servlet-name>
+		<url-pattern>/changesecret</url-pattern>
+		
 	</servlet-mapping>
 	
 	<welcome-file-list>
