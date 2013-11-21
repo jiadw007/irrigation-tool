@@ -421,10 +421,15 @@ public class timeBasedModel {
 			if(this.PERC.get(i-1)>0){
 				
 				this.SWC.add(i,SOIL.get("FC")*this.rootDepth);
-			}else if(this.PERC.get(i-1)==0&&(this.SWC.get(i-1)-this.ET.get(i-1)+this.InF.get(i-1))<SOIL.get("WP")*this.rootDepth*0.1){
+				
+			}else if(this.SWC.get(i-1)-this.ET.get(i-1)+this.InF.get(i-1)<SOIL.get("WP")*this.rootDepth*0.1){
 				
 				this.SWC.add(i,SOIL.get("WP")*this.rootDepth*0.1);
 				
+				
+			}else if(this.SWC.get(i-1)-this.ET.get(i-1)+this.InF.get(i-1)>SOIL.get("FC")*this.rootDepth){
+				
+				this.SWC.add(i,SOIL.get("FC")*this.rootDepth);
 				
 			}else{
 				
@@ -645,10 +650,14 @@ public class timeBasedModel {
 		if(this.PERC.get(i-1)>0){
 			
 			this.SWC.add(i,SOIL.get("FC")*this.rootDepth);
-		}else if(this.PERC.get(i-1)==0&&(this.SWC.get(i-1)-this.ET.get(i-1)+this.InF.get(i-1))<SOIL.get("WP")*this.rootDepth*0.1){
+		}else if(this.SWC.get(i-1)-this.ET.get(i-1)+this.InF.get(i-1)<SOIL.get("WP")*this.rootDepth*0.1){
 			
 			this.SWC.add(i,SOIL.get("WP")*this.rootDepth*0.1);
 			
+			
+		}else if(this.SWC.get(i-1)-this.ET.get(i-1)+this.InF.get(i-1)>SOIL.get("FC")*this.rootDepth){
+			
+			this.SWC.add(i,SOIL.get("FC")*this.rootDepth);
 			
 		}else{
 			
@@ -796,10 +805,14 @@ public class timeBasedModel {
 		if(this.PERC.get(i-1)>0){
 			
 			this.SWC.add(i,SOIL.get("FC")*this.rootDepth);
-		}else if(this.PERC.get(i-1)==0&&(this.SWC.get(i-1)-this.ET.get(i-1)+this.InF.get(i-1))<SOIL.get("WP")*this.rootDepth*0.1){
+		}else if(this.SWC.get(i-1)-this.ET.get(i-1)+this.InF.get(i-1)<SOIL.get("WP")*this.rootDepth*0.1){
 			
 			this.SWC.add(i,SOIL.get("WP")*this.rootDepth*0.1);
 			
+			
+		}else if(this.SWC.get(i-1)-this.ET.get(i-1)+this.InF.get(i-1)>SOIL.get("FC")*this.rootDepth){
+			
+			this.SWC.add(i,SOIL.get("FC")*this.rootDepth);
 			
 		}else{
 			

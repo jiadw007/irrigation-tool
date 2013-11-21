@@ -316,7 +316,10 @@ public class baseData {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, -14);
 		cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-		
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
 		this.startDate = cal;
 	}
 
@@ -326,6 +329,10 @@ public class baseData {
 		 
 		 cal.add(Calendar.DATE,-7);
 		 cal.set(Calendar.DAY_OF_WEEK,Calendar.SATURDAY);
+		 cal.set(Calendar.HOUR_OF_DAY, 23);
+	     cal.set(Calendar.MINUTE, 0);
+	     cal.set(Calendar.SECOND, 0);
+		 cal.set(Calendar.MILLISECOND, 0);
 		 this.endDate = cal;
 	}	
 	
@@ -372,13 +379,53 @@ public class baseData {
 		String str = in.readLine();
 		JSONArray jsonarray = new JSONArray(str);
 		logger.log(Level.INFO, String.valueOf(jsonarray.length()));
+		
+		for(int i = 0; i < 169; i++){
+			
+			
+			ET0.add(-1.0);
+			
+		}
+		
+		long time1  = this.startDate.getTime().getTime();
+		
 		for(int i = 0 ; i<jsonarray.length();i++){
 			
-			ET0.add(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")/10.0);
+			long time2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonarray.getJSONObject(i).getString("dt_hr")).getTime();
+			
+			long diff = time2 - time1;
+			
+			long index = (diff / (60 * 60 * 1000)) ;
+			
+			ET0.set((int)index,jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")/10.0);
 			
 		}
 		in.close();
 		connection.disconnect();
+		
+		//modify the ET data
+		for(int i = 0; i<jsonarray.length();i++){
+					
+			if(ET0.get(i) == -1.0){
+						
+				if(i == 0){
+							
+					ET0.set(i, 0.0);
+							
+				}else{
+							
+					ET0.set(i, ET0.get(i-1));
+							
+				}
+						
+						
+			}
+					
+		}
+		
+		
+		
+		
 			/*
 			String str = in.readLine();
 			System.out.println(str);
