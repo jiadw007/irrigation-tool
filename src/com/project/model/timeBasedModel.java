@@ -29,7 +29,7 @@ import com.project.po.baseData;
 public class timeBasedModel {
 	
 	
-	protected static baseData b;   
+	protected static baseData b;  
 	private int startIrrigationHour = 1;
 	private int lastIrrigationHour = 168;
 	private String soilType;  // get from user input
@@ -314,6 +314,7 @@ public class timeBasedModel {
 	 */
 	public timeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit,String days[],String hours[], double irriDepth) throws Exception{
 		
+		b = new baseData(zipcode,days,hours,irriDepth);
 		this.soilType = soiltype;
 		this.unit = unit;
 		/*

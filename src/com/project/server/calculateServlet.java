@@ -197,8 +197,6 @@ public class calculateServlet extends HttpServlet{
 					System.out.println(tbm.getArea());
 					System.out.println(tbm.getSoilType());
 					tbm.getLocation().print();
-				
-				
 					tbm.calculation();
 					/*
 					 * store results in cookies and response
@@ -218,12 +216,13 @@ public class calculateServlet extends HttpServlet{
 					Cookie stnId = new Cookie("stnId", tbm.getB().stnID);
 					stnId.setMaxAge(60*60);
 					stnId.setPath("/");
+					tbm.getB().startDate.add(Calendar.DATE, 1);
 					Cookie startDate = new Cookie("startDate",DateFormat.getDateInstance().format(tbm.getB().startDate.getTime()));
 					startDate.setMaxAge(60*60);
 					startDate.setPath("/");
 					Cookie endDate = new Cookie("endDate",DateFormat.getDateInstance().format(tbm.getB().endDate.getTime()));
 					endDate.setMaxAge(60*60);
-					startDate.setPath("/");
+					endDate.setPath("/");
 					resp.addCookie(endDate);
 					resp.addCookie(startDate);
 					resp.addCookie(stnId);
@@ -260,19 +259,17 @@ public class calculateServlet extends HttpServlet{
 					*/
 					
 					
-				}catch(JSONException e){
-					e.printStackTrace();
-				} catch (Exception e) {
+				}catch (Exception e) {
 					// TODO Auto-generated catch block
+					e.printStackTrace();
 					logger.log(Level.SEVERE,e.getMessage());
-					Cookie errorFlag = new Cookie("errorFlag", "true");
-					errorFlag.setMaxAge(60*60);
-					errorFlag.setPath("/");
-					resp.addCookie(errorFlag);
-					resp.sendRedirect("/results.html");
+					Cookie errorflag = new Cookie("errorflag","true");
+					errorflag.setMaxAge(60*60);
+                    errorflag.setPath("/");
+                    resp.addCookie(errorflag);
 				}
 				
-				//resp.sendRedirect("/result.html");
+				
 			}else if(system.equals("Time-based with rain sensor")){
 				
 				System.out.println("Time-based with rain sensor");
@@ -300,12 +297,13 @@ public class calculateServlet extends HttpServlet{
 					Cookie stnId = new Cookie("stnId", tbrsm.getB().stnID);
 					stnId.setMaxAge(60*60);
 					stnId.setPath("/");
+					tbrsm.getB().startDate.add(Calendar.DATE, 1);
 					Cookie startDate = new Cookie("startDate",DateFormat.getDateInstance().format(tbrsm.getB().startDate.getTime()));
 					startDate.setMaxAge(60*60);
 					startDate.setPath("/");
 					Cookie endDate = new Cookie("endDate",DateFormat.getDateInstance().format(tbrsm.getB().endDate.getTime()));
 					endDate.setMaxAge(60*60);
-					startDate.setPath("/");
+					endDate.setPath("/");
 					resp.addCookie(endDate);
 					resp.addCookie(startDate);
 					resp.addCookie(stnId);
@@ -336,16 +334,14 @@ public class calculateServlet extends HttpServlet{
 					out.flush();
 					out.close();
 					*/
-				}catch(JSONException e){
-					e.printStackTrace();
-				} catch (Exception e) {
+				}catch (Exception e) {
 					// TODO Auto-generated catch block
+					e.printStackTrace();
 					logger.log(Level.SEVERE,e.getMessage());
-					Cookie errorFlag = new Cookie("errorFlag", "true");
-					errorFlag.setMaxAge(60*60);
-					errorFlag.setPath("/");
-					resp.addCookie(errorFlag);
-					resp.sendRedirect("/results.html");
+					Cookie errorflag = new Cookie("errorflag","true");
+					errorflag.setMaxAge(60*60);
+                    errorflag.setPath("/");
+                    resp.addCookie(errorflag);
 				}
 				
 			}else if(system.equals("Time-based with soil moisture sensor")){
@@ -376,12 +372,13 @@ public class calculateServlet extends HttpServlet{
 					Cookie stnId = new Cookie("stnId", tbssm.getB().stnID);
 					stnId.setMaxAge(60*60);
 					stnId.setPath("/");
+					tbssm.getB().startDate.add(Calendar.DATE, 1);
 					Cookie startDate = new Cookie("startDate",DateFormat.getDateInstance().format(tbssm.getB().startDate.getTime()));
 					startDate.setMaxAge(60*60);
 					startDate.setPath("/");
 					Cookie endDate = new Cookie("endDate",DateFormat.getDateInstance().format(tbssm.getB().endDate.getTime()));
 					endDate.setMaxAge(60*60);
-					startDate.setPath("/");
+					endDate.setPath("/");
 					resp.addCookie(endDate);
 					resp.addCookie(startDate);
 					resp.addCookie(stnId);
@@ -414,16 +411,15 @@ public class calculateServlet extends HttpServlet{
 					out.close();
 					*/
 					
-				}catch(JSONException e){
-					e.printStackTrace();
-				} catch (Exception e) {
+				}catch (Exception e) {
 					// TODO Auto-generated catch block
+					e.printStackTrace();
+					//resp.sendRedirect("/results.html");
 					logger.log(Level.SEVERE,e.getMessage());
-					Cookie errorFlag = new Cookie("errorFlag", "true");
-					errorFlag.setMaxAge(60*60);
-					errorFlag.setPath("/");
-					resp.addCookie(errorFlag);
-					resp.sendRedirect("/results.html");
+					Cookie errorflag = new Cookie("errorflag","true");
+					errorflag.setMaxAge(60*60);
+                    errorflag.setPath("/");
+                    resp.addCookie(errorflag);
 				}
 				
 			}else{
@@ -453,12 +449,13 @@ public class calculateServlet extends HttpServlet{
 					Cookie stnId = new Cookie("stnId", etcm.getB().stnID);
 					stnId.setMaxAge(60*60);
 					stnId.setPath("/");
+					etcm.getB().startDate.add(Calendar.DATE, 1);
 					Cookie startDate = new Cookie("startDate",DateFormat.getDateInstance().format(etcm.getB().startDate.getTime()));
 					startDate.setMaxAge(60*60);
 					startDate.setPath("/");
 					Cookie endDate = new Cookie("endDate",DateFormat.getDateInstance().format(etcm.getB().endDate.getTime()));
 					endDate.setMaxAge(60*60);
-					startDate.setPath("/");
+					endDate.setPath("/");
 					resp.addCookie(endDate);
 					resp.addCookie(startDate);
 					resp.addCookie(stnId);
@@ -499,16 +496,13 @@ public class calculateServlet extends HttpServlet{
 					out.close();
 					*/
 					
-				}catch(JSONException e){
-					e.printStackTrace();
-				} catch (Exception e) {
+				}catch (Exception e) {
 					// TODO Auto-generated catch block
 					logger.log(Level.SEVERE,e.getMessage());
-					Cookie errorFlag = new Cookie("errorFlag", "true");
-					errorFlag.setMaxAge(60*60);
-					errorFlag.setPath("/");
-					resp.addCookie(errorFlag);
-					resp.sendRedirect("/results.html");
+					Cookie errorflag = new Cookie("errorflag","true");
+					errorflag.setMaxAge(60*60);
+                    errorflag.setPath("/");
+                    resp.addCookie(errorflag);
 				}
 			}
 			
@@ -518,6 +512,11 @@ public class calculateServlet extends HttpServlet{
 		cookie1.setMaxAge(7*24*60*60);
 		cookie1.setPath("/");
 		resp.addCookie(cookie1);
+		
+		//Cookie cookie2 = new Cookie("correctFlag","true");
+		//cookie2.setMaxAge(7*24*60*60);
+		//cookie2.setPath("/");
+		//resp.addCookie(cookie2);
 		
 		resp.sendRedirect("/results.html");
 		

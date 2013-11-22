@@ -42,7 +42,99 @@ public class logoutServlet extends HttpServlet{
 				resp.addCookie(cookie);
 				
 			}
-			
+			if(cookie.getName().equals("time_base_waterLoss")){
+				
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+				
+			}
+			if(cookie.getName().equals("time_base_iLoss")){
+	
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+			if(cookie.getName().equals("time_base_wStressDays")){
+	
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+			if(cookie.getName().equals("soil_sensor_waterLoss")){
+	
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+			if(cookie.getName().equals("soil_sensor_iLoss")){
+	
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+			if(cookie.getName().equals("soil_sensor_wStressDays")){
+	
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+			if(cookie.getName().equals("rain_sensor_waterLoss")){
+	
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+
+			if(cookie.getName().equals("rain_sensor_iLoss")){
+	
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+			if(cookie.getName().equals("rain_sensor_wStressDays")){
+	
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+			if(cookie.getName().equals("et_controller_waterLoss")){
+	
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+			if(cookie.getName().equals("et_controller_waterLoss")){
+	
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+			if(cookie.getName().equals("et_controller_wStressDays")){
+	
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+			if(cookie.getName().equals("stndId")){
+	
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+			if(cookie.getName().equals("startDate")){
+				
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+			if(cookie.getName().equals("endDate")){
+				
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+	
+			}
+
+		
 			
 		}
 		resp.sendRedirect(userService.createLogoutURL("/"));

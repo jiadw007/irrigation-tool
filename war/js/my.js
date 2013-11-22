@@ -661,59 +661,62 @@ $(document).ready(function(){
 		
 	});
 	*/
-	if($.cookie("time_base_waterLoss")){
+	
+	//if($.cookie("correctFlag")){
 		
+		
+			if($.cookie("time_base_waterLoss")){
+				var str="Time-based";
+				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("time_base_waterLoss")+"</b> gallons or <b>"+$.cookie("time_base_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("time_base_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><br/>");
+				$("#result").append($p);
+				//$.cookie("time_base_waterLoss","",{ expires: -1});
+				//$.cookie("time_base_iLoss","",{ expires: -1});
+				//$.cookie("time_base_wStressDays","",{ expires: -1});
+		
+			}
+			if($.cookie("rain_sensor_waterLoss")){
+				
+				var str="Time-based with Rain Sensor";
+				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("rain_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("rain_sensor_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("rain_sensor_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><br/>");
+				$("#result").append($p);
+				//$.cookie("rain_sensor_waterLoss","",{ expires: -1});
+				//$.cookie("rain_sensor_iLoss","",{ expires: -1});
+				//$.cookie("rain_sensor_wStressDays","",{ expires: -1});
+			}
+			if($.cookie("soil_sensor_waterLoss")){
+		
+		
+				var str="Time-based with Soil Moisture Sensor";
+				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("soil_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("soil_sensor_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("soil_sensor_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><br/>");
+				$("#result").append($p);
+				//$.cookie("soil_sensor_waterLoss","",{ expires: -1});
+				//$.cookie("soil_sensor_iLoss","",{ expires: -1});
+				//$.cookie("soil_sensor_wStressDays","",{ expires: -1});
+	
+			}
+			if($.cookie("et_controller_waterLoss")){
+		
+		
+				var str="ET-Controller";
+				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("et_controller_waterLoss")+"</b> gallons or <b>"+$.cookie("et_controller_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("et_controller_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><br/>");
+				$("#result").append($p);
+				//$.cookie("et_controller_waterLoss","",{ expires: -1});
+				//$.cookie("et_controller_waterLoss","",{ expires: -1});
+				//$.cookie("et_controller_wStressDays","",{ expires: -1});
+	
+			}
 			
-			var str="Time-based";
-			var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("time_base_waterLoss")+"</b> gallons or <b>"+$.cookie("time_base_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("time_base_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><br/>");
-			$("#result").append($p);
-			$.cookie("time_base_waterLoss","",{ expires: -1});
-			$.cookie("time_base_iLoss","",{ expires: -1});
-			$.cookie("time_base_wStreeDays","",{ expires: -1});
+			if($.cookie("stnId")){
 		
-	}
-	if($.cookie("rain_sensor_waterLoss")){
-		
-		
-		var str="Time-based with Rain Sensor";
-		var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("rain_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("rain_sensor_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("rain_sensor_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><br/>");
-		$("#result").append($p);
-		$.cookie("rain_sensor_waterLoss","",{ expires: -1});
-		$.cookie("rain_sensor_iLoss","",{ expires: -1});
-		$.cookie("rain_sensor_wStreeDays","",{ expires: -1});
-	}
-	if($.cookie("soil_sensor_waterLoss")){
-		
-		
-		var str="Time-based with Soil Moisture Sensor";
-		var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("soil_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("soil_sensor_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("soil_sensor_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><br/>");
-		$("#result").append($p);
-		$.cookie("soil_sensor_waterLoss","",{ expires: -1});
-		$.cookie("soil_sensor_iLoss","",{ expires: -1});
-		$.cookie("soil_sensor_wStreeDays","",{ expires: -1});
+				var $p ="<p>Each irrigation technology selected is listed below with the model results using weather data from <b>"+$.cookie("startDate")+"</b> to <b>"+$.cookie("endDate")+"</b>. Remember that the weather station used for this data is FAWN-<b>"+$.cookie("stnId")+"</b>.</p>";
+				$("#resultIntro").append($p);
+				//$.cookie("stndId","",{expires: -1});
+				//$.cookie("startDate","",{expires: -1});
+				//$.cookie("endDate","",{expires: -1});
+			}	
+	//}
 	
-	}
-	if($.cookie("et_controller_waterLoss")){
-		
-		
-		var str="ET-Controller";
-		var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("et_controller_waterLoss")+"</b> gallons or <b>"+$.cookie("et_controller_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("et_controller_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><br/>");
-		$("#result").append($p);
-		$.cookie("et_controller_waterLoss","",{ expires: -1});
-		$.cookie("et_controller_waterLoss","",{ expires: -1});
-		$.cookie("et_controller_wStreeDays","",{ expires: -1});
-	
-	}
-	
-	if($.cookie("stnId")){
-		
-		var $p ="<p>Each irrigation technology selected is listed below with the model results using weather data from <b>"+$.cookie("startDate")+"</b> to <b>"+$.cookie("endDate")+"</b>. Remember that the weather station used for this data is FAWN-<b>"+$.cookie("stnId")+"</b>.</p>";
-		$("#resultIntro").append($p);
-		$.cookie("stndId","",{expires: -1});
-		$.cookie("startDate","",{expires: -1});
-		$.cookie("endDate","",{expires: -1});
-	}
-	if($.cookie("errorFlag")){
+	if($.cookie("errorflag")){
 		
 		var $p="<h3> ERROR WITH FAWN DATA, PLEASE CONTACT FAWN. </h3>"
 		$("#result").append($p);
