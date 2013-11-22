@@ -9,12 +9,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
 
+/**
+ * Created with MyEclipse
+ * User : Dawei Jia
+ * Date : 11/22/2013 
+ * @author Dawei Jia
+ * Test locally, no use in Irrigation tool
+ */
 public class Test {
 	
 	public static final Logger logger = Logger.getLogger(Test.class.getCanonicalName());
@@ -108,7 +116,7 @@ public class Test {
 			
 			long index = (diff / (60 * 60 * 1000)) ;
 			
-			//System.out.println(two.toString()+" : " + diff +" , "+ index);
+			System.out.println(two.toString()+" : " + diff +" , "+ index);
 			ET1.set((int) index, jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")/10.0);
 			
 		}
@@ -157,7 +165,7 @@ public class Test {
 				logger.log(Level.INFO,String.valueOf(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")));
 				//System.out.println(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm"));
 				
-			}
+			}   
 		
 		in.close();
 		*/
@@ -166,18 +174,12 @@ public class Test {
 	}
 	
 	public static void main(String args[]) throws Exception{
-		
+		 
 		Test test = new Test();
-		test.requestETData("350");
-		
-		for(int i =0 ; i < 168 ; i++){
-			
-			
-			System.out.println(test.ET0.get(i)+ "," + test.ET1.get(i));
-			
-			
-		}
-		
+		DateFormat df = new SimpleDateFormat("MMM dd yyyy", Locale.US);
+		int i =2;
+		System.out.println(df.format(test.startDate.getTime()));
+		        
 		//System.out.println(test.startDate.getTime());
 		//System.out.println(test.endDate.getTime());
 		

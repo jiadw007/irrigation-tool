@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +24,13 @@ import com.project.po.Data;
 import com.project.po.DataBase;
 import com.project.po.Util;
 
+/**
+ * Created with MyEclipse
+ * User : Dawei Jia
+ * Date : 11/19/2013
+ * @author Dawei Jia
+ * controller for unsubscribe weeklyreport and changesecret
+ */
 public class controllerServlet extends HttpServlet{
 	
 	private static final Logger logger = Logger.getLogger(controllerServlet.class.getCanonicalName());
@@ -34,6 +43,7 @@ public class controllerServlet extends HttpServlet{
 		PrintWriter out = resp.getWriter();
 		String path = req.getServletPath();
 		Hashtable<String,Data> records = new Hashtable<String,Data>();
+		DateFormat df = new SimpleDateFormat("MMM dd yyyy", Locale.US);
 		logger.log(Level.INFO, path);
 		if(path.contains("/weeklyReport")){
 			
@@ -69,19 +79,19 @@ public class controllerServlet extends HttpServlet{
 									
 									timeBasedModel tbm = new timeBasedModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
 									tbm.calculation();
-									String startDate = DateFormat.getDateInstance().format(tbm.getB().startDate.getTime());
-									String endDate = DateFormat.getDateInstance().format(tbm.getB().endDate.getTime());
+									String startDate = df.format(tbm.getB().startDate.getTime());
+									String endDate = df.format(tbm.getB().endDate.getTime());
 									Double waterLoss = tbm.getwLostWeek();
 									Double iLoss = tbm.getiLostWeek();
-									//Double rainfall = tbm.getB().getRainFallPerWeek();
+									Double rainfall = tbm.getB().getRainFallPerWeek();
 									int wStressDays = tbm.getwStressDays();
 									String fawnName = tbm.getLocation().getFawnStnName();
 									double fawnDistance = tbm.getLocation().distance;
-									
+									double irriDepth = data.getIrriDepth()/2.54;
 									
 									
 									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-									results.put("Time-based", startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance));
+									results.put("Time-based", startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
 									
 								}catch(Exception e){
 									
@@ -96,19 +106,19 @@ public class controllerServlet extends HttpServlet{
 									
 									timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getRainsettings(),data.getDays(),data.getHours(),data.getIrriDepth());
 									tbrsm.calculation();
-									String startDate = DateFormat.getDateInstance().format(tbrsm.getB().startDate.getTime());
-									String endDate = DateFormat.getDateInstance().format(tbrsm.getB().endDate.getTime());
+									String startDate = df.format(tbrsm.getB().startDate.getTime());
+									String endDate = df.format(tbrsm.getB().endDate.getTime());
 									Double waterLoss = tbrsm.getwLostWeek();
 									Double iLoss = tbrsm.getiLostWeek();
-									//Double rainfall = tbm.getB().getRainFallPerWeek();
+									Double rainfall = tbrsm.getB().getRainFallPerWeek();
 									int wStressDays = tbrsm.getwStressDays();
 									String fawnName = tbrsm.getLocation().getFawnStnName();
 									double fawnDistance = tbrsm.getLocation().distance;
-									
+									double irriDepth = data.getIrriDepth()/2.54;
 									
 									
 									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-									results.put("Time-based",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance));
+									results.put("Time-based with rain sensor",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
 								}catch(Exception e){
 									
 									logger.log(Level.WARNING, e.getMessage());
@@ -124,19 +134,19 @@ public class controllerServlet extends HttpServlet{
 									
 									timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getSoilthreshold(),data.getDays(),data.getHours(),data.getIrriDepth());
 									tbssm.calculation();
-									String startDate = DateFormat.getDateInstance().format(tbssm.getB().startDate.getTime());
-									String endDate = DateFormat.getDateInstance().format(tbssm.getB().endDate.getTime());
+									String startDate = df.format(tbssm.getB().startDate.getTime());
+									String endDate = df.format(tbssm.getB().endDate.getTime());
 									Double waterLoss = tbssm.getwLostWeek();
 									Double iLoss = tbssm.getiLostWeek();
-									//Double rainfall = tbm.getB().getRainFallPerWeek();
+									Double rainfall = tbssm.getB().getRainFallPerWeek();
 									int wStressDays = tbssm.getwStressDays();
 									String fawnName = tbssm.getLocation().getFawnStnName();
 									double fawnDistance = tbssm.getLocation().distance;
-									
+									double irriDepth = data.getIrriDepth()/2.54;
 									
 									
 									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-									results.put("Time-based",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance));
+									results.put("Time-based with soil moisture sensor",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
 									
 								}catch(Exception e){
 									
@@ -152,19 +162,19 @@ public class controllerServlet extends HttpServlet{
 									
 									ETControllerModel etcm = new ETControllerModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
 									etcm.calculation();
-									String startDate = DateFormat.getDateInstance().format(etcm.getB().startDate.getTime());
-									String endDate = DateFormat.getDateInstance().format(etcm.getB().endDate.getTime());
+									String startDate = df.format(etcm.getB().startDate.getTime());
+									String endDate = df.format(etcm.getB().endDate.getTime());
 									Double waterLoss = etcm.getwLostWeek();
 									Double iLoss = etcm.getiLostWeek();
-									//Double rainfall = tbm.getB().getRainFallPerWeek();
+									Double rainfall = etcm.getB().getRainFallPerWeek();
 									int wStressDays = etcm.getwStressDays();
 									String fawnName = etcm.getLocation().getFawnStnName();
 									double fawnDistance = etcm.getLocation().distance;
-									
+									double irriDepth = data.getIrriDepth()/2.54;
 									
 									
 									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-									results.put("Time-based",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance));
+									results.put("ET_Controller",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
 									
 								}catch(Exception e){
 									

@@ -5,7 +5,13 @@ import java.util.HashMap;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
-
+/**
+ * Created with MyEcplise
+ * User : Dawei Jia
+ * Date: 10/19/2013
+ * @author Dawei Jia
+ *
+ */
 public class ETControllerModel extends timeBasedModel{
 	
 	
@@ -17,7 +23,20 @@ public class ETControllerModel extends timeBasedModel{
 	private ArrayList<Double> AWRstep1;
 	private ArrayList<Integer> AWRstep2;
 	//private ArrayList<Double> AWRstep3;
-	
+	/**
+	 * Constructor Method
+	 * @param soilType
+	 * @param area
+	 * @param rootDepth
+	 * @param zipcode
+	 * @param unit
+	 * @param days
+	 * @param hours
+	 * @param irriDepth
+	 * @throws Exception
+	 * set initial value in ET0 ET AWR AWRstep1 AWRstep2 Ick1 Ick2 Ihret
+	 * 
+	 */
 	public ETControllerModel(String soilType, double area, double rootDepth,
 			String zipcode, String unit, String[] days, String[] hours, Double irriDepth) throws Exception {
 		// TODO Auto-generated constructor stub
@@ -32,17 +51,14 @@ public class ETControllerModel extends timeBasedModel{
 		AWR=new ArrayList();
 		AWRstep1=new ArrayList();
 		AWRstep2=new ArrayList();
-		//AWRstep3=new ArrayList();
 		double kc = b.Kc.get(this.getLocation().getZone()).get(b.Month.get(0));
 		double et0 = b.ET0.get(0);
 		this.getET().add(kc*et0);
 		this.AWR.add(0.0);  //initial value for AWR
 		this.AWRstep1.add(0.0);
 		this.AWRstep2.add(0);
-		//this.AWRstep3.add(0.0);
 		this.Ick1.add(0);
 		this.Ick2.add(0);
-		//this.getWB().add(0.0);
 		
 		HashMap<String,Double> SOIL = b.soil.get(this.getSoilType());
 		if(b.Rhr.get(0)>(this.getRootDepth()*SOIL.get("FC")-this.getSWC().get(0))){
@@ -56,16 +72,6 @@ public class ETControllerModel extends timeBasedModel{
 			this.Re.add(b.Rhr.get(0));
 			
 		}
-		
-		
-			
-		
-		
-		
-		//this.Re.add(0.0);
-		//this.getQ().add(0.0);
-		//this.getInF().add(0.0);
-		//this.getPERC().add(0.0);
 		this.Ihret.add(0.0);
 		
 	}
@@ -94,7 +100,7 @@ public class ETControllerModel extends timeBasedModel{
 	 * intital value: SWC AWR Rhr Re and ET	AWRstep1 AWRstep2 when i=i , output i
 	 * for the value in based model ,when i =i ,output i-1 
 	 * */
-	public JSONObject calculation(){
+	public void calculation(){
 		
 		HashMap<String,Double> SOIL = b.soil.get(this.getSoilType());
 		
@@ -317,6 +323,7 @@ public class ETControllerModel extends timeBasedModel{
 							
 		}
 		
+		/*
 		JSONObject resultJSON = new JSONObject();
 		try{
 			resultJSON.append("Hour", b.Hour).append("Rhr", b.Rhr).append("Re", this.Re).append("Ihrschedule", b.Ihrschedule).append("Ick1",this.Ick1).append("Ick2",this.Ick2)
@@ -329,8 +336,8 @@ public class ETControllerModel extends timeBasedModel{
 			
 			e.printStackTrace();
 		}
-		
-		return resultJSON;
+		*/
+		//return resultJSON;
 		
 		
 	}

@@ -11,7 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-
+/**
+ * Create with MyEclipse
+ * User : Dawei Jia
+ * Date : 10/19/2013
+ * @author Dawei Jia
+ * log out function
+ */
 public class logoutServlet extends HttpServlet{
 
 	@Override

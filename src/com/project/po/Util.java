@@ -24,7 +24,13 @@ import com.google.appengine.labs.repackaged.org.json.JSONObject;
 import com.project.server.calculateServlet;
 
 import javax.servlet.ServletException;
-
+/**
+ * Created with MyEclipse
+ * Date : 11/22/2013
+ * User : Dawei Jia
+ * @author jiadw_000
+ * Util function for weeklyreport
+ */
 public class Util{
 	
 	private static String mailServerURL = "http://fawn.ifas.ufl.edu/mail/send.php";
@@ -33,6 +39,15 @@ public class Util{
 	public static int EMAIL_WEEKLY_REPORT = 1;
 	private static final Logger logger = Logger.getLogger(calculateServlet.class.getCanonicalName());
 	
+	/**
+	 * create security token for email server
+	 * @param timestamp
+	 * @param type
+	 * @return token
+	 * @throws NoSuchAlgorithmException
+	 * @throws UnsupportedEncodingException
+	 * @throws ServletException
+	 */
 	public static String createToken(String timestamp, String type) throws NoSuchAlgorithmException, UnsupportedEncodingException, ServletException{
 		
 		DataBase db = new DataBase("secret");
@@ -57,14 +72,26 @@ public class Util{
 		return hexString.toString();
 
 	}
-	
+	/**
+	 * Invoke function for weekly report 
+	 * @param results
+	 * @param email
+	 * @return reponse from mail server
+	 * @throws Exception
+	 */
 	public static String requestWeeklyReport(Hashtable<String,String> results, String email) throws Exception{
 		
 		String urlParameters = buildWeeklyReportParameters(results, email);
 		return  postRequest2ExternalServer(mailServerURL, urlParameters);
 		
 	}
-	
+	/**
+	 * build weekly report parameters
+	 * @param results
+	 * @param email
+	 * @return url parameters
+	 * @throws Exception
+	 */
 	public static String buildWeeklyReportParameters(Hashtable<String,String> results,String email) throws Exception{
 		
 		
@@ -80,6 +107,8 @@ public class Util{
 		String endDate = attrs[1];
 		String fawnName = attrs[5];
 		String fawnDistance = attrs[6];
+		String rainfall = attrs[7];
+		String irriDepth = attrs[8];
 		urlParameters.append("dates=" + startDate + " to " + endDate);
 		
 		Enumeration<String> keys = results.keys();
@@ -89,16 +118,40 @@ public class Util{
 			String[] result = results.get(technology).split(",");
 			String waterLoss = result[2];
 			String percentage = result[3];
-			String wstressDays = result[4];
-			urlParameters.append("&percentage_water_not_used=" + percentage +"&gallon_water_not_used=" +
-			                     "&gallon_water_not_used=" + waterLoss +"&water_stress_day="+ wstressDays);
+			//String wstressDays = result[4];
+			if(technology.equals("Time_based")){
+				
+				urlParameters.append("&percentage_water_not_used1=" + percentage +"&gallon_water_not_used1=" + waterLoss);
+				
+			}else if(technology.equals("Time_based with rain sensor")){
+				
+				urlParameters.append("&percentage_water_not_used2=" + percentage +"&gallon_water_not_used2=" + waterLoss);
+				
+			}else if(technology.equals("Time_based with soil moisture sensor")){
+				
+				urlParameters.append("&percentage_water_not_used3=" + percentage +"&gallon_water_not_used3=" + waterLoss);
+				
+			}else{
+				
+				urlParameters.append("&percentage_water_not_used4=" + percentage +"&gallon_water_not_used4=" + waterLoss);
+				
+			}
+			
 		}
 		urlParameters.append("&fawn_station_name=" + fawnName + "&miles_to_fawn_station=" + fawnDistance + "&to="+email +"&subject=Urban Irrigation Weekly Report"
 								+ "&template_name=" + app + "&email_token=" + email_token + "&unsubscribe_token=" + unsubscribe_token + "&timestamp=" + timestamp 
-								+ "&app=" + app);
+								+ "&app=" + app+"&rainfall="+rainfall+"&irriDepth="+irriDepth);
+		
 		return urlParameters.toString();
 		
 	}
+	/**
+	 * post request to mail server to get weekly report
+	 * @param serverURL
+	 * @param postParas
+	 * @return reponse information from mail server
+	 * @throws IOException
+	 */
 	public static String postRequest2ExternalServer(String serverURL,
 			String postParas) throws IOException {
 		URL url = new URL(serverURL);

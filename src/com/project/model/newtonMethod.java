@@ -1,5 +1,12 @@
 package com.project.model;
 
+/**
+ * Created with MyEclipse
+ * User : Dawei Jia
+ * Date : 09/19/2013
+ * @author Dawei Jia
+ * Newton Iterarion Method for solving equations
+ */
 public class newtonMethod {
 	
 	private double psi;
@@ -9,6 +16,12 @@ public class newtonMethod {
 	private int maxcyc=1000;			  //the maximum times for the loop
 	private double[] x={8.0};			  // the initial value
 	private double result;				  // the result
+	/**
+	 * Constructor method
+	 * @param psi
+	 * @param delta
+	 * @param K
+	 */
 	public newtonMethod(double psi,double delta,double K){
 		this.psi=psi;
 		this.delta=delta;
@@ -27,17 +40,28 @@ public class newtonMethod {
 		this.result = result;
 	}
 
-
-
-
-	public double func(double x)                //the ln function
+	/**
+	 * the ln function
+	 * @param x
+	 * @return ln function
+	 */
+	public double func(double x)              
     {  
         return x-this.psi*this.delta*Math.log(1+x/(this.psi*this.delta))-this.K;  
-    }  
-    public double dfunc(double x)               //the derivative of func
+    }
+	/**
+	 * the derivative of ln function
+	 * @param x
+	 * @return derivative
+	 */
+    public double dfunc(double x)              
     {  
         return x/(this.psi*this.delta+x);  
-    }  
+    } 
+    /**
+     * Implementation Newton Method
+     * @return
+     */
     public boolean calculationMethod()   
     {  
         double x0,x1;  

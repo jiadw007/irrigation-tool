@@ -1,5 +1,12 @@
 package com.project.po;
 
+/**
+ * Create with MyEcplise
+ * User : Dawei Jia
+ * Date : 9/19/2013
+ * @author Dawei Jia
+ * po for storing user data in the GAE database
+ */
 public class Data {
 	
 	private String email;

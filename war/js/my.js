@@ -713,7 +713,13 @@ $(document).ready(function(){
 		$.cookie("startDate","",{expires: -1});
 		$.cookie("endDate","",{expires: -1});
 	}
-	
+	if($.cookie("errorFlag")){
+		
+		var $p="<h3> ERROR WITH FAWN DATA, PLEASE CONTACT FAWN. </h3>"
+		$("#result").append($p);
+		$.cookie("errorFlag","",{ expires: -1});
+		
+	}
 	
 	
 	

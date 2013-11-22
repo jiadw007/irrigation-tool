@@ -19,11 +19,17 @@ import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
 import com.project.po.Location;
 import com.project.po.baseData;
-
+/***
+ * Created with Eclipse
+ * User: Dawei Jia
+ * Date: 09/13/2013
+ * @author Dawei Jia
+ * This is the implementation of time based model for irrigation system in FAWN
+ */
 public class timeBasedModel {
 	
 	
-	protected static baseData b;
+	protected static baseData b;   
 	private int startIrrigationHour = 1;
 	private int lastIrrigationHour = 168;
 	private String soilType;  // get from user input
@@ -31,25 +37,25 @@ public class timeBasedModel {
 	private Double rootDepth; //get from user input
 	private Location location;	//get from user input
 	private String unit;	    //get from user input
-	private ArrayList<Double> WB;
-	private ArrayList<Double> SWC;			//from calculation function 
-	private ArrayList<Double> ET;			//from calculation function
-	private ArrayList<Double> delta;		//from calculation function 
-	private ArrayList<Double> F;			//from calculation function 
-	private ArrayList<Double> rateF;			//from calculation function 
-	private ArrayList<Double> PERC;			//from calculation function 
-	private ArrayList<Double> Q;			//from calculation function 
-	private ArrayList<Double> InF;			//from calculation function 
-	private ArrayList<Double> Loss;			//from calculation function 
-	private ArrayList<Double> PerLoss;		//from calculation function 
-	private ArrayList<Double> wLostHr;
-	private ArrayList<Double> wLostDay;
-	private ArrayList<Double> iLostHr;
-	private ArrayList<Double> iLostDay;
-	protected Double wLostWeek = 0.0;
-	protected Double iLostWeek = 0.0;
-	protected int wStressDays = 0;
-	protected double averW = 0.0;
+	private ArrayList<Double> WB = new ArrayList<Double>();   		
+	private ArrayList<Double> SWC = new ArrayList<Double>();			//from calculation function 
+	private ArrayList<Double> ET = new ArrayList<Double>();			//from calculation function
+	private ArrayList<Double> delta = new ArrayList<Double>();		//from calculation function 
+	private ArrayList<Double> F = new ArrayList<Double>();			//from calculation function 
+	private ArrayList<Double> rateF = new ArrayList<Double>();		//from calculation function 
+	private ArrayList<Double> PERC = new ArrayList<Double>();			//from calculation function 
+	private ArrayList<Double> Q = new ArrayList<Double>();			//from calculation function 
+	private ArrayList<Double> InF = new ArrayList<Double>();			//from calculation function 
+	private ArrayList<Double> Loss = new ArrayList<Double>();			//from calculation function 
+	private ArrayList<Double> PerLoss = new ArrayList<Double>();		//from calculation function 
+	private ArrayList<Double> wLostHr = new ArrayList<Double>();		//from calculation function 	
+	private ArrayList<Double> wLostDay = new ArrayList<Double>();		//from calculation function 
+	private ArrayList<Double> iLostHr = new ArrayList<Double>();		//from calculation function 
+	private ArrayList<Double> iLostDay = new ArrayList<Double>();		//from calculation function 
+	protected Double wLostWeek = 0.0;		// water not used for one week, output in the result web page
+	protected Double iLostWeek = 0.0;		// water not used percentage for one week, output in the result web page
+	protected int wStressDays = 0;			// water stress day for one week, output in the result webpage
+	protected double averW = 0.0;			// water stress day criteria
 	
 	public int getStartIrrigationHour() {
 		return startIrrigationHour;
@@ -293,33 +299,30 @@ public class timeBasedModel {
 	}
 
 
-
+	/**
+	 * Constructor methods 
+	 * @param soiltype 
+	 * @param area
+	 * @param rootDepth
+	 * @param zipcode
+	 * @param unit
+	 * @param days
+	 * @param hours
+	 * @param irriDepth
+	 * @throws Exception
+	 * All parameters got from calculateServlet
+	 */
 	public timeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit,String days[],String hours[], double irriDepth) throws Exception{
-		
-		
-		b=new baseData(zipcode,days,hours,irriDepth);
-		WB=new ArrayList<Double>();
-		SWC=new ArrayList<Double>();			//from calculation function 
-		ET=new ArrayList<Double>();			//from calculation function
-		delta=new ArrayList<Double>();		//from calculation function 
-		F=new ArrayList<Double>();			//from calculation function 
-		rateF=new ArrayList<Double>();			//from calculation function 
-		PERC=new ArrayList<Double>();			//from calculation function 
-		Q=new ArrayList<Double>();			//from calculation function 
-		InF=new ArrayList<Double>();			//from calculation function 
-		Loss=new ArrayList<Double>();			//from calculation function 
-		PerLoss=new ArrayList<Double>();		//from calculation function
-		wLostHr=new ArrayList<Double>();
-		wLostDay=new ArrayList<Double>();
-		iLostHr=new ArrayList<Double>();
-		iLostDay=new ArrayList<Double>();
 		
 		this.soilType = soiltype;
 		this.unit = unit;
+		/*
+		 * unit conversion
+		 */
 		if(unit.equals("English")){
 			
-			this.area = (double) (Math.round(area*4046.85*1000)/1000);
-			this.rootDepth = (double) (Math.round(rootDepth*2.54*1000)/1000);
+			this.area = (double) (Math.round(area*4046.85*100000)/100000);
+			this.rootDepth = (double) rootDepth *2.54;
 			
 			
 		}else{
@@ -328,7 +331,7 @@ public class timeBasedModel {
 			this.rootDepth = rootDepth;
 			
 		}
-		
+		//get the fawn station information
 		this.location = b.getLocationByzipCode(zipcode);
 		//for(int i =0;i<b.Rhr.size();i++){
 			
@@ -339,18 +342,22 @@ public class timeBasedModel {
 		HashMap<String, Double> SOIL=b.soil.get(this.soilType);		//get the properties for the designated soil
 		//System.out.println(SOIL);
 		Double swc0=0.75*SOIL.get("FC")*this.rootDepth;
-		this.SWC.add(swc0);			//get the SWC0 value
+		this.SWC.add(swc0);			//get the SWC0 value initialize SWC
 		this.averW = SOIL.get("FC")*this.rootDepth - SOIL.get("WP")*this.rootDepth;
 		
 		
 	}
-	
-	public JSONObject calculation(){
+	/**
+	 * implementation time based function 
+	 *  
+	 */
+	public void calculation(){
 		
 		b.removeInitialValue();
 		HashMap<String, Double> SOIL=b.soil.get(soilType);
 					
 		for(int i=this.startIrrigationHour;i<=this.lastIrrigationHour;i++){
+			
 			double wb = b.Rhr.get(i-1) + b.Ihr.get(i-1);
 			this.WB.add(wb);
 			if(this.WB.get(i-1)>0){  //calculate the rate(f),Q and PERC
@@ -441,6 +448,7 @@ public class timeBasedModel {
 			//calculate the water loss
 			double wloss=(this.Q.get(i-1)+this.PERC.get(i-1)-b.Rhr.get(i-1))*this.area*Math.pow(10.0, 4.0);
 			double iloss=(this.Q.get(i-1)+this.PERC.get(i-1)-this.b.Rhr.get(i-1))/this.b.Ihr.get(i-1);
+			
 			//caculate the wLostHr and water loss
 			if(wloss>0){
 				this.wLostHr.add(wloss);
@@ -558,7 +566,7 @@ public class timeBasedModel {
 		}
 		
 		
-		
+		/*
 		JSONObject resultJSON = new JSONObject();
 		try{
 			resultJSON.append("Hour", b.Hour).append("ET", this.ET).append("WB", this.WB).append("SWC", this.SWC)
@@ -570,13 +578,16 @@ public class timeBasedModel {
 			
 			e.printStackTrace();
 		}
-		
-		return resultJSON ;
+		*/
+		//return resultJSON ;
 		
 		
 	}
 
-
+	/**
+	 * implementation for timebased soil sensor and rain sensor
+	 * @param i index of results
+	 */
 
 	public void calculation(int i ){
 		
@@ -732,7 +743,11 @@ public class timeBasedModel {
 		}
 		
 	}
-	
+	/**
+	 * implementation for ET part 
+	 * don't calculate the Loss, iLoss wLosshr iLosshr wLossday iLossDay here
+	 * @param i
+	 */
 	public void calculationET(int i ){
 		
 		HashMap<String, Double> SOIL=b.soil.get(soilType);

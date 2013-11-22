@@ -23,19 +23,38 @@ import com.google.appengine.api.datastore.Text;
 import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheException;
 import net.sf.jsr107cache.CacheManager;
+	
 
-	public class DataBase {
+/**
+* Created With Eclipse
+* User : Dawei Jia
+* Date : 11/22/2013
+* @author jiadw_000
+*
+*/
+public class DataBase {
 	
-		private Cache cache;
-		private String dbName;
-		private static final Logger logger = Logger.getLogger(DataBase.class.getCanonicalName());
+	private Cache cache;
+	private String dbName;
+	private static final Logger logger = Logger.getLogger(DataBase.class.getCanonicalName());
 	
-		public DataBase(String dbName){
+	/**
+	 * Constructor method
+	 * @param dbName table name 
+	 */
+	public DataBase(String dbName){
 		
-			this.dbName = dbName;
+		this.dbName = dbName;
 		
 		
 	}
+	/**
+	 * replace colValue in specific colName
+	 * @param userID
+	 * @param colName
+	 * @param colValue
+	 * @throws ServletException
+	 */
 	public void replace(String userID, String colName, String colValue) throws ServletException{
 		
 		
@@ -55,6 +74,11 @@ import net.sf.jsr107cache.CacheManager;
 		
 		
 	}
+	/**
+	 * Insert User settings into 'User' database
+	 * @param data user
+	 * @throws ServletException
+	 */
 	public void insertIntoDataBase(Data data) throws ServletException{
 		
 		logger.log(Level.INFO,"Inserting user "+ data.getEmail() + "'s settings into datastore");
@@ -84,6 +108,10 @@ import net.sf.jsr107cache.CacheManager;
 		
 		
 	}
+	/**
+	 * fetch all user settings in the User database
+	 * @return Hashtable key: key in database Data: user settings 
+	 */
 	public Hashtable<String,Data> fecthAll(){
 		
 		Hashtable<String,Data> records = new Hashtable<String,Data>();
@@ -105,6 +133,12 @@ import net.sf.jsr107cache.CacheManager;
 		return records;
 		
 	}
+	/**
+	 * fetch one user setting information from User database
+	 * @param key
+	 * @return user settings
+	 * @throws ServletException
+	 */
 	public Data fetch(String key) throws ServletException{
 		
 		logger.log(Level.INFO, "Retrieving user " + key +"'s settings from Cache");
@@ -140,7 +174,13 @@ import net.sf.jsr107cache.CacheManager;
 		return data;
 		
 	}
-	
+	/**
+	 * fetch colvalue according colName and key
+	 * @param key
+	 * @param colName
+	 * @return column value
+	 * @throws ServletException
+	 */
 	public String fetch(String key, String colName) throws ServletException {
 		logger.log(Level.INFO, "Retrieving user " + key
 				+ "'s setting information from Cache");
@@ -171,7 +211,11 @@ import net.sf.jsr107cache.CacheManager;
 
 		return info;
 	}
-	
+	/**
+	 * Create Cache for database
+	 * @return Cache (Map)
+	 * @throws ServletException
+	 */
 	private Cache createCache() throws ServletException{
 		// TODO Auto-generated method stub
 		Map<String,Object> props = Collections.emptyMap();
@@ -184,6 +228,11 @@ import net.sf.jsr107cache.CacheManager;
 			
 		}
 	}
+	/**
+	 * delete one specific cache according to key
+	 * @param key
+	 * @throws CacheException
+	 */
 	public void cleanUpCacheDB(String key) throws CacheException{
 		
 		Map<String, Object> props = Collections.emptyMap();
@@ -212,6 +261,11 @@ import net.sf.jsr107cache.CacheManager;
 		logger.info("data of "+ key +" is removed");
 		
 	}
+	/**
+	 * process Entity property from database to Data object
+	 * @param result from database
+	 * @return Data object
+	 */
 	public Data processEntity2Data(Entity result){
 		
 		String email = result.getKey().getName();
@@ -231,6 +285,11 @@ import net.sf.jsr107cache.CacheManager;
 		Data data = new Data(email,unit,zipcode,soilType,rootDepth,area,systemSelection,days,hours,choice,rainsettings,soilthreshold,irriDepth);
 		return data;
 	}
+	/**
+	 * process Array to String 
+	 * @param str
+	 * @return String
+	 */
 	public String processArray2String(String[] str){
 		
 		StringBuilder sb = new StringBuilder();

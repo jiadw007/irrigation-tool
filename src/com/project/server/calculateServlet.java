@@ -33,13 +33,24 @@ import com.project.model.timeBasedRainSensorModel;
 import com.project.model.timeBasedSoilSensorModel;
 import com.project.po.Data;
 import com.project.po.DataBase;
-
+/**
+ * Created with MyEclipse
+ * User : Dawei Jia
+ * Date : 10/19/2013
+ * @author jiadw_000
+ *
+ */
 public class calculateServlet extends HttpServlet{
 	
 	
 	private static final Logger logger = Logger.getLogger(calculateServlet.class.getCanonicalName());
 	@SuppressWarnings("deprecation")
 	@Override
+	/**
+	 * post method function
+	 * two reuslt mode : csv and result in web page
+	 * 
+	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
@@ -61,7 +72,9 @@ public class calculateServlet extends HttpServlet{
 		String[] days = null;
 		String[] hours = null;
 		String choice = req.getParameter("correspondence");
-		
+		/**
+		 * inital all values from cookies
+		 */
 		//System.out.println("choice: "+choice);
 		for(int i = 0; i< cookie.length; i++){
 			
@@ -149,20 +162,29 @@ public class calculateServlet extends HttpServlet{
 				
 			}*/
 		}
+		/*
+		 * store user setting in the database
+		 */
 		Data data = new Data(email,unit,zipcode,soilType,rootDepth,area,systemSelection,days,hours,choice,rainsettings,soilthreshold,irriDepth);
 		DataBase db = new DataBase("User");
 		db.insertIntoDataBase(data);
-		Data d1 = db.fetch(data.getEmail());
-		System.out.println(d1.getEmail());
+		//Data d1 = db.fetch(data.getEmail());
+		//System.out.println(d1.getEmail());
 		//System.out.println("days" + days);
 		//System.out.println("hours" + hours);
+		
+		/*
+		 * unit conversion
+		 */
 		if(unit.equals("English")){
 			
 			irriDepth = irriDepth * 2.54;
 			
 		}
 		System.out.println(irriDepth);
-		
+		/*
+		 * compute for all models 
+		 */
 		for (String system : systemSelection){
 			
 			if (system.equals("Time-based")){
@@ -177,7 +199,10 @@ public class calculateServlet extends HttpServlet{
 					tbm.getLocation().print();
 				
 				
-					JSONObject resultJSON = tbm.calculation();
+					tbm.calculation();
+					/*
+					 * store results in cookies and response
+					 */
 					Cookie time_base_waterLoss = new Cookie("time_base_waterLoss",String.valueOf(tbm.getwLostWeek()));
 					time_base_waterLoss.setMaxAge(60*60);
 					time_base_waterLoss.setPath("/");
@@ -210,12 +235,14 @@ public class calculateServlet extends HttpServlet{
 					//System.out.println(resultJSON.get("wLostDay"));
 					//System.out.println(resultJSON.get("Hour"));
 					
+					//csv file output
+					/*
 					resp.setContentType("text/csv");
 					
 					String disposition = "attachment;fileName=time-base-result.csv";
 					resp.setHeader("Content-Disposition", disposition);
 					//resp.sendRedirect("/results.html");
-					out = resp.getWriter();
+					//out = resp.getWriter();
 					
 					//ut.print("sdsdf");
 					//out.write(resultJSON.toString());
@@ -230,14 +257,19 @@ public class calculateServlet extends HttpServlet{
 					}
 					out.flush();
 					out.close();
-					
+					*/
 					
 					
 				}catch(JSONException e){
 					e.printStackTrace();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.log(Level.SEVERE,e.getMessage());
+					Cookie errorFlag = new Cookie("errorFlag", "true");
+					errorFlag.setMaxAge(60*60);
+					errorFlag.setPath("/");
+					resp.addCookie(errorFlag);
+					resp.sendRedirect("/results.html");
 				}
 				
 				//resp.sendRedirect("/result.html");
@@ -252,7 +284,7 @@ public class calculateServlet extends HttpServlet{
 					System.out.println(tbrsm.getSoilType());
 					tbrsm.getLocation().print();
 				
-					JSONObject resultJSON = tbrsm.calculation();
+					tbrsm.calculation();
 					Cookie rain_sensor_waterLoss = new Cookie("rain_sensor_waterLoss",String.valueOf(tbrsm.getwLostWeek()));
 					rain_sensor_waterLoss.setMaxAge(60*60);
 					rain_sensor_waterLoss.setPath("/");
@@ -284,11 +316,11 @@ public class calculateServlet extends HttpServlet{
 					
 					//System.out.println(resultJSON.get("wLostDay"));
 					//System.out.println(resultJSON.get("Hour"));
-					
+					/*
 					resp.setContentType("text/csv");
 					String disposition = "attachment;fileName=rain-sensor-result.csv";
 					resp.setHeader("Content-Disposition", disposition);
-					out = resp.getWriter();
+					//out = resp.getWriter();
 					
 					//ut.print("sdsdf");
 					//out.write(resultJSON.toString());
@@ -303,12 +335,17 @@ public class calculateServlet extends HttpServlet{
 					}
 					out.flush();
 					out.close();
-					
+					*/
 				}catch(JSONException e){
 					e.printStackTrace();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.log(Level.SEVERE,e.getMessage());
+					Cookie errorFlag = new Cookie("errorFlag", "true");
+					errorFlag.setMaxAge(60*60);
+					errorFlag.setPath("/");
+					resp.addCookie(errorFlag);
+					resp.sendRedirect("/results.html");
 				}
 				
 			}else if(system.equals("Time-based with soil moisture sensor")){
@@ -323,7 +360,7 @@ public class calculateServlet extends HttpServlet{
 					tbssm.getLocation().print();
 					//tbssm.calculation();
 				
-					JSONObject resultJSON = tbssm.calculation();
+					tbssm.calculation();
 					Cookie soil_sensor_waterLoss = new Cookie("soil_sensor_waterLoss",String.valueOf(tbssm.getwLostWeek()));
 					soil_sensor_waterLoss.setMaxAge(60*60);
 					soil_sensor_waterLoss.setPath("/");
@@ -356,11 +393,11 @@ public class calculateServlet extends HttpServlet{
 					
 					//System.out.println(resultJSON.get("wLostDay"));
 					//System.out.println(resultJSON.get("Hour"));
-					
+					/*
 					resp.setContentType("text/csv");
 					String disposition = "attachment;fileName=soil-sensor-result.csv";
 					resp.setHeader("Content-Disposition", disposition);
-					out = resp.getWriter();
+					//out = resp.getWriter();
 					
 					//ut.print("sdsdf");
 					//out.write(resultJSON.toString());
@@ -375,12 +412,18 @@ public class calculateServlet extends HttpServlet{
 					}
 					out.flush();
 					out.close();
+					*/
 					
 				}catch(JSONException e){
 					e.printStackTrace();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.log(Level.SEVERE,e.getMessage());
+					Cookie errorFlag = new Cookie("errorFlag", "true");
+					errorFlag.setMaxAge(60*60);
+					errorFlag.setPath("/");
+					resp.addCookie(errorFlag);
+					resp.sendRedirect("/results.html");
 				}
 				
 			}else{
@@ -394,7 +437,7 @@ public class calculateServlet extends HttpServlet{
 					System.out.println(etcm.getSoilType());
 					etcm.getLocation().print();
 				
-					JSONObject resultJSON = etcm.calculation();
+					etcm.calculation();
 					Cookie et_controller_waterLoss = new Cookie("et_controller_waterLoss",String.valueOf(etcm.getwLostWeek()));
 					et_controller_waterLoss.setMaxAge(60*60);
 					et_controller_waterLoss.setPath("/");
@@ -435,11 +478,11 @@ public class calculateServlet extends HttpServlet{
 						
 					}
 					*/
-					
+					/*
 					resp.setContentType("text/csv");
 					String disposition = "attachment;fileName=ET-controller-result.csv";
 					resp.setHeader("Content-Disposition", disposition);
-					out = resp.getWriter();
+					//out = resp.getWriter();
 					
 					//ut.print("sdsdf");
 					//out.write(resultJSON.toString());
@@ -454,12 +497,18 @@ public class calculateServlet extends HttpServlet{
 					}
 					out.flush();
 					out.close();
+					*/
 					
 				}catch(JSONException e){
 					e.printStackTrace();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.log(Level.SEVERE,e.getMessage());
+					Cookie errorFlag = new Cookie("errorFlag", "true");
+					errorFlag.setMaxAge(60*60);
+					errorFlag.setPath("/");
+					resp.addCookie(errorFlag);
+					resp.sendRedirect("/results.html");
 				}
 			}
 			
@@ -470,16 +519,7 @@ public class calculateServlet extends HttpServlet{
 		cookie1.setPath("/");
 		resp.addCookie(cookie1);
 		
-		//resp.sendRedirect("/results.html");
-		
-		
-	}
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		super.doGet(req, resp);
-		
+		resp.sendRedirect("/results.html");
 		
 		
 	}

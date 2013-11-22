@@ -23,7 +23,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
-
+/**
+ * Create with MyEclipse
+ * User: Dawei Jia
+ * Date:9/19/2013
+ * @author Dawei Jia
+ * basic data for computation model in Irrigation tool
+ */
 public class baseData {
 	
 	public static String mailServerURL = "http://fawn.ifas.ufl.edu/mail/send.php";
@@ -46,19 +52,16 @@ public class baseData {
 	public Calendar endDate;
 	public String stnID;
 	private static final Logger logger = Logger.getLogger(baseData.class.getName());
+	
 	/**
-	public ArrayList<String> Date;			//from csv.file
-	public ArrayList<String> Year;			//from csv.file
-	public ArrayList<String> Month;			//from csv.file
-	public ArrayList<String> Hour;			//from csv.file
-	//public ArrayList<Double> WB;			//from csv.file
-	public ArrayList<Double> Rhr;			//from csv.file
-	public ArrayList<Double> Ihr;			//from csv.file
-	public ArrayList<Double> ET0;          //from csv.file
-	public ArrayList<Integer> Ihrschedule;   //from csv.file
-	public String Filename;
-	 * @throws Exception 
-	**/
+	 * Constructor method 
+	 * @param zipcode
+	 * @param days
+	 * @param hours
+	 * @param irriDepth
+	 * @throws Exception
+	 * Initialize Soil District fawnID Ihr Ischedule hourlyRainData hourlyETData
+	 */
 	public baseData(String zipcode,String[]days, String[] hours, Double irriDepth) throws Exception{
 		
 		zipcodes = new zipCode();
@@ -240,6 +243,12 @@ public class baseData {
 		*/	
 	}
 	
+	/**
+	 * get user Location by zipcode
+	 * latitude longitude
+	 * @param zipcode
+	 * @return Location
+	 */
 	public Location getLocationByzipCode(String zipcode){
 		
 		int index = this.zipcodes.zipcode.indexOf(zipcode);
@@ -260,12 +269,12 @@ public class baseData {
 			return null;
 			
 		}
-		
-		
-		
-		
 	}
-	
+	/**
+	 * get Nearest fawn station ID
+	 * @param loc
+	 * @return fawn station ID
+	 */
 	public String getNearByFawnStnID(Location loc){
 		
 		float lat = loc.getLat();
@@ -295,6 +304,14 @@ public class baseData {
 		
 	}
 	
+	/**
+	 * calculate distance between user geographical coordinates and nearest fawn geographical coordinates
+	 * @param lat1
+	 * @param lng1
+	 * @param lat2
+	 * @param lng2
+	 * @return distance Miles
+	 */
 	public double distanceCalculation(float lat1, float lng1, float lat2, float lng2){
 		
 		double earthRadius = 3958.75;
@@ -310,7 +327,9 @@ public class baseData {
 		
 	}
 	
-	
+	/**
+	 * set startDate: the day before last Sunday
+	 */
 	public void setStartDate() {
 		
 		Calendar cal = Calendar.getInstance();
@@ -322,7 +341,9 @@ public class baseData {
 		cal.set(Calendar.MILLISECOND, 0);
 		this.startDate = cal;
 	}
-
+	/**
+	 * set endDate: last Saturday
+	 */
 	public void setEndDate() {
 		
 		Calendar cal = Calendar.getInstance();
@@ -337,7 +358,13 @@ public class baseData {
 	}	
 	
 	
-	
+	/**
+	 * Invoke function for hourly rain data
+	 * @param startDate
+	 * @param endDate
+	 * @param stnID
+	 * @throws Exception
+	 */
 	public void  requestRainData(Calendar startDate, Calendar endDate,String stnID) throws Exception{
 		
 		String urlParameter = this.buildRainRequest(startDate, endDate, stnID);
@@ -350,13 +377,21 @@ public class baseData {
 		//}
 		
 	}
-	
+	/**
+	 * Invoke function for hourly rain data
+	 * @param stnID
+	 * @throws Exception
+	 */
 	public void requestETData(String stnID) throws Exception{
 		
 		this.postETRequest2ExternalServer(stnID);
 		
 	}
-	
+	/**
+	 * post request to server to get hourly ET data for last week
+	 * @param stnID fawn station ID
+	 * @throws Exception
+	 */
 	public void postETRequest2ExternalServer(String stnID) throws Exception{
 		
 		URL url = new URL(ETdataServerURL+stnID);
@@ -374,17 +409,26 @@ public class baseData {
 		//System.out.println(connection.getInputStream());
 		//BufferedReader in1 = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		//System.out.println(in1.readLine());
+		
+		/*
+		 * Important difference to get ET data
+		 * One for GAE, the other for local test 
+		 */
 		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
 		//BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
+		
+		
+		
 		String str = in.readLine();
 		JSONArray jsonarray = new JSONArray(str);
-		logger.log(Level.INFO, String.valueOf(jsonarray.length()));
+		logger.log(Level.INFO, "Total number of ET Data is : " + String.valueOf(jsonarray.length()));
 		
-		for(int i = 0; i < 169; i++){
-			
-			
-			ET0.add(-1.0);
-			
+		/*
+		 * store ET data according to index, check missing data
+		 * Total number is 169 
+		 */
+		for(int i = 0; i < 169; i++){	
+			ET0.add(-1.0);	
 		}
 		
 		long time1  = this.startDate.getTime().getTime();
@@ -403,7 +447,7 @@ public class baseData {
 		in.close();
 		connection.disconnect();
 		
-		//modify the ET data
+		//check and modify hourly ET data
 		for(int i = 0; i<jsonarray.length();i++){
 					
 			if(ET0.get(i) == -1.0){
@@ -421,35 +465,16 @@ public class baseData {
 						
 			}
 					
-		}
-		
-		
-		
-		
-			/*
-			String str = in.readLine();
-			System.out.println(str);
-			StringBuilder sb = new StringBuilder();
-			sb.append("{\"ET\":");
-			sb.append(str);
-			sb.append("}");
-			String json = sb.toString();
-			System.out.println(json);
-			JSONObject jsonobject = new JSONObject(json);
-			JSONArray jsonarray = jsonobject.getJSONArray("ET");
-			//System.out.println("jsonarray length: "+jsonarray.length());
-			logger.log(Level.INFO, String.valueOf(jsonarray.length()));
-			for(int i =0;i<jsonarray.length();i++){
-				logger.log(Level.INFO,String.valueOf(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")));
-				//System.out.println(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm"));
-				
-			}
-		
-		in.close();
-		*/
-		
-		
+		}	
+	
 	}
+	/**
+	 * build rain request parameters
+	 * @param fromDate start Date
+	 * @param toDate	end Date
+	 * @param stnID		fawn station ID
+	 * @return urlParameters
+	 */
 	public String buildRainRequest(Calendar fromDate,Calendar toDate, String stnID) {
 	
 		int fromMonth = fromDate.get(Calendar.MONTH)+1;
@@ -466,7 +491,12 @@ public class baseData {
 		
 	}
 	
-	
+	/**
+	 * post request to server get hourly rain data for last week
+	 * @param serverUrl 
+	 * @param postParams 
+	 * @throws Exception
+	 */
 	public void postRainRequest2ExternalServer(String serverUrl, String postParams) throws Exception{
 		
 		URL url = new URL(serverUrl);
@@ -501,11 +531,17 @@ public class baseData {
 		    this.Hour.add(String.valueOf(date.getHours()));
 		    this.Rhr.add(Double.parseDouble(inputs[2].equals("N/A") ? "0" : inputs[2].replace("\"", ""))*2.54);
 		}
+		
+		logger.log(Level.INFO, "Total number of Rain Data is : " + this.Date.size());
 		in.close();
 		connection.disconnect();
 		
 	}
 	
+	/**
+	 * rainsum for one week
+	 * @return rainsum
+	 */
 	
 	public Double getRainFallPerWeek(){
 		Double rainsum = 0.0;
@@ -518,7 +554,9 @@ public class baseData {
 		return rainsum;
 		
 	}
-	
+	/**
+	 * remove initial value for output convenience, since more attributes don't have initial vale 
+	 */
 	public void removeInitialValue(){
 		
 		Date.remove(0);
@@ -535,3 +573,24 @@ public class baseData {
 	
 
 }
+/*
+String str = in.readLine();
+System.out.println(str);
+StringBuilder sb = new StringBuilder();
+sb.append("{\"ET\":");
+sb.append(str);
+sb.append("}");
+String json = sb.toString();
+System.out.println(json);
+JSONObject jsonobject = new JSONObject(json);
+JSONArray jsonarray = jsonobject.getJSONArray("ET");
+//System.out.println("jsonarray length: "+jsonarray.length());
+logger.log(Level.INFO, String.valueOf(jsonarray.length()));
+for(int i =0;i<jsonarray.length();i++){
+	logger.log(Level.INFO,String.valueOf(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")));
+	//System.out.println(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm"));
+	
+}
+
+in.close();
+*/

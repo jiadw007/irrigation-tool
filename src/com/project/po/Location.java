@@ -1,7 +1,13 @@
 package com.project.po;
 
 import java.util.Comparator;
-
+/**
+ * Created with MyEclipse
+ * User : Dawei Jia
+ * Date :¡¡09/19/2013
+ * @author Dawei Jia
+ * Location to store geographical information for user location and nearest fawn station location
+ */
 public class Location implements Comparator<Location>{
 	
 	private String city;
@@ -20,7 +26,13 @@ public class Location implements Comparator<Location>{
 	
 	
 	
-
+	/**
+	 * Constructor method
+	 * @param zipcode
+	 * @param lat
+	 * @param lng
+	 * @param city
+	 */
 	public Location(String zipcode, float lat,float lng,String city){
 		
 		this.zip = zipcode;
@@ -30,7 +42,9 @@ public class Location implements Comparator<Location>{
 		this.setZone();
 	}
 
-
+	/**
+	 * Compare distance between two objects
+	 */
 	@Override
 	public int compare(Location o1, Location o2) {
 		// TODO Auto-generated method stub
@@ -50,7 +64,11 @@ public class Location implements Comparator<Location>{
 
 
 
-
+	/**
+	 * overload compare function
+	 * @param other
+	 * @return boolean flag
+	 */
 	public int compare(Location other) {
 		// TODO Auto-generated method stub
 		if(this.distance == other.distance){
@@ -137,7 +155,9 @@ public class Location implements Comparator<Location>{
 	public void setZone(String zone) {
 		this.zone = zone;
 	}
-
+	/**
+	 * set the district of location
+	 */
 	public void setZone(){
 		
 		if(this.lat > north2Central){

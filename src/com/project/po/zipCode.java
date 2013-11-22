@@ -9,6 +9,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+/**
+ * Create with MyEclipse
+ * User : Dawei Jia
+ * Date : 09/19/2013
+ * @author Dawei Jia
+ * Read zipcode and fawn_zips from .txt file
+ *
+ */
 public class zipCode {
 	
 	

@@ -6,6 +6,13 @@ import java.util.HashMap;
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
 
+/**
+ * Created with MyEclipse
+ * User : Dawei Jia
+ * Date : 10/19/2013
+ * @author Dawei Jia
+ *
+ */
 public class timeBasedSoilSensorModel extends timeBasedModel{
 	
 	
@@ -20,7 +27,19 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 	public ArrayList<Double> getIhrsoil() {
 		return Ihrsoil;
 	}
-
+	/**
+	 * Constructor Method
+	 * @param soilType
+	 * @param area
+	 * @param rootDepth
+	 * @param zipcode
+	 * @param unit
+	 * @param soilthreshold
+	 * @param days
+	 * @param hours
+	 * @param irriDepth
+	 * @throws Exception
+	 */
 	public timeBasedSoilSensorModel(String soilType, double area,
 			double rootDepth, String zipcode, String unit, double soilthreshold,String[] days, String[] hours, Double irriDepth) throws Exception {
 			
@@ -29,8 +48,11 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 		Ihrsoil = new ArrayList<Double>();
 		// TODO Auto-generated constructor stub
 	}
-	
-	public JSONObject calculation(){
+	/**
+	 * calculation in time based soil sensor model
+	 * override method in time based model
+	 */
+	public void calculation(){
 		
 		b.removeInitialValue();
 		
@@ -109,6 +131,7 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 							
 							
 		}
+		/*
 		JSONObject resultJSON = new JSONObject();
 		try{
 			resultJSON.append("Hour", b.Hour).append("Rhr", b.Rhr).append("Ihrsoil",this.Ihrsoil)
@@ -121,8 +144,8 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 			
 			e.printStackTrace();
 		}
-		
-		return resultJSON ; 
+		*/
+		//return resultJSON ; 
 	}
 	
 	

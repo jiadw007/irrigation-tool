@@ -11,9 +11,19 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-
+/**
+ * Created with MyEclipse
+ * User : Dawei Jia
+ * Date : 10/19/2013
+ * @author Dawei Jia
+ *
+ */
 public class loginServlet extends HttpServlet{
-
+	
+	
+	/**
+	 * login function
+	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {

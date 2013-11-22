@@ -4,23 +4,38 @@ import java.util.ArrayList;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
-
+/**
+ * Created with MyEclipse
+ * User : Dawei Jia
+ * Date : 10/19/2013
+ * @author Dawei Jia
+ *
+ */
 public class timeBasedRainSensorModel extends timeBasedModel{
 	
 	
 	private double rainsettings;
 	private ArrayList<Double> rainSum;    //rainSum for last 24hours
 	private ArrayList<Double> IhrRain;	  //WB = Rhr +IhrRain
-	
+	/**
+	 * Constructor Method
+	 * @param soilType
+	 * @param area
+	 * @param rootDepth
+	 * @param zipcode
+	 * @param unit
+	 * @param rainsettings
+	 * @param days
+	 * @param hours
+	 * @param irriDepth
+	 * @throws Exception
+	 */
 	public timeBasedRainSensorModel(String soilType, double area, double rootDepth, String zipcode, String unit, double rainsettings,String[] days, String[] hours, Double irriDepth) throws Exception{
 		
 		super(soilType,area,rootDepth,zipcode,unit,days, hours,irriDepth);
 		this.rainsettings = rainsettings;
 		rainSum = new ArrayList<Double>();
 		IhrRain = new ArrayList<Double>();
-		
-		
-		
 	}
 	
 	public double getRainsettings() {
@@ -34,8 +49,11 @@ public class timeBasedRainSensorModel extends timeBasedModel{
 	public ArrayList<Double> getIhrRain() {
 		return IhrRain;
 	}
-
-	public JSONObject calculation(){
+	/**
+	 * calculation method in time based rain sensor model
+	 * override method in time based model
+	 */
+	public void calculation(){
 		
 		//this.setWB(new ArrayList<Double>());
 		
@@ -126,6 +144,7 @@ public class timeBasedRainSensorModel extends timeBasedModel{
 					
 					
 		}
+		/*
 		JSONObject resultJSON = new JSONObject();
 		try{
 			resultJSON.append("Hour", b.Hour).append("Rhr", b.Rhr).append("rainSum", this.rainSum).append("IhrRain", this.IhrRain)
@@ -138,8 +157,8 @@ public class timeBasedRainSensorModel extends timeBasedModel{
 			
 			e.printStackTrace();
 		}
-		
-		return resultJSON;
+		*/
+		//return resultJSON;
 		//super.calculation();
 		
 	}
