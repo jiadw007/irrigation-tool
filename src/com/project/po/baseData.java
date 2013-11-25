@@ -431,8 +431,8 @@ public class baseData {
 		 * Important difference to get ET data
 		 * One for GAE, the other for local test 
 		 */
-		//BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
-		BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
+		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
+		//BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
 		
 		String str = in.readLine();
 		JSONArray jsonarray = new JSONArray(str);
@@ -483,7 +483,7 @@ public class baseData {
 						
 			}
 			
-			adjust = true;
+			//adjust = true;
 		}
 		
 		

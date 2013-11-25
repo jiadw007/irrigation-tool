@@ -191,11 +191,32 @@ public class Util{
 	}
 	
 	
-	public Cookie[] CreateCookies(){
+	public static Cookie[] createCookies(String name, String waterLoss, String iLoss, String wstressDays,String rainfall, String stnID,String startDate, String endDate){
 		
-		
-		
-		return null;
+		Cookie[] results = new Cookie[7];
+		System.out.println("Create Cookies !");
+		results[0] = new Cookie(name+"_waterLoss",waterLoss);
+		results[0].setMaxAge(60*60);
+		results[0].setPath("/");
+		results[1] = new Cookie(name+"_iLoss",iLoss);
+		results[1].setMaxAge(60*60);
+		results[1].setPath("/");
+		results[2] = new Cookie(name+"_wStressDays", wstressDays);
+		results[2].setMaxAge(60*60);
+		results[2].setPath("/");
+		results[3] = new Cookie("rainfall",rainfall);
+		results[3].setMaxAge(60*60);
+		results[3].setPath("/");
+		results[4] = new Cookie("stnId", stnID);
+		results[4].setMaxAge(60*60);
+		results[4].setPath("/");
+		results[5] = new Cookie("startDate",startDate);
+		results[5].setMaxAge(60*60);
+		results[5].setPath("/");
+		results[6] = new Cookie("endDate",endDate);
+		results[6].setMaxAge(60*60);
+		results[6].setPath("/");
+		return results;
 	}
 	
 	

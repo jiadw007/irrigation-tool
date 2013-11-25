@@ -491,7 +491,7 @@ public class timeBasedModel {
 					this.iLostDay.add(0.0);
 							
 				}else if(Integer.parseInt(this.b.Hour.get(i-1))%23==0){
-					System.out.println(i);		
+					//System.out.println(i);		
 					double wsum=0;
 					double isum=0;
 					for(int j =i-23;j<=i;j++){
@@ -554,7 +554,7 @@ public class timeBasedModel {
 			}else{
 				swcSum +=this.SWC.get(j);
 				swcSum /=24.0;
-				System.out.println("swc : "+swcSum);
+				//System.out.println("swc : "+swcSum);
 				if(swcSum < this.averW){
 					
 					this.wStressDays++;

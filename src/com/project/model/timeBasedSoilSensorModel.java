@@ -120,7 +120,7 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 			}else{
 				swcSum +=this.getSWC().get(j);
 				swcSum /=24.0;
-				System.out.println("swc : "+swcSum);
+				//System.out.println("swc : "+swcSum);
 				if(swcSum < this.averW){
 									
 					this.wStressDays++;

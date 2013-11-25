@@ -186,5 +186,28 @@ public class Test {
 		System.out.println(system.toString().contains("Time-based with soil moisture sensor"));
 		
 	}
+	/*
+	Cookie time_base_waterLoss = new Cookie("time_base_waterLoss",String.valueOf(tbm.getwLostWeek()));
+	time_base_waterLoss.setMaxAge(60*60);
+	time_base_waterLoss.setPath("/");
+	Cookie time_base_iLoss = new Cookie("time_base_iLoss",String.valueOf(tbm.getiLostWeek()));
+	time_base_iLoss.setMaxAge(60*60);
+	time_base_iLoss.setPath("/");
+	Cookie wStressDays = new Cookie("time_base_wStressDays", String.valueOf(tbm.getwStressDays()));
+	wStressDays.setMaxAge(60*60);
+	wStressDays.setPath("/");
+	Cookie rainfall = new Cookie("rainfall",String.valueOf(tbm.getB().getRainFallPerWeek()));
+	rainfall.setMaxAge(60*60);
+	rainfall.setPath("/");
+	Cookie stnId = new Cookie("stnId", tbm.getB().stnID);
+	stnId.setMaxAge(60*60);
+	stnId.setPath("/");
+	Cookie startDate = new Cookie("startDate",DateFormat.getDateInstance().format(tbm.getB().startDate.getTime()));
+	startDate.setMaxAge(60*60);
+	startDate.setPath("/");
+	Cookie endDate = new Cookie("endDate",DateFormat.getDateInstance().format(tbm.getB().endDate.getTime()));
+	endDate.setMaxAge(60*60);
+	endDate.setPath("/");
+	*/
 
 }
