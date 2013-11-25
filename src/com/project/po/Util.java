@@ -24,6 +24,7 @@ import com.google.appengine.labs.repackaged.org.json.JSONObject;
 import com.project.server.calculateServlet;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 /**
  * Created with MyEclipse
  * Date : 11/22/2013
@@ -188,6 +189,15 @@ public class Util{
 		}
 		return response.toString();
 	}
+	
+	
+	public Cookie[] CreateCookies(){
+		
+		
+		
+		return null;
+	}
+	
 	
 	
 	public static void main(String arghhs[]) throws NoSuchAlgorithmException, UnsupportedEncodingException, ServletException{

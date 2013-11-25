@@ -1,5 +1,7 @@
 package com.project.po;
 
+import java.io.IOException;
+
 /**
  * Create with MyEcplise
  * User : Dawei Jia
@@ -54,10 +56,9 @@ public class Data {
 			String[] systemSelection, String[] days, String[] hours,
 			String choice, double rainsettings,
 			double soilthreshold, double irriDepth
-			) {
+			) throws IOException{
 		super();
 		this.email = email;
-		
 		this.unit = unit;
 		this.zipcode = zipcode;
 		this.soilType = soilType;
@@ -71,6 +72,73 @@ public class Data {
 		this.rainsettings = rainsettings;
 		this.soilthreshold = soilthreshold;
 		this.irriDepth = irriDepth;
+		StringBuilder system = new StringBuilder();
+		for(String sys : this.systemSelection){
+			
+			system.append(sys);
+			
+		}
+		if(this.email.equals("")){
+			
+			throw new IOException("Sorry, you miss your email. Please Sign in !");
+		}else if(this.unit.equals("")){
+			
+			throw new IOException("Sorry, you miss your unit setting. Please go back to set it ! ");
+			
+		}else if(this.zipcode.equals("")){
+			
+			throw new IOException("Sorry, you miss your zip code setting. Please go back to set it ! ");
+			
+		}else if(this.soilType.equals("")){
+			
+			throw new IOException("Sorry, you miss your soil type setting. Please go back to set it ! ");
+			
+		}else if(this.rootDepth == 0.0){
+			
+			throw new IOException("Sorry, you miss your root depth setting. Please go back to set it ! ");
+			
+		}else if(this.area ==0.0){
+			
+			throw new IOException("Sorry, you miss your area setting. Please go back to set it ! ");
+			
+		}else if(this.systemSelection.length == 0){
+			
+			throw new IOException("Sorry, you miss your system technology setting. Please go back to set it ! ");
+			
+		}else if(this.days.length == 0){
+			
+			throw new IOException("Sorry, you miss your irrigation schedule days setting. Please go back to set it ! ");
+		
+		}else if(this.hours.length == 0 ){
+			
+			throw new IOException("Sorry, you miss your irrigation schedule hours setting. Please go back to set it ! ");
+			
+		}else if(this.choice.equals("")){
+			
+			throw new IOException("Sorry, you miss your choice setting. Please go back to set it ! ");
+			
+		}else if(this.irriDepth == 0.0){
+			
+			throw new IOException("Sorry, you miss your irrigation system setting. Please go back to set it ! ");
+			
+		}else if(this.rainsettings == 0.0){
+			
+			if(system.toString().contains("Time-based with rain sensor")){
+				
+				throw new IOException("Sorry, you miss your rainsettings. Please go back to set it ! ");
+				
+			}
+			
+		}else if(this.soilthreshold == 0.0){
+			
+			if(system.toString().contains("Time-based with soil moisture sensor")){
+				
+				throw new IOException("Sorry, you miss your soil threshold. Please go back to set it ! ");
+				
+			}
+			
+			
+		}
 		
 	}
 

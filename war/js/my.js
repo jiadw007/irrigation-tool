@@ -718,9 +718,9 @@ $(document).ready(function(){
 	
 	if($.cookie("errorflag")){
 		
-		var $p="<h3> ERROR WITH FAWN DATA, PLEASE CONTACT FAWN. </h3>"
-		$("#result").append($p);
-		$.cookie("errorFlag","",{ expires: -1});
+		var $p = "<h3>"+$.cookie("errorflag")+"</h3>"
+		$("#resultIntro").append($p);
+		$.cookie("errorflag","",{ expires: -1});
 		
 	}
 	

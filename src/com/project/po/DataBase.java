@@ -281,9 +281,15 @@ public class DataBase {
 		Double soilthreshold = (Double) result.getProperty("soilthreshold");
 		Double irriDepth = (Double) result.getProperty("irriDepth");
 		String choice = (String ) result.getProperty("choice");
-		
-		Data data = new Data(email,unit,zipcode,soilType,rootDepth,area,systemSelection,days,hours,choice,rainsettings,soilthreshold,irriDepth);
-		return data;
+		try{
+			
+			Data data = new Data(email,unit,zipcode,soilType,rootDepth,area,systemSelection,days,hours,choice,rainsettings,soilthreshold,irriDepth);
+			return data;
+		}catch(Exception e){
+			
+			e.printStackTrace();
+		}
+		return null; 
 	}
 	/**
 	 * process Array to String 

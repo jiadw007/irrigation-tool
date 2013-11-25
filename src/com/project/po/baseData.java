@@ -10,9 +10,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,6 +24,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
+import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
 /**
  * Create with MyEclipse
@@ -51,6 +54,7 @@ public class baseData {
 	public Calendar startDate;
 	public Calendar endDate;
 	public String stnID;
+	public boolean adjust = false;
 	private static final Logger logger = Logger.getLogger(baseData.class.getName());
 	
 	/**
@@ -186,25 +190,36 @@ public class baseData {
 		this.setEndDate();
 		this.stnID = this.getNearByFawnStnID(this.getLocationByzipCode(zipcode));
 		System.out.println("stnID : " +this.stnID);
-		this.requestRainData(startDate, endDate, stnID);
-		this.requestETData(this.stnID);
+		
+		try{
+			
+			for(int i =0;i<169;i++){
+				
+				Ihrschedule.add(0);
+				Ihr.add(0.0);
+			}
+			for(int i =0 ;i<days.length;i++){
+				
+				int day = Integer.parseInt(days[i])-1;
+				int hour = Integer.parseInt(hours[i])+1;
+				int index = 24 * day + hour;
+				Ihrschedule.set(index, 1);
+				Ihr.set(index, irriDepth);
+			}
+			this.requestRainData(startDate, endDate, stnID);
+			this.requestETData(this.stnID);
+			
+		}catch(IOException e){
+			
+			throw new IOException(e.getMessage());
+			
+		}
+		
 		//ET0.add(0.0);
 		//Ihrschedule1.add(0);
 		//set the value of Ihrschedule
 		
-		for(int i =0;i<169;i++){
-					
-			Ihrschedule.add(0);
-			Ihr.add(0.0);
-		}
-		for(int i =0 ;i<days.length;i++){
-			
-			int day = Integer.parseInt(days[i])-1;
-			int hour = Integer.parseInt(hours[i])+1;
-			int index = 24 * day + hour;
-			Ihrschedule.set(index, 1);
-			Ihr.set(index, irriDepth);
-		}
+		
 		//get et value
 		
 		/*
@@ -390,9 +405,11 @@ public class baseData {
 	/**
 	 * post request to server to get hourly ET data for last week
 	 * @param stnID fawn station ID
+	 * @throws JSONException 
+	 * @throws ParseException 
 	 * @throws Exception
 	 */
-	public void postETRequest2ExternalServer(String stnID) throws Exception{
+	public void postETRequest2ExternalServer(String stnID) throws IOException, JSONException, ParseException{
 		
 		URL url = new URL(ETdataServerURL+stnID);
 		logger.log(Level.INFO,ETdataServerURL+stnID);
@@ -414,10 +431,8 @@ public class baseData {
 		 * Important difference to get ET data
 		 * One for GAE, the other for local test 
 		 */
-		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
-		//BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
-		
-		
+		//BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
+		BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
 		
 		String str = in.readLine();
 		JSONArray jsonarray = new JSONArray(str);
@@ -446,26 +461,32 @@ public class baseData {
 		}
 		in.close();
 		connection.disconnect();
-		
-		//check and modify hourly ET data
-		for(int i = 0; i<jsonarray.length();i++){
-					
-			if(ET0.get(i) == -1.0){
+		if(jsonarray.length()<169){
+			
+			//check and modify hourly ET data
+			for(int i = 0; i<jsonarray.length();i++){
 						
-				if(i == 0){
+				if(ET0.get(i) == -1.0){
 							
-					ET0.set(i, 0.0);
+					if(i == 0){
+								
+						ET0.set(i, 0.0);
+								
+					}else{
+								
+						ET0.set(i, ET0.get(i-1));
+								
+					}
 							
-				}else{
-							
-					ET0.set(i, ET0.get(i-1));
 							
 				}
 						
-						
 			}
-					
-		}	
+			
+			adjust = true;
+		}
+		
+		
 	
 	}
 	/**
@@ -520,6 +541,8 @@ public class baseData {
 			in.readLine();
 			
 		}
+		BigDecimal multiplicand = new BigDecimal(0.0);
+		BigDecimal multiplier = new BigDecimal(2.54);
 		while(in.ready()){
 		
 			String[] inputs = in.readLine().split(",");
@@ -529,13 +552,18 @@ public class baseData {
 		    this.Year.add(String.valueOf(date.getYear()+1900));
 		    this.Month.add(String.valueOf(date.getMonth()+1));
 		    this.Hour.add(String.valueOf(date.getHours()));
-		    this.Rhr.add(Double.parseDouble(inputs[2].equals("N/A") ? "0" : inputs[2].replace("\"", ""))*2.54);
+		
+		    this.Rhr.add(inputs[2].equals("N/A") ? 0.0 : multiplicand.valueOf(Double.parseDouble(inputs[2].replace("\"",""))).multiply(multiplier).doubleValue());
+		    //System.out.println(Double.parseDouble(inputs[2].replace("\"", ""))*2.54);
 		}
 		
 		logger.log(Level.INFO, "Total number of Rain Data is : " + this.Date.size());
 		in.close();
 		connection.disconnect();
-		
+		if(this.Date.size()<169){
+			
+			throw new IOException("Sorry, Error With FAWN Rainfall Data. Please Contact FAWN !");
+		}
 	}
 	
 	/**
@@ -544,14 +572,17 @@ public class baseData {
 	 */
 	
 	public Double getRainFallPerWeek(){
-		Double rainsum = 0.0;
+		
+		BigDecimal rainsum = new BigDecimal(0.0);
+		BigDecimal divisor = new BigDecimal(2.54);
+		BigDecimal dividend = new BigDecimal(0.0);
 		for(int i =0;i<168;i++){
 			
-			rainsum += this.Rhr.get(i)/2.54;
-			
+			rainsum = rainsum.add(divisor.valueOf(this.Rhr.get(i)));
+			//System.out.println(this.Rhr.get(i)+","+rainsum);
 		}
-		//rainsum = (double) (Math.round(rainsum*2.54*1000)/1000);
-		return rainsum;
+		//rainsum = (double) (Math.round(rainsum*100)/100);
+		return rainsum.divide(divisor,2).doubleValue();
 		
 	}
 	/**

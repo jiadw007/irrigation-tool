@@ -103,7 +103,7 @@ public class logoutServlet extends HttpServlet{
 				resp.addCookie(cookie);
 	
 			}
-			if(cookie.getName().equals("et_controller_waterLoss")){
+			if(cookie.getName().equals("et_controller_iLoss")){
 	
 				cookie.setMaxAge(0);
 				resp.addCookie(cookie);
@@ -115,7 +115,7 @@ public class logoutServlet extends HttpServlet{
 				resp.addCookie(cookie);
 	
 			}
-			if(cookie.getName().equals("stndId")){
+			if(cookie.getName().equals("stnId")){
 	
 				cookie.setMaxAge(0);
 				resp.addCookie(cookie);
@@ -132,6 +132,12 @@ public class logoutServlet extends HttpServlet{
 				cookie.setMaxAge(0);
 				resp.addCookie(cookie);
 	
+			}
+			if(cookie.getName().equals("errorflag")){
+				
+				cookie.setMaxAge(0);
+				resp.addCookie(cookie);
+				
 			}
 
 		

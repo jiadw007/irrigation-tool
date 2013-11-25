@@ -174,14 +174,16 @@ public class Test {
 	}
 	
 	public static void main(String args[]) throws Exception{
-		 
-		Test test = new Test();
-		DateFormat df = new SimpleDateFormat("MMM dd yyyy", Locale.US);
-		int i =2;
-		System.out.println(df.format(test.startDate.getTime()));
-		        
-		//System.out.println(test.startDate.getTime());
-		//System.out.println(test.endDate.getTime());
+		
+		String[] s1 = {"Time-based","Time-based with rain sensor","Time-based with soil moisture sensor","Evapotranspiration Controller"};
+		StringBuilder system = new StringBuilder();
+		for(String sys : s1){
+			
+			system.append(sys);
+			
+		}
+		System.out.println();
+		System.out.println(system.toString().contains("Time-based with soil moisture sensor"));
 		
 	}
 

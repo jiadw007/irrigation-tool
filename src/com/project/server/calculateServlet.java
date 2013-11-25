@@ -62,16 +62,22 @@ public class calculateServlet extends HttpServlet{
 		String isystem = "";
 		int irriDuration = 0;
 		String email = "";
-		String password = "";
+		//String password = "";
 		String soilType ="";
 		String zipcode ="";
 		String unit = "";
 		double rootDepth =0.0;
 		double area = 0.0;
-		String[] systemSelection = null;
-		String[] days = null;
-		String[] hours = null;
+		String[] systemSelection = {};
+		String[] days = {};
+		String[] hours = {};
 		String choice = req.getParameter("correspondence");
+		boolean adjustflag = false;
+		Cookie cookie1 = new Cookie("choice",choice);
+		cookie1.setMaxAge(7*24*60*60);
+		cookie1.setPath("/");
+		resp.addCookie(cookie1);
+		
 		/**
 		 * inital all values from cookies
 		 */
@@ -82,10 +88,6 @@ public class calculateServlet extends HttpServlet{
 				
 				email = URLDecoder.decode(cookie[i].getValue(),"UTF-8");
 				//System.out.println(email);
-			}else if(cookie[i].getName().equals("password")){
-				
-				password =URLDecoder.decode(cookie[i].getValue(),"UTF-8");
-				//System.out.println(password);
 			}else if (cookie[i].getName().equals("soilType")){
 				
 				soilType = URLDecoder.decode(cookie[i].getValue(),"UTF-8");
@@ -165,33 +167,39 @@ public class calculateServlet extends HttpServlet{
 		/*
 		 * store user setting in the database
 		 */
-		Data data = new Data(email,unit,zipcode,soilType,rootDepth,area,systemSelection,days,hours,choice,rainsettings,soilthreshold,irriDepth);
-		DataBase db = new DataBase("User");
-		db.insertIntoDataBase(data);
-		//Data d1 = db.fetch(data.getEmail());
-		//System.out.println(d1.getEmail());
-		//System.out.println("days" + days);
-		//System.out.println("hours" + hours);
-		
-		/*
-		 * unit conversion
-		 */
-		if(unit.equals("English")){
+		try{
 			
-			irriDepth = irriDepth * 2.54;
+			Data data = new Data(email,unit,zipcode,soilType,rootDepth,area,systemSelection,days,hours,choice,rainsettings,soilthreshold,irriDepth);
+			DataBase db = new DataBase("User");
+			db.insertIntoDataBase(data);
+			//Data d1 = db.fetch(data.getEmail());
+			//System.out.println(d1.getEmail());
+			//System.out.println("days" + days);
+			//System.out.println("hours" + hours);
 			
-		}
-		System.out.println(irriDepth);
-		/*
-		 * compute for all models 
-		 */
-		for (String system : systemSelection){
-			
-			if (system.equals("Time-based")){
+			/*
+			 * unit conversion
+			 */
+			if(unit.equals("English")){
 				
-				System.out.println("Time-based");
-				try{
+				irriDepth = irriDepth * 2.54;
+				
+			}
+			System.out.println(irriDepth);
+			/*
+			 * compute for all models 
+			 */
+			for (String system : systemSelection){
+				
+				if (system.equals("Time-based")){
+					
+					System.out.println("Time-based");
 					timeBasedModel tbm = new timeBasedModel(soilType,area,rootDepth,zipcode,unit,days,hours,irriDepth);
+					if(!adjustflag&&tbm.getB().adjust){
+						
+						adjustflag = true;
+					}
+					
 					System.out.println(tbm.getRootDepth());
 					System.out.println(tbm.getUnit());
 					System.out.println(tbm.getArea());
@@ -230,10 +238,9 @@ public class calculateServlet extends HttpServlet{
 					resp.addCookie(time_base_waterLoss);
 					resp.addCookie(time_base_iLoss);
 					resp.addCookie(wStressDays);
-					
-					//System.out.println(resultJSON.get("wLostDay"));
+				    //System.out.println(resultJSON.get("wLostDay"));
 					//System.out.println(resultJSON.get("Hour"));
-					
+						
 					//csv file output
 					/*
 					resp.setContentType("text/csv");
@@ -242,45 +249,37 @@ public class calculateServlet extends HttpServlet{
 					resp.setHeader("Content-Disposition", disposition);
 					//resp.sendRedirect("/results.html");
 					//out = resp.getWriter();
-					
+						
 					//ut.print("sdsdf");
 					//out.write(resultJSON.toString());
 					out.println("Hour,Rhr(cm),Ihr(cm),ET0(cm),ET(cm),WB(cm),SWC(cm),DELTA(cm),F(cm),rateF(cm),Q(cm),Inf,PERC,Loss(cm3),PerLoss,wLostHr(cm3),wLostDay(cm3),iLostHr,iLostDay");
 					for(int i =0;i<tbm.getB().Hour.size();i++){
-						
+							
 						out.println(tbm.getB().Hour.get(i)+","+tbm.getB().Rhr.get(i)+","+tbm.getB().Ihr.get(i)+","+tbm.getB().ET0.get(i)+","+tbm.getET().get(i)+","+tbm.getWB().get(i)+","+tbm.getSWC().get(i+1)+","+tbm.getDelta().get(i)+","
-						        +tbm.getF().get(i)+","+tbm.getRateF().get(i)+","+tbm.getQ().get(i)+","
-						        +tbm.getInF().get(i)+","+tbm.getPERC().get(i)+","+tbm.getLoss().get(i)+","+tbm.getPerLoss().get(i)+","+tbm.getwLostHr().get(i)+","
-						        +tbm.getwLostDay().get(i)+","+tbm.getiLostHr().get(i)+","+tbm.getiLostDay().get(i));
-						
+							        +tbm.getF().get(i)+","+tbm.getRateF().get(i)+","+tbm.getQ().get(i)+","
+							        +tbm.getInF().get(i)+","+tbm.getPERC().get(i)+","+tbm.getLoss().get(i)+","+tbm.getPerLoss().get(i)+","+tbm.getwLostHr().get(i)+","
+							        +tbm.getwLostDay().get(i)+","+tbm.getiLostHr().get(i)+","+tbm.getiLostDay().get(i));
+							
 					}
 					out.flush();
 					out.close();
 					*/
+						
+				}else if(system.equals("Time-based with rain sensor")){
 					
-					
-				}catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					logger.log(Level.SEVERE,e.getMessage());
-					Cookie errorflag = new Cookie("errorflag","true");
-					errorflag.setMaxAge(60*60);
-                    errorflag.setPath("/");
-                    resp.addCookie(errorflag);
-				}
-				
-				
-			}else if(system.equals("Time-based with rain sensor")){
-				
-				System.out.println("Time-based with rain sensor");
-				try{	
+					System.out.println("Time-based with rain sensor");
+						
 					timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(soilType,area,rootDepth,zipcode,unit,rainsettings,days,hours,irriDepth);
+					if(!adjustflag&&tbrsm.getB().adjust){
+						
+						adjustflag = true;
+					}
 					System.out.println(tbrsm.getRootDepth());
 					System.out.println(tbrsm.getUnit());
 					System.out.println(tbrsm.getArea());
 					System.out.println(tbrsm.getSoilType());
 					tbrsm.getLocation().print();
-				
+					
 					tbrsm.calculation();
 					Cookie rain_sensor_waterLoss = new Cookie("rain_sensor_waterLoss",String.valueOf(tbrsm.getwLostWeek()));
 					rain_sensor_waterLoss.setMaxAge(60*60);
@@ -310,8 +309,7 @@ public class calculateServlet extends HttpServlet{
 					resp.addCookie(wStressDays);
 					resp.addCookie(rain_sensor_waterLoss);
 					resp.addCookie(rain_sensor_iLoss);
-					resp.addCookie(rainfall);
-					
+					resp.addCookie(rainfall);	
 					//System.out.println(resultJSON.get("wLostDay"));
 					//System.out.println(resultJSON.get("Hour"));
 					/*
@@ -319,43 +317,37 @@ public class calculateServlet extends HttpServlet{
 					String disposition = "attachment;fileName=rain-sensor-result.csv";
 					resp.setHeader("Content-Disposition", disposition);
 					//out = resp.getWriter();
-					
 					//ut.print("sdsdf");
 					//out.write(resultJSON.toString());
 					out.println("Hour,Rhr(cm),Ihr(cm),ET0(cm),RainSum(cm),IhrRain(cm),ET(cm),WB(cm),SWC(cm),DELTA(cm),F(cm),rateF(cm),Q,Inf,PERC,Loss(cm),PerLoss,wLostHr(cm3),wLostDay(cm3),iLostHr,iLostDay");
 					for(int i =0;i<tbrsm.getB().Hour.size();i++){
-						
+							
 						out.println(tbrsm.getB().Hour.get(i)+","+tbrsm.getB().Rhr.get(i)+","+tbrsm.getB().Ihr.get(i)+","+tbrsm.getB().ET0.get(i)+","+tbrsm.getRainSum().get(i)+","+tbrsm.getIhrRain().get(i)+","+tbrsm.getET().get(i)+","+tbrsm.getWB().get(i)+","+tbrsm.getSWC().get(i+1)+","+tbrsm.getDelta().get(i)+","
-						        +tbrsm.getF().get(i)+","+tbrsm.getRateF().get(i)+","+tbrsm.getQ().get(i)+","
-						        +tbrsm.getInF().get(i)+","+tbrsm.getPERC().get(i)+","+tbrsm.getLoss().get(i)+","+tbrsm.getPerLoss().get(i)+","+tbrsm.getwLostHr().get(i)+","
-						        +tbrsm.getwLostDay().get(i)+","+tbrsm.getiLostHr().get(i)+","+tbrsm.getiLostDay().get(i));
-						
+							        +tbrsm.getF().get(i)+","+tbrsm.getRateF().get(i)+","+tbrsm.getQ().get(i)+","
+							        +tbrsm.getInF().get(i)+","+tbrsm.getPERC().get(i)+","+tbrsm.getLoss().get(i)+","+tbrsm.getPerLoss().get(i)+","+tbrsm.getwLostHr().get(i)+","
+							        +tbrsm.getwLostDay().get(i)+","+tbrsm.getiLostHr().get(i)+","+tbrsm.getiLostDay().get(i));
+							
 					}
 					out.flush();
 					out.close();
-					*/
-				}catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					logger.log(Level.SEVERE,e.getMessage());
-					Cookie errorflag = new Cookie("errorflag","true");
-					errorflag.setMaxAge(60*60);
-                    errorflag.setPath("/");
-                    resp.addCookie(errorflag);
-				}
-				
-			}else if(system.equals("Time-based with soil moisture sensor")){
-				
-				System.out.println("Time-based with soil moisture sensor");
-				try{
+					*/					
+				}else if(system.equals("Time-based with soil moisture sensor")){
+					
+					System.out.println("Time-based with soil moisture sensor");
+					
 					timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(soilType,area,rootDepth,zipcode,unit,soilthreshold,days,hours,irriDepth);
+					
+					if(!adjustflag&&tbssm.getB().adjust){
+						
+						adjustflag = true;
+					}
 					System.out.println(tbssm.getRootDepth());
 					System.out.println(tbssm.getUnit());
 					System.out.println(tbssm.getArea());
 					System.out.println(tbssm.getSoilType());
 					tbssm.getLocation().print();
 					//tbssm.calculation();
-				
+					
 					tbssm.calculation();
 					Cookie soil_sensor_waterLoss = new Cookie("soil_sensor_waterLoss",String.valueOf(tbssm.getwLostWeek()));
 					soil_sensor_waterLoss.setMaxAge(60*60);
@@ -385,9 +377,7 @@ public class calculateServlet extends HttpServlet{
 					resp.addCookie(rainfall);
 					resp.addCookie(wStressDays);
 					resp.addCookie(soil_sensor_waterLoss);
-					resp.addCookie(soil_sensor_iLoss);
-					
-					
+					resp.addCookie(soil_sensor_iLoss);	
 					//System.out.println(resultJSON.get("wLostDay"));
 					//System.out.println(resultJSON.get("Hour"));
 					/*
@@ -395,44 +385,38 @@ public class calculateServlet extends HttpServlet{
 					String disposition = "attachment;fileName=soil-sensor-result.csv";
 					resp.setHeader("Content-Disposition", disposition);
 					//out = resp.getWriter();
-					
+						
 					//ut.print("sdsdf");
 					//out.write(resultJSON.toString());
 					out.println("Hour,Rhr(cm),Ihr(cm),ET0(cm),IhrSoil(cm),ET(cm),WB(cm),SWC(cm),DELTA(cm),F(cm),rateF(cm),Q,Inf,PERC,Loss(cm3),PerLoss,wLostHr(cm3),wLostDay(cm3),iLostHr,iLostDay");
 					for(int i =0;i<tbssm.getB().Hour.size();i++){
-						
+							
 						out.println(tbssm.getB().Hour.get(i)+","+tbssm.getB().Rhr.get(i)+","+tbssm.getB().Ihr.get(i)+","+tbssm.getB().ET0.get(i)+","+tbssm.getIhrsoil().get(i)+","+tbssm.getET().get(i)+","+tbssm.getWB().get(i)+","+tbssm.getSWC().get(i+1)+","+tbssm.getDelta().get(i)+","
-						        +tbssm.getF().get(i)+","+tbssm.getRateF().get(i)+","+tbssm.getQ().get(i)+","
-						        +tbssm.getInF().get(i)+","+tbssm.getPERC().get(i)+","+tbssm.getLoss().get(i)+","+tbssm.getPerLoss().get(i)+","+tbssm.getwLostHr().get(i)+","
-						        +tbssm.getwLostDay().get(i)+","+tbssm.getiLostHr().get(i)+","+tbssm.getiLostDay().get(i));
-						
+							        +tbssm.getF().get(i)+","+tbssm.getRateF().get(i)+","+tbssm.getQ().get(i)+","
+							        +tbssm.getInF().get(i)+","+tbssm.getPERC().get(i)+","+tbssm.getLoss().get(i)+","+tbssm.getPerLoss().get(i)+","+tbssm.getwLostHr().get(i)+","
+							        +tbssm.getwLostDay().get(i)+","+tbssm.getiLostHr().get(i)+","+tbssm.getiLostDay().get(i));
+							
 					}
 					out.flush();
-					out.close();
+					out.close();						
 					*/
+						
+				}else{
 					
-				}catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					//resp.sendRedirect("/results.html");
-					logger.log(Level.SEVERE,e.getMessage());
-					Cookie errorflag = new Cookie("errorflag","true");
-					errorflag.setMaxAge(60*60);
-                    errorflag.setPath("/");
-                    resp.addCookie(errorflag);
-				}
-				
-			}else{
-				
-				System.out.println("Evapotranspiration Controller");
-				try{
+					System.out.println("Evapotranspiration Controller");
+					
 					ETControllerModel etcm = new ETControllerModel(soilType,area,rootDepth,zipcode,unit,days,hours,irriDepth);
+					
+					if(!adjustflag&&etcm.getB().adjust){
+						
+						adjustflag = true;
+					}
 					System.out.println(etcm.getRootDepth());
 					System.out.println(etcm.getUnit());
 					System.out.println(etcm.getArea());
 					System.out.println(etcm.getSoilType());
 					etcm.getLocation().print();
-				
+					
 					etcm.calculation();
 					Cookie et_controller_waterLoss = new Cookie("et_controller_waterLoss",String.valueOf(etcm.getwLostWeek()));
 					et_controller_waterLoss.setMaxAge(60*60);
@@ -463,16 +447,16 @@ public class calculateServlet extends HttpServlet{
 					resp.addCookie(wStressDays);
 					resp.addCookie(et_controller_waterLoss);
 					resp.addCookie(et_controller_iLoss);
-					
+						
 					//System.out.println(resultJSON.get("wLostDay"));
 					//System.out.println(resultJSON.get("Hour"));
 					//System.out.print("Re: ");
 					//System.out.println(etcm.getRe().size()+","+etcm.getAWR().size()+","+etcm.getAWRstep1().size()+","+etcm.getAWRstep2().size()+","+etcm.getIck1().size()+","+etcm.getIck2().size()+","+etcm.getiLostHr().size()+","+etcm.getIhret().size()+","+etcm.getiLostDay().size()+","+etcm.getwLostHr().size()+","+etcm.getwLostDay().size());
 					/*
 					for(int i =0;i<168;i++){
-						
+							
 						System.out.print(etcm.getRe().get(i)+",");
-						
+							
 					}
 					*/
 					/*
@@ -480,38 +464,40 @@ public class calculateServlet extends HttpServlet{
 					String disposition = "attachment;fileName=ET-controller-result.csv";
 					resp.setHeader("Content-Disposition", disposition);
 					//out = resp.getWriter();
-					
+						
 					//ut.print("sdsdf");
 					//out.write(resultJSON.toString());
 					out.println("Hour,Rhr(cm),Ihr(cm),ET0(cm),Re,Ihrshcdule,ET,Ick1,Ick2,AWRSTEP1,AWRSTEP2,AWR,Ihret,WB(cm),SWC(cm),DELTA(cm),F(cm),rateF(cm),Q,Inf,PERC,Loss(cm3),PerLoss,wLostHr(cm3),wLostDay(cm3),iLostHr,iLostDay");
 					for(int i =0;i<etcm.getB().Hour.size();i++){
-						
+							
 						out.println(etcm.getB().Hour.get(i)+","+etcm.getB().Rhr.get(i)+","+etcm.getB().Ihr.get(i)+","+etcm.getRe().get(i)+","+etcm.getB().ET0.get(i)+","+etcm.getB().Ihrschedule.get(i)+","+etcm.getET().get(i)+","+etcm.getIck1().get(i)+","+etcm.getIck2().get(i)+","+etcm.getAWRstep1().get(i)+","+etcm.getAWRstep2().get(i)+","+etcm.getAWR().get(i)+","+etcm.getIhret().get(i)+","+etcm.getWB().get(i)+","+etcm.getSWC().get(i+1)+","+etcm.getDelta().get(i)+","
-						        +etcm.getF().get(i)+","+etcm.getRateF().get(i)+","+etcm.getQ().get(i)+","
-						        +etcm.getInF().get(i)+","+etcm.getPERC().get(i)+","+etcm.getLoss().get(i)+","+etcm.getPerLoss().get(i)+","+etcm.getwLostHr().get(i)+","
-						        +etcm.getwLostDay().get(i)+","+etcm.getiLostHr().get(i)+","+etcm.getiLostDay().get(i));
-						
+							        +etcm.getF().get(i)+","+etcm.getRateF().get(i)+","+etcm.getQ().get(i)+","
+							        +etcm.getInF().get(i)+","+etcm.getPERC().get(i)+","+etcm.getLoss().get(i)+","+etcm.getPerLoss().get(i)+","+etcm.getwLostHr().get(i)+","
+							        +etcm.getwLostDay().get(i)+","+etcm.getiLostHr().get(i)+","+etcm.getiLostDay().get(i));
+							
 					}
 					out.flush();
 					out.close();
-					*/
-					
-				}catch (Exception e) {
-					// TODO Auto-generated catch block
-					logger.log(Level.SEVERE,e.getMessage());
-					Cookie errorflag = new Cookie("errorflag","true");
-					errorflag.setMaxAge(60*60);
-                    errorflag.setPath("/");
-                    resp.addCookie(errorflag);
+					*/								
 				}
+				
 			}
 			
+			if(adjustflag){
+				
+				throw new IOException("Error with FAWN ET Data. This is the adjusted result ! Please Contact FAWN.");
+				
+			}
+			
+		}catch(Exception e){
+			
+			logger.log(Level.SEVERE, e.getMessage());
+			Cookie errorflag = new Cookie("errorflag",e.getMessage());
+			errorflag.setMaxAge(60*60);
+            errorflag.setPath("/");
+            resp.addCookie(errorflag);
 		}
 		
-		Cookie cookie1 = new Cookie("choice",choice);
-		cookie1.setMaxAge(7*24*60*60);
-		cookie1.setPath("/");
-		resp.addCookie(cookie1);
 		
 		//Cookie cookie2 = new Cookie("correctFlag","true");
 		//cookie2.setMaxAge(7*24*60*60);
