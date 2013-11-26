@@ -51,7 +51,7 @@ public class Util{
 	 */
 	public static String createToken(String timestamp, String type) throws NoSuchAlgorithmException, UnsupportedEncodingException, ServletException{
 		
-		DataBase db = new DataBase("secret");
+		DataBase db = new DataBase("Secret");
 		String secret = db.fetch("secret", "secret");
 		String originalToken = "{" + secret + "}-{" + timestamp + "}-{" + type + "}";
 		MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
@@ -99,18 +99,18 @@ public class Util{
 		//parameters not used : ranking links techonology 
 		StringBuilder urlParameters = new StringBuilder();
 		String timestamp = Long.toString(System.nanoTime());
-		String app = "UrbanIrrigation";
+		String app = "Irrigation Tool";
 		String email_token = createToken(timestamp, app);
 		String unsubscribe_token = createToken(timestamp, email);
 		//get common result attributes
 		String[] attrs = results.elements().nextElement().split(",");
 		String startDate = attrs[0];
 		String endDate = attrs[1];
-		String fawnName = attrs[5];
-		String fawnDistance = attrs[6];
-		String rainfall = attrs[7];
-		String irriDepth = attrs[8];
-		urlParameters.append("dates=" + startDate + " to " + endDate);
+		String fawnName = attrs[4];
+		//String fawnDistance = attrs[6];
+		String rainfall = attrs[5];
+		String irriDepth = attrs[6];
+		urlParameters.append("startDate=" + startDate + "&endDate=" + endDate);
 		
 		Enumeration<String> keys = results.keys();
 		while(keys.hasMoreElements()){
@@ -132,16 +132,16 @@ public class Util{
 				
 				urlParameters.append("&percentage_water_not_used3=" + percentage +"&gallon_water_not_used3=" + waterLoss);
 				
-			}else{
+			}else if(technology.equals("Evapotranspiration Controller")){
 				
 				urlParameters.append("&percentage_water_not_used4=" + percentage +"&gallon_water_not_used4=" + waterLoss);
 				
 			}
 			
 		}
-		urlParameters.append("&fawn_station_name=" + fawnName + "&miles_to_fawn_station=" + fawnDistance + "&to="+email +"&subject=Urban Irrigation Weekly Report"
+		urlParameters.append("&fawn_station_name=" + fawnName + "&to=" + email +"&subject=Irrigation Tool Weekly Report"
 								+ "&template_name=" + app + "&email_token=" + email_token + "&unsubscribe_token=" + unsubscribe_token + "&timestamp=" + timestamp 
-								+ "&app=" + app+"&rainfall="+rainfall+"&irriDepth="+irriDepth);
+								+ "&app=" + app+"&rainfall=" + rainfall + "&irriDepth="+irriDepth);
 		
 		return urlParameters.toString();
 		
