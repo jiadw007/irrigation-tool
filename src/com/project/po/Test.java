@@ -9,12 +9,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
+import com.google.appengine.labs.repackaged.org.json.JSONObject;
 
 /**
  * Created with MyEclipse
@@ -174,7 +176,7 @@ public class Test {
 	}
 	
 	public static void main(String args[]) throws Exception{
-		
+		/*
 		String[] s1 = {"Time-based","Time-based with rain sensor","Time-based with soil moisture sensor","Evapotranspiration Controller"};
 		StringBuilder system = new StringBuilder();
 		for(String sys : s1){
@@ -186,6 +188,7 @@ public class Test {
 		System.out.println(system.toString().contains("Time-based with soil moisture sensor"));
 		
 	}
+	*/
 	/*
 	Cookie time_base_waterLoss = new Cookie("time_base_waterLoss",String.valueOf(tbm.getwLostWeek()));
 	time_base_waterLoss.setMaxAge(60*60);
@@ -209,5 +212,38 @@ public class Test {
 	endDate.setMaxAge(60*60);
 	endDate.setPath("/");
 	*/
+	
+		String serverUrl = "http://test.fawn.ifas.ufl.edu/controller.php/stationsJson/";
+
+		URL url = new URL(serverUrl);
+		//logger.log(Level.INFO,ETdataServerURL+stnID);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		//System.out.println(connection.getDoInput());
+		connection.setDoOutput(true);
+		connection.setDoInput(true);
+		connection.setRequestMethod("GET");
+		connection.setRequestProperty("Content-Type", "text/plain");
+		connection.setRequestProperty("charset", "utf-8");
+		//connection.setRequestProperty("Content-Encoding", "gzip");
+		//connection.setRequestProperty("Content-Length", "541");
+		connection.setUseCaches(false);
+		BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));
+		String str = in.readLine();
+		JSONObject json = new JSONObject(str);
+		Iterator iter =json.keys();
+		while(iter.hasNext()){
+			
+			String key = (String)iter.next();
+			JSONObject obj = (JSONObject) json.getJSONObject(key);
+			String lat = obj.getString("Latitude");
+			String lon = obj.getString("Longitude");
+			String name = obj.getString("display_name");
+			System.out.println(key+","+lat+","+lon+","+name);
+			
+			
+		}
+		
+		
+	}
 
 }

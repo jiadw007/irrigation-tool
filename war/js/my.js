@@ -667,7 +667,7 @@ $(document).ready(function(){
 		
 			if($.cookie("time_base_waterLoss")){
 				var str="Time-based";
-				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("time_base_waterLoss")+"</b> gallons or <b>"+$.cookie("time_base_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("time_base_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><p>The sum of irrigation for one week: <b>"+$.cookie("irriWeek")+"</b></p><br/>");
+				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("time_base_waterLoss")+"</b> gallons or <b>"+$.cookie("time_base_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("time_base_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><p>The sum of irrigation for one week: <b>"+$.cookie("time_base_irriWeek")+"</b> inches</p><br/>");
 				$("#result").append($p);
 				//$.cookie("time_base_waterLoss","",{ expires: -1});
 				//$.cookie("time_base_iLoss","",{ expires: -1});
@@ -677,7 +677,7 @@ $(document).ready(function(){
 			if($.cookie("rain_sensor_waterLoss")){
 				
 				var str="Time-based with Rain Sensor";
-				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("rain_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("rain_sensor_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("rain_sensor_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><p>The sum of irrigation for one week: <b>"+$.cookie("irriWeek")+"</b></p><br/>");
+				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("rain_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("rain_sensor_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("rain_sensor_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><p>The sum of irrigation for one week: <b>"+$.cookie("rain_sensor_irriWeek")+"</b> inches</p><br/>");
 				$("#result").append($p);
 				//$.cookie("rain_sensor_waterLoss","",{ expires: -1});
 				//$.cookie("rain_sensor_iLoss","",{ expires: -1});
@@ -687,7 +687,7 @@ $(document).ready(function(){
 		
 		
 				var str="Time-based with Soil Moisture Sensor";
-				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("soil_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("soil_sensor_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("soil_sensor_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><p>The sum of irrigation for one week: <b>"+$.cookie("irriWeek")+"</b></p><br/>");
+				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("soil_sensor_waterLoss")+"</b> gallons or <b>"+$.cookie("soil_sensor_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("soil_sensor_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><p>The sum of irrigation for one week: <b>"+$.cookie("soil_sensor_irriWeek")+"</b> inches</p><br/>");
 				$("#result").append($p);
 				//$.cookie("soil_sensor_waterLoss","",{ expires: -1});
 				//$.cookie("soil_sensor_iLoss","",{ expires: -1});
@@ -698,7 +698,7 @@ $(document).ready(function(){
 		
 		
 				var str="ET-Controller";
-				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("et_controller_waterLoss")+"</b> gallons or <b>"+$.cookie("et_controller_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("et_controller_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><p>The sum of irrigation for one week: <b>"+$.cookie("irriWeek")+"</b></p><br/>");
+				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("et_controller_waterLoss")+"</b> gallons or <b>"+$.cookie("et_controller_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("et_controller_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><p>The sum of irrigation for one week: <b>"+$.cookie("et_controller_irriWeek")+"</b> inches</p><br/>");
 				$("#result").append($p);
 				//$.cookie("et_controller_waterLoss","",{ expires: -1});
 				//$.cookie("et_controller_waterLoss","",{ expires: -1});

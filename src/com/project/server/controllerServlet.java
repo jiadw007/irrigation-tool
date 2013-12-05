@@ -93,13 +93,13 @@ public class controllerServlet extends HttpServlet{
 									double irriDepth = 0.0;
 									if(data.getUnit().equals("Metric")){
 										
-										BigDecimal dividend = new BigDecimal(data.getIrriDepth());
+										BigDecimal dividend = new BigDecimal(tbm.getB().IrriWeek);
 										BigDecimal divisor = new BigDecimal(2.54);
 										irriDepth = dividend.divide(divisor, 2).doubleValue();
 										
 									}else{
 										
-										irriDepth = data.getIrriDepth();
+										irriDepth = tbm.getB().IrriWeek;
 										
 									}
 									
@@ -122,7 +122,18 @@ public class controllerServlet extends HttpServlet{
 									//int wStressDays = tbrsm.getwStressDays();
 									String fawnName = tbrsm.getLocation().getFawnStnName();
 									//double fawnDistance = tbrsm.getLocation().distance;
-									double irriDepth = data.getIrriDepth()/2.54;
+									double irriDepth = 0.0;
+									if(data.getUnit().equals("Metric")){
+												
+										BigDecimal dividend = new BigDecimal(tbrsm.getB().IrriWeek);
+										BigDecimal divisor = new BigDecimal(2.54);
+										irriDepth = dividend.divide(divisor, 2).doubleValue();
+												
+									}else{
+												
+										irriDepth = tbrsm.getB().IrriWeek;
+												
+									}
 									
 									
 									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
@@ -144,7 +155,18 @@ public class controllerServlet extends HttpServlet{
 									//int wStressDays = tbssm.getwStressDays();
 									String fawnName = tbssm.getLocation().getFawnStnName();
 									//double fawnDistance = tbssm.getLocation().distance;
-									double irriDepth = data.getIrriDepth()/2.54;
+									double irriDepth = 0.0;
+									if(data.getUnit().equals("Metric")){
+												
+										BigDecimal dividend = new BigDecimal(tbssm.getB().IrriWeek);
+										BigDecimal divisor = new BigDecimal(2.54);
+										irriDepth = dividend.divide(divisor, 2).doubleValue();
+												
+									}else{
+												
+										irriDepth = tbssm.getB().IrriWeek;
+												
+									}
 									
 									
 									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
@@ -167,7 +189,18 @@ public class controllerServlet extends HttpServlet{
 									//int wStressDays = etcm.getwStressDays();
 									String fawnName = etcm.getLocation().getFawnStnName();
 									//double fawnDistance = etcm.getLocation().distance;
-									double irriDepth = data.getIrriDepth()/2.54;
+									double irriDepth = 0.0;
+									if(data.getUnit().equals("Metric")){
+												
+										BigDecimal dividend = new BigDecimal(etcm.getB().IrriWeek);
+										BigDecimal divisor = new BigDecimal(2.54);
+										irriDepth = dividend.divide(divisor, 2).doubleValue();
+												
+									}else{
+												
+										irriDepth = etcm.getB().IrriWeek;
+												
+									}
 									
 									
 									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
@@ -269,7 +302,7 @@ public class controllerServlet extends HttpServlet{
 				
 			}catch(Exception e){
 				
-				
+				e.printStackTrace();
 				out.println("update failed");
 				
 			}
@@ -325,13 +358,13 @@ public class controllerServlet extends HttpServlet{
 							double irriDepth = 0.0;
 							if(data.getUnit().equals("Metric")){
 										
-								BigDecimal dividend = new BigDecimal(data.getIrriDepth());
+								BigDecimal dividend = new BigDecimal(tbm.getB().IrriWeek);
 								BigDecimal divisor = new BigDecimal(2.54);
 								irriDepth = dividend.divide(divisor, 2).doubleValue();
 										
 							}else{
 										
-								irriDepth = data.getIrriDepth();
+								irriDepth = tbm.getB().IrriWeek;
 										
 							}
 							System.out.println("email_1");		
@@ -354,7 +387,18 @@ public class controllerServlet extends HttpServlet{
 							//int wStressDays = tbrsm.getwStressDays();
 							String fawnName = tbrsm.getLocation().getFawnStnName();
 							//double fawnDistance = tbrsm.getLocation().distance;
-							double irriDepth = data.getIrriDepth()/2.54;
+							double irriDepth = 0.0;
+							if(data.getUnit().equals("Metric")){
+										
+								BigDecimal dividend = new BigDecimal(tbrsm.getB().IrriWeek);
+								BigDecimal divisor = new BigDecimal(2.54);
+								irriDepth = dividend.divide(divisor, 2).doubleValue();
+										
+							}else{
+										
+								irriDepth = tbrsm.getB().IrriWeek;
+										
+							}
 									
 							System.out.println("email_2");
 							//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
@@ -376,7 +420,18 @@ public class controllerServlet extends HttpServlet{
 							//int wStressDays = tbssm.getwStressDays();
 							String fawnName = tbssm.getLocation().getFawnStnName();
 							//double fawnDistance = tbssm.getLocation().distance;
-							double irriDepth = data.getIrriDepth()/2.54;
+							double irriDepth = 0.0;
+							if(data.getUnit().equals("Metric")){
+										
+								BigDecimal dividend = new BigDecimal(tbssm.getB().IrriWeek);
+								BigDecimal divisor = new BigDecimal(2.54);
+								irriDepth = dividend.divide(divisor, 2).doubleValue();
+										
+							}else{
+										
+								irriDepth = tbssm.getB().IrriWeek;
+										
+							}
 									
 							System.out.println("email_3");	
 							//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
@@ -399,7 +454,24 @@ public class controllerServlet extends HttpServlet{
 							//int wStressDays = etcm.getwStressDays();
 							String fawnName = etcm.getLocation().getFawnStnName();
 							//double fawnDistance = etcm.getLocation().distance;
-							double irriDepth = data.getIrriDepth()/2.54;
+							double irriDepth = 0.0;
+							//for(int i =0; i< etcm.getIhret().size(); i++){
+								
+								//System.out.print(etcm.getIhret().get(i)+",");
+								
+							//}
+							if(data.getUnit().equals("Metric")){
+									
+								BigDecimal dividend = new BigDecimal(etcm.getB().IrriWeek);
+								BigDecimal divisor = new BigDecimal(2.54);
+								irriDepth = dividend.divide(divisor, 2).doubleValue();
+								System.out.println("email4 : " + irriDepth);	
+										
+							}else{
+										
+								irriDepth = etcm.getB().IrriWeek;
+								System.out.println("email4 :" + irriDepth);		
+							}
 									
 							System.out.println("email_4");		
 							//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
@@ -415,7 +487,7 @@ public class controllerServlet extends HttpServlet{
 					logger.log(Level.INFO,sent);
 					logger.log(Level.INFO, "Sending email to "+ "jiadw007@gmail.com");
 				}catch(Exception e){
-							
+					e.printStackTrace();		
 					logger.log(Level.WARNING, e.getMessage());
 				}
 			}

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -204,12 +205,22 @@ public class calculateServlet extends HttpServlet{
 					System.out.println(tbm.getUnit());
 					System.out.println(tbm.getArea());
 					System.out.println(tbm.getSoilType());
+					System.out.println(tbm.getB().IrriWeek);
 					tbm.getLocation().print();
 					tbm.calculation();
 					/*
 					 * store results in cookies and response
 					 */
 					tbm.getB().startDate.add(Calendar.DATE, 1);
+					if(unit.equals("Metric")){
+						
+						BigDecimal dividend = new BigDecimal(tbm.getB().IrriWeek);
+						BigDecimal divisor = new BigDecimal(2.54);
+						tbm.getB().IrriWeek = dividend.divide(divisor, 2).doubleValue();
+						System.out.println("After: "+tbm.getB().IrriWeek);		
+								
+					}
+
 					Cookie[] results = Util.createCookies("time_base",String.valueOf(tbm.getwLostWeek()),String.valueOf(tbm.getiLostWeek()),
 															String.valueOf(tbm.getwStressDays()),String.valueOf(tbm.getB().getRainFallPerWeek()),
 															tbm.getLocation().getFawnStnName(),DateFormat.getDateInstance().format(tbm.getB().startDate.getTime()),
@@ -261,10 +272,19 @@ public class calculateServlet extends HttpServlet{
 					System.out.println(tbrsm.getUnit());
 					System.out.println(tbrsm.getArea());
 					System.out.println(tbrsm.getSoilType());
+					System.out.println(tbrsm.getB().IrriWeek);
 					tbrsm.getLocation().print();
 					
 					tbrsm.calculation();
 					tbrsm.getB().startDate.add(Calendar.DATE, 1);
+					if(unit.equals("Metric")){
+						
+						BigDecimal dividend = new BigDecimal(tbrsm.getB().IrriWeek);
+						BigDecimal divisor = new BigDecimal(2.54);
+						tbrsm.getB().IrriWeek = dividend.divide(divisor, 2).doubleValue();
+						System.out.println("After: "+tbrsm.getB().IrriWeek);			
+								
+					}
 					Cookie[] results = Util.createCookies("rain_sensor",String.valueOf(tbrsm.getwLostWeek()),String.valueOf(tbrsm.getiLostWeek()),
 															String.valueOf(tbrsm.getwStressDays()),String.valueOf(tbrsm.getB().getRainFallPerWeek()),
 															tbrsm.getLocation().getFawnStnName(),DateFormat.getDateInstance().format(tbrsm.getB().startDate.getTime()),
@@ -312,11 +332,20 @@ public class calculateServlet extends HttpServlet{
 					System.out.println(tbssm.getUnit());
 					System.out.println(tbssm.getArea());
 					System.out.println(tbssm.getSoilType());
+					System.out.println(tbssm.getB().IrriWeek);
 					tbssm.getLocation().print();
 					//tbssm.calculation();
 					
 					tbssm.calculation();
 					tbssm.getB().startDate.add(Calendar.DATE, 1);
+					if(unit.equals("Metric")){
+						
+						BigDecimal dividend = new BigDecimal(tbssm.getB().IrriWeek);
+						BigDecimal divisor = new BigDecimal(2.54);
+						tbssm.getB().IrriWeek = dividend.divide(divisor, 2).doubleValue();
+						System.out.println("After: "+tbssm.getB().IrriWeek);			
+								
+					}
 					Cookie[] results = Util.createCookies("soil_sensor",String.valueOf(tbssm.getwLostWeek()),String.valueOf(tbssm.getiLostWeek()),
 															String.valueOf(tbssm.getwStressDays()),String.valueOf(tbssm.getB().getRainFallPerWeek()),
 															tbssm.getLocation().getFawnStnName(),DateFormat.getDateInstance().format(tbssm.getB().startDate.getTime()),
@@ -366,10 +395,25 @@ public class calculateServlet extends HttpServlet{
 					System.out.println(etcm.getUnit());
 					System.out.println(etcm.getArea());
 					System.out.println(etcm.getSoilType());
+					//System.out.println(etcm.getB().IrriWeek);
 					etcm.getLocation().print();
 					
 					etcm.calculation();
+					for(int i =0; i< etcm.getIhret().size(); i++){
+						
+						System.out.print(etcm.getIhret().get(i)+",");
+						
+					}
+					System.out.println();
 					etcm.getB().startDate.add(Calendar.DATE, 1);
+					if(unit.equals("Metric")){
+						
+						BigDecimal dividend = new BigDecimal(etcm.getB().IrriWeek);
+						BigDecimal divisor = new BigDecimal(2.54);
+						etcm.getB().IrriWeek = dividend.divide(divisor, 2).doubleValue();
+						System.out.println("After: "+etcm.getB().IrriWeek);			
+								
+					}
 					Cookie[] results = Util.createCookies("et_controller",String.valueOf(etcm.getwLostWeek()),String.valueOf(etcm.getiLostWeek()),
 															String.valueOf(etcm.getwStressDays()),String.valueOf(etcm.getB().getRainFallPerWeek()),
 															etcm.getLocation().getFawnStnName(),DateFormat.getDateInstance().format(etcm.getB().startDate.getTime()),
@@ -416,7 +460,7 @@ public class calculateServlet extends HttpServlet{
 			
 			if(adjustflag){
 				
-				throw new IOException("Error with FAWN ET Data. This is the adjusted result ! Please Contact FAWN.");
+				throw new IOException(" Estimated FAWN ET Data. This is the adjusted result ! .");
 				
 			}
 			

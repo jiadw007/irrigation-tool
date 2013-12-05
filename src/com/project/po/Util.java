@@ -109,7 +109,7 @@ public class Util{
 		String fawnName = attrs[4];
 		//String fawnDistance = attrs[6];
 		String rainfall = attrs[5];
-		String irriDepth = attrs[6];
+		String irriWeek = attrs[6];
 		urlParameters.append("start_date=" + startDate + "&end_date=" + endDate);
 		
 		Enumeration<String> keys = results.keys();
@@ -120,6 +120,7 @@ public class Util{
 			String[] result = results.get(technology).split(",");
 			String waterLoss = result[2];
 			String percentage = result[3];
+			String irriDepth = result[6];
 			//String wstressDays = result[4];
 			if(technology.equals("Time-based")){
 				
@@ -134,15 +135,15 @@ public class Util{
 				urlParameters.append("&percentage_water_not_used_soil_sensor=" + percentage +"&gallon_water_not_used_soil_sensor=" + waterLoss);
 				
 			}else if(technology.equals("ET_Controller")){
-				
-				urlParameters.append("&percentage_water_not_used_et=" + percentage +"&gallon_water_not_used_et=" + waterLoss);
+				System.out.println("parameter: "+irriDepth);
+				urlParameters.append("&percentage_water_not_used_et=" + percentage +"&gallon_water_not_used_et=" + waterLoss+"&irriDepth_et=" + irriDepth);
 				
 			}
 			
 		}
 		urlParameters.append("&fawn_station_name=" + fawnName + "&to=" + email +"&subject=UrbanIrrigation Weekly Report"
 								+ "&template_name=" + app + "&email_token=" + email_token + "&unsubscribe_token=" + unsubscribe_token + "&timestamp=" + timestamp 
-								+ "&app=" + app+"&rainfall=" + rainfall + "&irriDepth="+irriDepth);
+								+ "&app=" + app+"&rainfall=" + rainfall + "&irriWeek=" + irriWeek);
 		logger.log(Level.INFO,urlParameters.toString());
 		return urlParameters.toString();
 		
@@ -217,7 +218,8 @@ public class Util{
 		results[6] = new Cookie("endDate",endDate);
 		results[6].setMaxAge(60*60);
 		results[6].setPath("/");
-		results[7] = new Cookie("irriWeek",irriWeek);
+		System.out.println("irri: "+irriWeek);
+		results[7] = new Cookie(name+"_irriWeek",irriWeek);
 		results[7].setMaxAge(60*60);
 		results[7].setPath("/");
 		return results;

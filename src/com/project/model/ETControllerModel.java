@@ -103,7 +103,7 @@ public class ETControllerModel extends timeBasedModel{
 	public void calculation(){
 		
 		HashMap<String,Double> SOIL = b.soil.get(this.getSoilType());
-		
+		b.IrriWeek = 0.0;
 		
 		for(int i =this.getStartIrrigationHour();i<=this.getLastIrrigationHour();i++){
 			
@@ -149,7 +149,7 @@ public class ETControllerModel extends timeBasedModel{
 			if(Ick1.get(i)+Ick2.get(i)==2){
 				
 				this.Ihret.add(this.AWR.get(i-1));
-				
+				b.IrriWeek += this.AWR.get(i-1);
 			}else{
 				
 				this.Ihret.add(0.0);
@@ -158,7 +158,7 @@ public class ETControllerModel extends timeBasedModel{
 			//Calculate AWR for this hour, like the process of SWC, use above value to calcualte
 			//AWRstep1
 			if(this.Ick1.get(i)+this.Ick2.get(i)==2){
-				
+				 
 				double awrstep1=this.getET().get(i-1)-this.Re.get(i-1);    //et and re initial value
 				this.AWRstep1.add(awrstep1);
 				
@@ -341,8 +341,6 @@ public class ETControllerModel extends timeBasedModel{
 		
 		
 	}
-	
-	
 	
 	
 
