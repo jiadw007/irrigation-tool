@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -50,7 +51,7 @@ public class controllerServlet extends HttpServlet{
 		if(path.contains("/weeklyReport")){
 			
 			DataBase db = new DataBase("User");
-			records = db.fecthAll();
+			records = db.fetchAll();
 			//System.out.println(records.size());
 			if(records != null){
 				
@@ -80,6 +81,7 @@ public class controllerServlet extends HttpServlet{
 									logger.log(Level.INFO, "Time-based");
 									timeBasedModel tbm = new timeBasedModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
 									tbm.calculation();
+									tbm.getB().startDate.add(Calendar.DATE, 1);
 									String startDate = df.format(tbm.getB().startDate.getTime());
 									String endDate = df.format(tbm.getB().endDate.getTime());
 									Double waterLoss = tbm.getwLostWeek();
@@ -111,6 +113,7 @@ public class controllerServlet extends HttpServlet{
 						
 									timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getRainsettings(),data.getDays(),data.getHours(),data.getIrriDepth());
 									tbrsm.calculation();
+									tbrsm.getB().startDate.add(Calendar.DATE, 1);
 									String startDate = df.format(tbrsm.getB().startDate.getTime());
 									String endDate = df.format(tbrsm.getB().endDate.getTime());
 									Double waterLoss = tbrsm.getwLostWeek();
@@ -132,6 +135,7 @@ public class controllerServlet extends HttpServlet{
 
 									timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getSoilthreshold(),data.getDays(),data.getHours(),data.getIrriDepth());
 									tbssm.calculation();
+									tbssm.getB().startDate.add(Calendar.DATE, 1);
 									String startDate = df.format(tbssm.getB().startDate.getTime());
 									String endDate = df.format(tbssm.getB().endDate.getTime());
 									Double waterLoss = tbssm.getwLostWeek();
@@ -154,6 +158,7 @@ public class controllerServlet extends HttpServlet{
 
 									ETControllerModel etcm = new ETControllerModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
 									etcm.calculation();
+									etcm.getB().startDate.add(Calendar.DATE, 1);
 									String startDate = df.format(etcm.getB().startDate.getTime());
 									String endDate = df.format(etcm.getB().endDate.getTime());
 									Double waterLoss = etcm.getwLostWeek();
@@ -233,7 +238,7 @@ public class controllerServlet extends HttpServlet{
 			
 		}else if(path.contains("/changeSecret")){
 			
-			// http://1.irrigation.appspot.com/changesecret?old=xxxx&new=xxxx
+			// http://1.irrigation-tool.appspot.com/changeSecret?old=xxxx&new=xxxx
 			String oldSecret = req.getParameter("old");
 			String newSecret = req.getParameter("new");
 			
@@ -282,11 +287,140 @@ public class controllerServlet extends HttpServlet{
 			
 			
 			
+		}else if(path.contains("emailtest")){
+			
+			DataBase db = new DataBase("User");
+			Data data = db.fetch("jiadw007@gmail.com");
+			//System.out.println(records.size());
+
+			String choice = data.getChoice();
+			if(choice.equals("no")){
+						
+				logger.log(Level.INFO, "jiadw007@gmail.com" + " is unsubscribed");
+					
+			}else{
+				try{
+							
+					logger.log(Level.INFO, "Calculating " + "jiadw007@gmail.com" +" 's water use");
+					//StringBuilder sb = new StringBuilder();
+					Hashtable<String,String> results = new Hashtable<String,String>();
+					//sb.append("Technology , waterLoss(gallons) , waterLossPercentgae , waterStressDays , rainfall(inch)\r\n");
+					String[] systemSelection = data.getSystemSelection();
+					for(String system : systemSelection){
+						
+						if(system.equals("Time-based")){
+							
+							logger.log(Level.INFO, "Time-based");
+							timeBasedModel tbm = new timeBasedModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
+							tbm.calculation();
+							tbm.getB().startDate.add(Calendar.DATE, 1);
+							String startDate = df.format(tbm.getB().startDate.getTime());
+							String endDate = df.format(tbm.getB().endDate.getTime());
+							Double waterLoss = tbm.getwLostWeek();
+							Double iLoss = tbm.getiLostWeek();
+							Double rainfall = tbm.getB().getRainFallPerWeek();
+							//int wStressDays = tbm.getwStressDays();
+							String fawnName = tbm.getLocation().getFawnStnName();
+							//double fawnDistance = tbm.getLocation().distance;
+							double irriDepth = 0.0;
+							if(data.getUnit().equals("Metric")){
+										
+								BigDecimal dividend = new BigDecimal(data.getIrriDepth());
+								BigDecimal divisor = new BigDecimal(2.54);
+								irriDepth = dividend.divide(divisor, 2).doubleValue();
+										
+							}else{
+										
+								irriDepth = data.getIrriDepth();
+										
+							}
+							System.out.println("email_1");		
+							//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
+							//results.put("Time-based", startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+							results.put("Time-based", startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+fawnName+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+			
+						}else if(system.equals("Time-based with rain sensor")){
+									
+							logger.log(Level.INFO, "Time-based with rain sensor");
+						
+							timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getRainsettings(),data.getDays(),data.getHours(),data.getIrriDepth());
+							tbrsm.calculation();
+							tbrsm.getB().startDate.add(Calendar.DATE, 1);
+							String startDate = df.format(tbrsm.getB().startDate.getTime());
+							String endDate = df.format(tbrsm.getB().endDate.getTime());
+							Double waterLoss = tbrsm.getwLostWeek();
+							Double iLoss = tbrsm.getiLostWeek();
+							Double rainfall = tbrsm.getB().getRainFallPerWeek();
+							//int wStressDays = tbrsm.getwStressDays();
+							String fawnName = tbrsm.getLocation().getFawnStnName();
+							//double fawnDistance = tbrsm.getLocation().distance;
+							double irriDepth = data.getIrriDepth()/2.54;
+									
+							System.out.println("email_2");
+							//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
+							//results.put("Time-based with rain sensor",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+							results.put("Time-based with rain sensor", startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+fawnName+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+								
+						}else if(system.equals("Time-based with soil moisture sensor")){
+								
+							logger.log(Level.INFO, "Time-based with soil moisture sensor");
+
+							timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getSoilthreshold(),data.getDays(),data.getHours(),data.getIrriDepth());
+							tbssm.calculation();
+							tbssm.getB().startDate.add(Calendar.DATE, 1);
+							String startDate = df.format(tbssm.getB().startDate.getTime());
+							String endDate = df.format(tbssm.getB().endDate.getTime());
+							Double waterLoss = tbssm.getwLostWeek();
+							Double iLoss = tbssm.getiLostWeek();
+							Double rainfall = tbssm.getB().getRainFallPerWeek();
+							//int wStressDays = tbssm.getwStressDays();
+							String fawnName = tbssm.getLocation().getFawnStnName();
+							//double fawnDistance = tbssm.getLocation().distance;
+							double irriDepth = data.getIrriDepth()/2.54;
+									
+							System.out.println("email_3");	
+							//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
+							//results.put("Time-based with soil moisture sensor",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+							results.put("Time-based with soil moisture sensor",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+fawnName+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+									
+								
+						}else{
+								
+							logger.log(Level.INFO, "Evaprtranspiration Controller");
+
+							ETControllerModel etcm = new ETControllerModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
+							etcm.calculation();
+							etcm.getB().startDate.add(Calendar.DATE, 1);
+							String startDate = df.format(etcm.getB().startDate.getTime());
+							String endDate = df.format(etcm.getB().endDate.getTime());
+							Double waterLoss = etcm.getwLostWeek();
+							Double iLoss = etcm.getiLostWeek();
+							Double rainfall = etcm.getB().getRainFallPerWeek();
+							//int wStressDays = etcm.getwStressDays();
+							String fawnName = etcm.getLocation().getFawnStnName();
+							//double fawnDistance = etcm.getLocation().distance;
+							double irriDepth = data.getIrriDepth()/2.54;
+									
+							System.out.println("email_4");		
+							//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
+							//results.put("ET_Controller",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+							results.put("ET_Controller",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+fawnName+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+								
+						}//end_if
+														
+					}//end_for
+							
+					String sent = Util.requestWeeklyReport(results, "jiadw007@gmail.com");
+					out.println(sent);
+					logger.log(Level.INFO,sent);
+					logger.log(Level.INFO, "Sending email to "+ "jiadw007@gmail.com");
+				}catch(Exception e){
+							
+					logger.log(Level.WARNING, e.getMessage());
+				}
+			}
 		}//end_if
 		
 	}
-	
-	
-	
 
 }

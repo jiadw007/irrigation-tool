@@ -112,7 +112,7 @@ public class DataBase {
 	 * fetch all user settings in the User database
 	 * @return Hashtable key: key in database Data: user settings 
 	 */
-	public Hashtable<String,Data> fecthAll(){
+	public Hashtable<String,Data> fetchAll(){
 		
 		Hashtable<String,Data> records = new Hashtable<String,Data>();
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

@@ -99,7 +99,7 @@ public class Util{
 		//parameters not used : ranking links techonology 
 		StringBuilder urlParameters = new StringBuilder();
 		String timestamp = Long.toString(System.nanoTime());
-		String app = "Irrigation Tool";
+		String app = "UrbanIrrigationVersion2";
 		String email_token = createToken(timestamp, app);
 		String unsubscribe_token = createToken(timestamp, email);
 		//get common result attributes
@@ -110,39 +110,40 @@ public class Util{
 		//String fawnDistance = attrs[6];
 		String rainfall = attrs[5];
 		String irriDepth = attrs[6];
-		urlParameters.append("startDate=" + startDate + "&endDate=" + endDate);
+		urlParameters.append("start_date=" + startDate + "&end_date=" + endDate);
 		
 		Enumeration<String> keys = results.keys();
 		while(keys.hasMoreElements()){
 			
 			String technology = keys.nextElement();
+			logger.log(Level.INFO, technology);
 			String[] result = results.get(technology).split(",");
 			String waterLoss = result[2];
 			String percentage = result[3];
 			//String wstressDays = result[4];
-			if(technology.equals("Time_based")){
+			if(technology.equals("Time-based")){
 				
-				urlParameters.append("&percentage_water_not_used1=" + percentage +"&gallon_water_not_used1=" + waterLoss);
+				urlParameters.append("&percentage_water_not_used_time_based=" + percentage +"&gallon_water_not_used_time_based=" + waterLoss);
 				
-			}else if(technology.equals("Time_based with rain sensor")){
+			}else if(technology.equals("Time-based with rain sensor")){
 				
-				urlParameters.append("&percentage_water_not_used2=" + percentage +"&gallon_water_not_used2=" + waterLoss);
+				urlParameters.append("&percentage_water_not_used_rain_sensor=" + percentage +"&gallon_water_not_used_rain_sensor=" + waterLoss);
 				
-			}else if(technology.equals("Time_based with soil moisture sensor")){
+			}else if(technology.equals("Time-based with soil moisture sensor")){
 				
-				urlParameters.append("&percentage_water_not_used3=" + percentage +"&gallon_water_not_used3=" + waterLoss);
+				urlParameters.append("&percentage_water_not_used_soil_sensor=" + percentage +"&gallon_water_not_used_soil_sensor=" + waterLoss);
 				
-			}else if(technology.equals("Evapotranspiration Controller")){
+			}else if(technology.equals("ET_Controller")){
 				
-				urlParameters.append("&percentage_water_not_used4=" + percentage +"&gallon_water_not_used4=" + waterLoss);
+				urlParameters.append("&percentage_water_not_used_et=" + percentage +"&gallon_water_not_used_et=" + waterLoss);
 				
 			}
 			
 		}
-		urlParameters.append("&fawn_station_name=" + fawnName + "&to=" + email +"&subject=Irrigation Tool Weekly Report"
+		urlParameters.append("&fawn_station_name=" + fawnName + "&to=" + email +"&subject=UrbanIrrigation Weekly Report"
 								+ "&template_name=" + app + "&email_token=" + email_token + "&unsubscribe_token=" + unsubscribe_token + "&timestamp=" + timestamp 
 								+ "&app=" + app+"&rainfall=" + rainfall + "&irriDepth="+irriDepth);
-		
+		logger.log(Level.INFO,urlParameters.toString());
 		return urlParameters.toString();
 		
 	}
@@ -191,9 +192,9 @@ public class Util{
 	}
 	
 	
-	public static Cookie[] createCookies(String name, String waterLoss, String iLoss, String wstressDays,String rainfall, String stnID,String startDate, String endDate){
+	public static Cookie[] createCookies(String name, String waterLoss, String iLoss, String wstressDays,String rainfall, String stn,String startDate, String endDate,String irriWeek){
 		
-		Cookie[] results = new Cookie[7];
+		Cookie[] results = new Cookie[8];
 		System.out.println("Create Cookies !");
 		results[0] = new Cookie(name+"_waterLoss",waterLoss);
 		results[0].setMaxAge(60*60);
@@ -207,7 +208,7 @@ public class Util{
 		results[3] = new Cookie("rainfall",rainfall);
 		results[3].setMaxAge(60*60);
 		results[3].setPath("/");
-		results[4] = new Cookie("stnId", stnID);
+		results[4] = new Cookie("fawnName", stn);
 		results[4].setMaxAge(60*60);
 		results[4].setPath("/");
 		results[5] = new Cookie("startDate",startDate);
@@ -216,6 +217,9 @@ public class Util{
 		results[6] = new Cookie("endDate",endDate);
 		results[6].setMaxAge(60*60);
 		results[6].setPath("/");
+		results[7] = new Cookie("irriWeek",irriWeek);
+		results[7].setMaxAge(60*60);
+		results[7].setPath("/");
 		return results;
 	}
 	

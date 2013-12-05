@@ -50,12 +50,14 @@ public class baseData {
 	public ArrayList<String> Date;
 	public ArrayList<String> Year;
 	public ArrayList<Integer> Ihrschedule;
+	public double IrriWeek = 0.0;
 	//public ArrayList<Integer> Ihrschedule1;
 	public Calendar startDate;
 	public Calendar endDate;
 	public String stnID;
 	public boolean adjust = false;
 	private static final Logger logger = Logger.getLogger(baseData.class.getName());
+	
 	
 	/**
 	 * Constructor method 
@@ -205,6 +207,7 @@ public class baseData {
 				int index = 24 * day + hour;
 				Ihrschedule.set(index, 1);
 				Ihr.set(index, irriDepth);
+				this.IrriWeek += irriDepth;
 			}
 			this.requestRainData(startDate, endDate, stnID);
 			this.requestETData(this.stnID);
@@ -431,8 +434,8 @@ public class baseData {
 		 * Important difference to get ET data
 		 * One for GAE, the other for local test 
 		 */
-		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
-		//BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
+		//BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
+		BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
 		
 		String str = in.readLine();
 		JSONArray jsonarray = new JSONArray(str);
@@ -541,6 +544,30 @@ public class baseData {
 			in.readLine();
 			
 		}
+		
+		/*
+		for(int i = 0; i < 169; i++){
+		  
+			this.Rhr.add(0.0);
+	    }
+		  
+		long time1 = this.startDate.getTime().getTime();
+		BigDecimal multiplicand = new BigDecimal(0.0);
+		BigDecimal multiplier = new BigDecimal(2.54);
+		while(in.ready()){
+		
+		 	String[] inputs = in.readLine().split(",");
+		 	long time2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(inputs[1].replace("\"","")).getTime();
+		 	long diff = time2-time1;
+		 	long index = (diff/(60*60*1000));	
+		  	this.Rhr.set((int)index,inputs[2].equals("N/A") ? 0.0 : multiplicand.valueOf(Double.parseDouble(inputs[2].replace("\"",""))).multiply(multiplier).doubleValue());
+		  
+		  
+		}
+ 
+		*/
+		
+		
 		BigDecimal multiplicand = new BigDecimal(0.0);
 		BigDecimal multiplier = new BigDecimal(2.54);
 		while(in.ready()){
@@ -598,6 +625,17 @@ public class baseData {
 		Ihr.remove(0);
 		ET0.remove(0);
 		Ihrschedule.remove(0);
+		
+		
+	}
+	
+	public static void main(String args[]) throws Exception{
+		String[] days = {"1","2","3"};
+		String[] hours = {"0","1","2"};
+		
+		baseData bd = new baseData("32608", days, hours, 1.0);
+		//bd.requestRainData(bd.startDate, bd.endDate, "32608");
+		System.out.println(bd.Rhr.size());
 		
 		
 	}

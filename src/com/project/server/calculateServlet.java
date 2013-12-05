@@ -212,8 +212,8 @@ public class calculateServlet extends HttpServlet{
 					tbm.getB().startDate.add(Calendar.DATE, 1);
 					Cookie[] results = Util.createCookies("time_base",String.valueOf(tbm.getwLostWeek()),String.valueOf(tbm.getiLostWeek()),
 															String.valueOf(tbm.getwStressDays()),String.valueOf(tbm.getB().getRainFallPerWeek()),
-															tbm.getB().stnID,DateFormat.getDateInstance().format(tbm.getB().startDate.getTime()),
-															DateFormat.getDateInstance().format(tbm.getB().endDate.getTime()));
+															tbm.getLocation().getFawnStnName(),DateFormat.getDateInstance().format(tbm.getB().startDate.getTime()),
+															DateFormat.getDateInstance().format(tbm.getB().endDate.getTime()),String.valueOf(tbm.getB().IrriWeek));
 					
 					resp.addCookie(results[0]);
 					resp.addCookie(results[1]);
@@ -222,6 +222,7 @@ public class calculateServlet extends HttpServlet{
 					resp.addCookie(results[4]);
 					resp.addCookie(results[5]);
 					resp.addCookie(results[6]);
+					resp.addCookie(results[7]);
 						
 					//csv file output
 					/*
@@ -266,8 +267,8 @@ public class calculateServlet extends HttpServlet{
 					tbrsm.getB().startDate.add(Calendar.DATE, 1);
 					Cookie[] results = Util.createCookies("rain_sensor",String.valueOf(tbrsm.getwLostWeek()),String.valueOf(tbrsm.getiLostWeek()),
 															String.valueOf(tbrsm.getwStressDays()),String.valueOf(tbrsm.getB().getRainFallPerWeek()),
-															tbrsm.getB().stnID,DateFormat.getDateInstance().format(tbrsm.getB().startDate.getTime()),
-															DateFormat.getDateInstance().format(tbrsm.getB().endDate.getTime()));
+															tbrsm.getLocation().getFawnStnName(),DateFormat.getDateInstance().format(tbrsm.getB().startDate.getTime()),
+															DateFormat.getDateInstance().format(tbrsm.getB().endDate.getTime()),String.valueOf(tbrsm.getB().IrriWeek));
 					
 					resp.addCookie(results[0]);
 					resp.addCookie(results[1]);
@@ -275,7 +276,8 @@ public class calculateServlet extends HttpServlet{
 					resp.addCookie(results[3]);
 					resp.addCookie(results[4]);
 					resp.addCookie(results[5]);
-					resp.addCookie(results[6]);	
+					resp.addCookie(results[6]);
+					resp.addCookie(results[7]);
 				
 					/*
 					resp.setContentType("text/csv");
@@ -317,8 +319,8 @@ public class calculateServlet extends HttpServlet{
 					tbssm.getB().startDate.add(Calendar.DATE, 1);
 					Cookie[] results = Util.createCookies("soil_sensor",String.valueOf(tbssm.getwLostWeek()),String.valueOf(tbssm.getiLostWeek()),
 															String.valueOf(tbssm.getwStressDays()),String.valueOf(tbssm.getB().getRainFallPerWeek()),
-															tbssm.getB().stnID,DateFormat.getDateInstance().format(tbssm.getB().startDate.getTime()),
-															DateFormat.getDateInstance().format(tbssm.getB().endDate.getTime()));
+															tbssm.getLocation().getFawnStnName(),DateFormat.getDateInstance().format(tbssm.getB().startDate.getTime()),
+															DateFormat.getDateInstance().format(tbssm.getB().endDate.getTime()),String.valueOf(tbssm.getB().IrriWeek));
 					
 					resp.addCookie(results[0]);
 					resp.addCookie(results[1]);
@@ -327,6 +329,7 @@ public class calculateServlet extends HttpServlet{
 					resp.addCookie(results[4]);
 					resp.addCookie(results[5]);
 					resp.addCookie(results[6]);
+					resp.addCookie(results[7]);
 		
 					/*
 					resp.setContentType("text/csv");
@@ -369,8 +372,8 @@ public class calculateServlet extends HttpServlet{
 					etcm.getB().startDate.add(Calendar.DATE, 1);
 					Cookie[] results = Util.createCookies("et_controller",String.valueOf(etcm.getwLostWeek()),String.valueOf(etcm.getiLostWeek()),
 															String.valueOf(etcm.getwStressDays()),String.valueOf(etcm.getB().getRainFallPerWeek()),
-															etcm.getB().stnID,DateFormat.getDateInstance().format(etcm.getB().startDate.getTime()),
-															DateFormat.getDateInstance().format(etcm.getB().endDate.getTime()));
+															etcm.getLocation().getFawnStnName(),DateFormat.getDateInstance().format(etcm.getB().startDate.getTime()),
+															DateFormat.getDateInstance().format(etcm.getB().endDate.getTime()),String.valueOf(etcm.getB().IrriWeek));
 					
 					resp.addCookie(results[0]);
 					resp.addCookie(results[1]);
@@ -379,6 +382,7 @@ public class calculateServlet extends HttpServlet{
 					resp.addCookie(results[4]);
 					resp.addCookie(results[5]);
 					resp.addCookie(results[6]);
+					resp.addCookie(results[7]);
 					/*
 					for(int i =0;i<168;i++){
 							
@@ -417,7 +421,7 @@ public class calculateServlet extends HttpServlet{
 			}
 			
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			logger.log(Level.SEVERE, e.getMessage());
 			Cookie errorflag = new Cookie("errorflag",e.getMessage());
 			errorflag.setMaxAge(60*60);

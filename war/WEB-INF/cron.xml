@@ -3,7 +3,7 @@
 	<cron>
 		<url>/weeklyReport</url>
 		<description>Mail out a weekly report to users</description>
-		<schedule>every sunday 9:00</schedule>
+		<schedule>every monday 9:00</schedule>
 		<timezone>America/New_York</timezone>	
 	</cron>
 
