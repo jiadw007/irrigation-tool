@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Date;
+import java.util.Locale;
 import java.util.zip.GZIPInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -358,6 +359,9 @@ public class baseData {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		this.startDate = cal;
+		
+		
+		
 	}
 	/**
 	 * set endDate: last Saturday
@@ -541,40 +545,57 @@ public class baseData {
 		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		for(int i= 1;i<=24;i++){
 			
-			in.readLine();
+			String str = in.readLine();
+			//System.out.println(str);
 			
 		}
+		DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		Calendar cal1 = Calendar.getInstance();
+		 
+		cal1.add(Calendar.DATE,-14);
+		cal1.set(Calendar.DAY_OF_WEEK,Calendar.SATURDAY);
+		cal1.set(Calendar.HOUR_OF_DAY, 23);
+	    cal1.set(Calendar.MINUTE, 0);
+	    cal1.set(Calendar.SECOND, 0);
+		cal1.set(Calendar.MILLISECOND, 0);
+
 		
-		/*
 		for(int i = 0; i < 169; i++){
 		  
 			this.Rhr.add(0.0);
+			this.Date.add(df.format(cal1.getTime()));
+			this.Year.add(String.valueOf(cal1.get(Calendar.YEAR)));
+			this.Month.add(String.valueOf(cal1.get(Calendar.MONTH)+1));
+			this.Hour.add(String.valueOf(cal1.get(Calendar.HOUR_OF_DAY)));
+			cal1.add(Calendar.HOUR_OF_DAY, 1);
 	    }
 		  
 		long time1 = this.startDate.getTime().getTime();
 		BigDecimal multiplicand = new BigDecimal(0.0);
 		BigDecimal multiplier = new BigDecimal(2.54);
+		int count = 0;
 		while(in.ready()){
-		
+			
 		 	String[] inputs = in.readLine().split(",");
-		 	long time2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(inputs[1].replace("\"","")).getTime();
+		 	long time2 = new Date(inputs[1].replace("\"", "")).getTime();
 		 	long diff = time2-time1;
 		 	long index = (diff/(60*60*1000));	
 		  	this.Rhr.set((int)index,inputs[2].equals("N/A") ? 0.0 : multiplicand.valueOf(Double.parseDouble(inputs[2].replace("\"",""))).multiply(multiplier).doubleValue());
-		  
+		  	count++;
 		  
 		}
  
-		*/
 		
-		
+		/*
 		BigDecimal multiplicand = new BigDecimal(0.0);
 		BigDecimal multiplier = new BigDecimal(2.54);
 		while(in.ready()){
-		
-			String[] inputs = in.readLine().split(",");
 			
-		    this.Date.add(inputs[1].replace("\"", ""));
+			
+			
+		   String[] inputs = in.readLine().split(",");
+			
+		   this.Date.add(inputs[1].replace("\"", ""));
 		    Date date = new Date(inputs[1].replace("\"", ""));
 		    this.Year.add(String.valueOf(date.getYear()+1900));
 		    this.Month.add(String.valueOf(date.getMonth()+1));
@@ -583,13 +604,13 @@ public class baseData {
 		    this.Rhr.add(inputs[2].equals("N/A") ? 0.0 : multiplicand.valueOf(Double.parseDouble(inputs[2].replace("\"",""))).multiply(multiplier).doubleValue());
 		    //System.out.println(Double.parseDouble(inputs[2].replace("\"", ""))*2.54);
 		}
-		
-		logger.log(Level.INFO, "Total number of Rain Data is : " + this.Date.size());
+		*/
+		logger.log(Level.INFO, "Total number of Rain Data is : " + count);
 		in.close();
 		connection.disconnect();
-		if(this.Date.size()<169){
+		if(count<169){
 			
-			throw new IOException("Sorry, Error With FAWN Rainfall Data. Please Contact FAWN !");
+			throw new IOException("Estimated FAWN Rainfall Data. This is an adjusted result !");
 		}
 	}
 	

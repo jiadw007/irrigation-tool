@@ -212,7 +212,7 @@ public class Test {
 	endDate.setMaxAge(60*60);
 	endDate.setPath("/");
 	*/
-	
+	/*
 		String serverUrl = "http://test.fawn.ifas.ufl.edu/controller.php/stationsJson/";
 
 		URL url = new URL(serverUrl);
@@ -242,8 +242,42 @@ public class Test {
 			
 			
 		}
-		
-		
+	*/
+		ArrayList<String> Month = new ArrayList<String>();   
+		ArrayList<String> Hour = new ArrayList<String>();
+		ArrayList<String> Date = new ArrayList<String>();
+		ArrayList<String> Year = new ArrayList<String>();
+		Calendar cal1 = Calendar.getInstance();
+		 
+		cal1.add(Calendar.DATE,-14);
+		cal1.set(Calendar.DAY_OF_WEEK,Calendar.SATURDAY);
+		cal1.set(Calendar.HOUR_OF_DAY, 23);
+	    cal1.set(Calendar.MINUTE, 0);
+	    cal1.set(Calendar.SECOND, 0);
+		cal1.set(Calendar.MILLISECOND, 0);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.add(Calendar.DATE, -7);
+		cal2.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+		cal2.set(Calendar.HOUR_OF_DAY, 23);
+		cal2.set(Calendar.MINUTE, 0);
+		cal2.set(Calendar.SECOND, 0);
+		cal2.set(Calendar.MILLISECOND, 0);
+		DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		for(int i =1; i<=169; i++){
+			
+			
+			Date.add(df.format(cal1.getTime()));
+			Year.add(String.valueOf(cal1.get(Calendar.YEAR)));
+			Month.add(String.valueOf(cal1.get(Calendar.MONTH)+1));
+			Hour.add(String.valueOf(cal1.get(Calendar.HOUR_OF_DAY)));
+			cal1.add(Calendar.HOUR_OF_DAY, 1);
+			
+		}
+		for(int i =0; i<=168;i++){
+			
+			System.out.println(Date.get(i)+","+Year.get(i)+","+Month.get(i)+","+Hour.get(i));
+			
+		}
 	}
 
 }
