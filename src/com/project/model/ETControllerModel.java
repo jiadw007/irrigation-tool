@@ -103,7 +103,7 @@ public class ETControllerModel extends timeBasedModel{
 	public void calculation(){
 		
 		HashMap<String,Double> SOIL = b.soil.get(this.getSoilType());
-		b.IrriWeek = 0.0;
+		
 		
 		for(int i =this.getStartIrrigationHour();i<=this.getLastIrrigationHour();i++){
 			

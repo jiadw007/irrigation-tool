@@ -75,6 +75,7 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 			}else{
 				
 				this.Ihrsoil.add(this.b.Ihr.get(i-1));
+				this.getB().IrriWeek +=this.b.Ihr.get(i-1);
 			}
 			double wb=this.b.Rhr.get(i-1)+this.Ihrsoil.get(i-1);
 			this.getWB().add(wb);

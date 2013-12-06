@@ -207,7 +207,7 @@ public class baseData {
 				int index = 24 * day + hour;
 				Ihrschedule.set(index, 1);
 				Ihr.set(index, irriDepth);
-				this.IrriWeek += irriDepth;
+				
 			}
 			this.requestRainData(startDate, endDate, stnID);
 			this.requestETData(this.stnID);

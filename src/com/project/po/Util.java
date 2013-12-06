@@ -109,7 +109,7 @@ public class Util{
 		String fawnName = attrs[4];
 		//String fawnDistance = attrs[6];
 		String rainfall = attrs[5];
-		String irriWeek = attrs[6];
+		//String irriWeek = attrs[6];
 		urlParameters.append("start_date=" + startDate + "&end_date=" + endDate);
 		
 		Enumeration<String> keys = results.keys();
@@ -124,15 +124,15 @@ public class Util{
 			//String wstressDays = result[4];
 			if(technology.equals("Time-based")){
 				
-				urlParameters.append("&percentage_water_not_used_time_based=" + percentage +"&gallon_water_not_used_time_based=" + waterLoss);
+				urlParameters.append("&percentage_water_not_used_time_based=" + percentage +"&gallon_water_not_used_time_based=" + waterLoss + "&irriDepth_time_based=" + irriDepth);
 				
 			}else if(technology.equals("Time-based with rain sensor")){
 				
-				urlParameters.append("&percentage_water_not_used_rain_sensor=" + percentage +"&gallon_water_not_used_rain_sensor=" + waterLoss);
+				urlParameters.append("&percentage_water_not_used_rain_sensor=" + percentage +"&gallon_water_not_used_rain_sensor=" + waterLoss +"&irriDepth_rain_sensor=" + irriDepth);
 				
 			}else if(technology.equals("Time-based with soil moisture sensor")){
 				
-				urlParameters.append("&percentage_water_not_used_soil_sensor=" + percentage +"&gallon_water_not_used_soil_sensor=" + waterLoss);
+				urlParameters.append("&percentage_water_not_used_soil_sensor=" + percentage +"&gallon_water_not_used_soil_sensor=" + waterLoss +"&irriDepth_soil_sensor=" + irriDepth);
 				
 			}else if(technology.equals("ET_Controller")){
 				System.out.println("parameter: "+irriDepth);
@@ -143,7 +143,7 @@ public class Util{
 		}
 		urlParameters.append("&fawn_station_name=" + fawnName + "&to=" + email +"&subject=UrbanIrrigation Weekly Report"
 								+ "&template_name=" + app + "&email_token=" + email_token + "&unsubscribe_token=" + unsubscribe_token + "&timestamp=" + timestamp 
-								+ "&app=" + app+"&rainfall=" + rainfall + "&irriWeek=" + irriWeek);
+								+ "&app=" + app+"&rainfall=" + rainfall );
 		logger.log(Level.INFO,urlParameters.toString());
 		return urlParameters.toString();
 		

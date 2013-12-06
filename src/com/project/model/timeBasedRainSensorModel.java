@@ -89,7 +89,7 @@ public class timeBasedRainSensorModel extends timeBasedModel{
 			}
 			else{
 				this.IhrRain.add(super.b.Ihr.get(i-1));
-				
+				this.getB().IrriWeek +=b.Ihr.get(i-1);
 			}
 			double wb=this.b.Rhr.get(i-1)+this.IhrRain.get(i-1);
 			this.getWB().add(wb);

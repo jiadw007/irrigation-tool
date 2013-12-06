@@ -359,6 +359,7 @@ public class timeBasedModel {
 					
 		for(int i=this.startIrrigationHour;i<=this.lastIrrigationHour;i++){
 			
+			this.getB().IrriWeek +=this.getB().Ihr.get(i-1);
 			double wb = b.Rhr.get(i-1) + b.Ihr.get(i-1);
 			this.WB.add(wb);
 			if(this.WB.get(i-1)>0){  //calculate the rate(f),Q and PERC
