@@ -18,7 +18,7 @@ import com.google.appengine.api.users.UserServiceFactory;
  * @author Dawei Jia
  * log out function
  */
-public class logoutServlet extends HttpServlet{
+public class LogoutServlet extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)

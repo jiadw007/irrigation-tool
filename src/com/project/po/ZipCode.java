@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Read zipcode and fawn_zips from .txt file
  *
  */
-public class zipCode {
+public class ZipCode {
 	
 	
 	public static ArrayList<String> zipcode = new ArrayList<String>();
@@ -30,7 +30,7 @@ public class zipCode {
 	public static ArrayList<String> fawnStnNames = new ArrayList<String>();
 	
 	
-	public zipCode(){
+	public ZipCode(){
 		
 		try{
 			//File file =new File(zippath);

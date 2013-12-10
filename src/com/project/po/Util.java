@@ -21,7 +21,7 @@ import java.util.zip.GZIPInputStream;
 
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
-import com.project.server.calculateServlet;
+import com.project.server.CalculateServlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -38,7 +38,7 @@ public class Util{
 	public static TimeZone timeZoneUsed = TimeZone.getTimeZone("America/New_York");
 	public static int EMAIL_INTRO = 0;
 	public static int EMAIL_WEEKLY_REPORT = 1;
-	private static final Logger logger = Logger.getLogger(calculateServlet.class.getCanonicalName());
+	private static final Logger logger = Logger.getLogger(CalculateServlet.class.getCanonicalName());
 	
 	/**
 	 * create security token for email server

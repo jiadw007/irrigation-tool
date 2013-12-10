@@ -7,11 +7,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>calculateAction</servlet-name>
-		<servlet-class>com.project.server.calculateServlet</servlet-class>
+		<servlet-class>com.project.server.CalculateServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>controller</servlet-name>
-		<servlet-class>com.project.server.controllerServlet</servlet-class>
+		<servlet-class>com.project.server.ControllerServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>calculateAction</servlet-name>
@@ -19,7 +19,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>loginAction</servlet-name>
-		<servlet-class>com.project.server.loginServlet</servlet-class>
+		<servlet-class>com.project.server.LoginServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>loginAction</servlet-name>
@@ -27,7 +27,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>logoutAction</servlet-name>
-		<servlet-class>com.project.server.logoutServlet</servlet-class>
+		<servlet-class>com.project.server.LogoutServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>logoutAction</servlet-name>

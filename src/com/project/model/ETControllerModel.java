@@ -12,7 +12,7 @@ import com.google.appengine.labs.repackaged.org.json.JSONObject;
  * @author Dawei Jia
  *
  */
-public class ETControllerModel extends timeBasedModel{
+public class ETControllerModel extends TimeBasedModel{
 	
 	
 	private ArrayList<Double> Ihret;

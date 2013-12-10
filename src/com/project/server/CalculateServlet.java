@@ -29,9 +29,9 @@ import com.project.po.Util;
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
 import com.project.model.ETControllerModel;
-import com.project.model.timeBasedModel;
-import com.project.model.timeBasedRainSensorModel;
-import com.project.model.timeBasedSoilSensorModel;
+import com.project.model.TimeBasedModel;
+import com.project.model.TimeBasedRainSensorModel;
+import com.project.model.TimeBasedSoilSensorModel;
 import com.project.po.Data;
 import com.project.po.DataBase;
 /**
@@ -41,10 +41,10 @@ import com.project.po.DataBase;
  * @author jiadw_000
  *
  */
-public class calculateServlet extends HttpServlet{
+public class CalculateServlet extends HttpServlet{
 	
 	
-	private static final Logger logger = Logger.getLogger(calculateServlet.class.getCanonicalName());
+	private static final Logger logger = Logger.getLogger(CalculateServlet.class.getCanonicalName());
 	@SuppressWarnings("deprecation")
 	@Override
 	/**
@@ -73,7 +73,8 @@ public class calculateServlet extends HttpServlet{
 		String[] days = {};
 		String[] hours = {};
 		String choice = req.getParameter("correspondence");
-		boolean adjustflag = false;
+		boolean adjustETflag = false;
+		boolean adjustRainflag = false;
 		Cookie cookie1 = new Cookie("choice",choice);
 		cookie1.setMaxAge(7*24*60*60);
 		cookie1.setPath("/");
@@ -195,12 +196,15 @@ public class calculateServlet extends HttpServlet{
 				if (system.equals("Time-based")){
 					
 					System.out.println("Time-based");
-					timeBasedModel tbm = new timeBasedModel(soilType,area,rootDepth,zipcode,unit,days,hours,irriDepth);
-					if(!adjustflag&&tbm.getB().adjust){
+					TimeBasedModel tbm = new TimeBasedModel(soilType,area,rootDepth,zipcode,unit,days,hours,irriDepth);
+					if(!adjustETflag&&tbm.getB().adjustET){
 						
-						adjustflag = true;
+						adjustETflag = true;
 					}
-					
+					if(!adjustRainflag&&tbm.getB().adjustRain){
+						
+						adjustRainflag = true;
+					}
 					System.out.println(tbm.getRootDepth());
 					System.out.println(tbm.getUnit());
 					System.out.println(tbm.getArea());
@@ -263,10 +267,14 @@ public class calculateServlet extends HttpServlet{
 					
 					System.out.println("Time-based with rain sensor");
 						
-					timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(soilType,area,rootDepth,zipcode,unit,rainsettings,days,hours,irriDepth);
-					if(!adjustflag&&tbrsm.getB().adjust){
+					TimeBasedRainSensorModel tbrsm = new TimeBasedRainSensorModel(soilType,area,rootDepth,zipcode,unit,rainsettings,days,hours,irriDepth);
+					if(!adjustETflag&&tbrsm.getB().adjustET){
 						
-						adjustflag = true;
+						adjustETflag = true;
+					}
+					if(!adjustRainflag&&tbrsm.getB().adjustRain){
+						
+						adjustRainflag = true;
 					}
 					System.out.println(tbrsm.getRootDepth());
 					System.out.println(tbrsm.getUnit());
@@ -322,11 +330,15 @@ public class calculateServlet extends HttpServlet{
 					
 					System.out.println("Time-based with soil moisture sensor");
 					
-					timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(soilType,area,rootDepth,zipcode,unit,soilthreshold,days,hours,irriDepth);
+					TimeBasedSoilSensorModel tbssm = new TimeBasedSoilSensorModel(soilType,area,rootDepth,zipcode,unit,soilthreshold,days,hours,irriDepth);
 					
-					if(!adjustflag&&tbssm.getB().adjust){
+					if(!adjustETflag&&tbssm.getB().adjustET){
 						
-						adjustflag = true;
+						adjustETflag = true;
+					}
+					if(!adjustRainflag&&tbssm.getB().adjustRain){
+						
+						adjustRainflag = true;
 					}
 					System.out.println(tbssm.getRootDepth());
 					System.out.println(tbssm.getUnit());
@@ -387,9 +399,13 @@ public class calculateServlet extends HttpServlet{
 					
 					ETControllerModel etcm = new ETControllerModel(soilType,area,rootDepth,zipcode,unit,days,hours,irriDepth);
 					
-					if(!adjustflag&&etcm.getB().adjust){
+					if(!adjustETflag&&etcm.getB().adjustET){
 						
-						adjustflag = true;
+						adjustETflag = true;
+					}
+					if(!adjustRainflag&&etcm.getB().adjustRain){
+						
+						adjustRainflag = true;
 					}
 					System.out.println(etcm.getRootDepth());
 					System.out.println(etcm.getUnit());
@@ -457,10 +473,14 @@ public class calculateServlet extends HttpServlet{
 				}
 				
 			}
-			
-			if(adjustflag){
+			if(adjustRainflag){
 				
-				throw new IOException(" Estimated FAWN ET Data. This is the adjusted result ! .");
+				throw new IOException(" Estimated FAWN Rain Data. This is the adjusted result ! ");
+				
+			}
+			if(adjustETflag){
+				
+				throw new IOException(" Estimated FAWN ET Data. This is the adjusted result ! ");
 				
 			}
 			
@@ -472,12 +492,6 @@ public class calculateServlet extends HttpServlet{
             errorflag.setPath("/");
             resp.addCookie(errorflag);
 		}
-		
-		
-		//Cookie cookie2 = new Cookie("correctFlag","true");
-		//cookie2.setMaxAge(7*24*60*60);
-		//cookie2.setPath("/");
-		//resp.addCookie(cookie2);
 		
 		resp.sendRedirect("/results.html");
 		

@@ -7,7 +7,7 @@ package com.project.model;
  * @author Dawei Jia
  * Newton Iterarion Method for solving equations
  */
-public class newtonMethod {
+public class NewtonMethod {
 	
 	private double psi;
 	private double delta;
@@ -22,7 +22,7 @@ public class newtonMethod {
 	 * @param delta
 	 * @param K
 	 */
-	public newtonMethod(double psi,double delta,double K){
+	public NewtonMethod(double psi,double delta,double K){
 		this.psi=psi;
 		this.delta=delta;
 		this.K=K;

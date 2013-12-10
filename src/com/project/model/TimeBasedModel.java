@@ -18,7 +18,7 @@ import java.util.HashMap;
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
 import com.project.po.Location;
-import com.project.po.baseData;
+import com.project.po.BaseData;
 /***
  * Created with Eclipse
  * User: Dawei Jia
@@ -26,10 +26,10 @@ import com.project.po.baseData;
  * @author Dawei Jia
  * This is the implementation of time based model for irrigation system in FAWN
  */
-public class timeBasedModel {
+public class TimeBasedModel {
 	
 	
-	protected static baseData b;  
+	protected static BaseData b;  
 	private int startIrrigationHour = 1;
 	private int lastIrrigationHour = 168;
 	private String soilType;  // get from user input
@@ -200,7 +200,7 @@ public class timeBasedModel {
 
 
 	
-	public static baseData getB() {
+	public static BaseData getB() {
 		return b;
 	}
 
@@ -312,9 +312,9 @@ public class timeBasedModel {
 	 * @throws Exception
 	 * All parameters got from calculateServlet
 	 */
-	public timeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit,String days[],String hours[], double irriDepth) throws Exception{
+	public TimeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit,String days[],String hours[], double irriDepth) throws Exception{
 		
-		b = new baseData(zipcode,days,hours,irriDepth);
+		b = new BaseData(zipcode,days,hours,irriDepth);
 		this.soilType = soiltype;
 		this.unit = unit;
 		/*
@@ -368,7 +368,7 @@ public class timeBasedModel {
 				this.delta.add(i-1,delta);
 				double psi=SOIL.get("psi");		//get the psi property of the soil
 				double k=SOIL.get("K");			//get the K property of the soil
-				newtonMethod nm=new newtonMethod(psi,delta,k);	
+				NewtonMethod nm=new NewtonMethod(psi,delta,k);	
 				//double F=0.0;
 				if(nm.calculationMethod()){
 					
@@ -601,7 +601,7 @@ public class timeBasedModel {
 			this.delta.add(i-1,delta);
 			double psi=SOIL.get("psi");		//get the psi property of the soil
 			double k=SOIL.get("K");			//get the K property of the soil
-			newtonMethod nm=new newtonMethod(psi,delta,k);	
+			NewtonMethod nm=new NewtonMethod(psi,delta,k);	
 			//double F=0.0;
 			if(nm.calculationMethod()){
 				
@@ -760,7 +760,7 @@ public class timeBasedModel {
 			this.delta.add(i-1,delta);
 			double psi=SOIL.get("psi");		//get the psi property of the soil
 			double k=SOIL.get("K");			//get the K property of the soil
-			newtonMethod nm=new newtonMethod(psi,delta,k);	
+			NewtonMethod nm=new NewtonMethod(psi,delta,k);	
 			//double F=0.0;
 			if(nm.calculationMethod()){
 				

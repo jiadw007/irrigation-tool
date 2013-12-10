@@ -34,30 +34,29 @@ import com.google.appengine.labs.repackaged.org.json.JSONObject;
  * @author Dawei Jia
  * basic data for computation model in Irrigation tool
  */
-public class baseData {
+public class BaseData extends EnviromentData{
 	
 	public static String mailServerURL = "http://fawn.ifas.ufl.edu/mail/send.php";
 	public static String dataServerURL = "http://fawn.ifas.ufl.edu/data/reports/?res";
 	public static String ETdataServerURL = "http://test.fawn.ifas.ufl.edu/controller.php/lastWeekET/json/";
-	public static HashMap<String,HashMap<String, Double>> soil=new HashMap<String,HashMap<String, Double>>();
-	public static HashMap<String,HashMap<String, Double>> Kc=new HashMap<String,HashMap<String, Double>>();
-	public static zipCode zipcodes;
+	public static ZipCode zipcodes = new ZipCode();
 	
-	public ArrayList<Double> Ihr;
-	public ArrayList<Double> ET0;
-	public ArrayList<Double> Rhr;
-	public ArrayList<String> Month;   
-	public ArrayList<String> Hour;
-	public ArrayList<String> Date;
-	public ArrayList<String> Year;
-	public ArrayList<Integer> Ihrschedule;
+	public ArrayList<Double> Ihr = new ArrayList<Double>();
+	public ArrayList<Double> ET0 = new ArrayList<Double>();
+	public ArrayList<Double> Rhr = new ArrayList<Double>();
+	public ArrayList<String> Month = new ArrayList<String>();   
+	public ArrayList<String> Hour = new ArrayList<String>();
+	public ArrayList<String> Date = new ArrayList<String>();
+	public ArrayList<String> Year = new ArrayList<String>();
+	public ArrayList<Integer> Ihrschedule = new ArrayList<Integer>();
 	public double IrriWeek = 0.0;
 	//public ArrayList<Integer> Ihrschedule1;
 	public Calendar startDate;
 	public Calendar endDate;
 	public String stnID;
-	public boolean adjust = false;
-	private static final Logger logger = Logger.getLogger(baseData.class.getName());
+	public boolean adjustET = false;
+	public boolean adjustRain = false;
+	private static final Logger logger = Logger.getLogger(BaseData.class.getName());
 	
 	
 	/**
@@ -69,126 +68,10 @@ public class baseData {
 	 * @throws Exception
 	 * Initialize Soil District fawnID Ihr Ischedule hourlyRainData hourlyETData
 	 */
-	public baseData(String zipcode,String[]days, String[] hours, Double irriDepth) throws Exception{
+	public BaseData(String zipcode,String[]days, String[] hours, Double irriDepth) throws Exception{
 		
-		zipcodes = new zipCode();
-		
-		Date=new ArrayList<String>();			
-		Year=new ArrayList<String>();			
-		Month=new ArrayList<String>();			
-		Hour=new ArrayList<String>();			
-		//WB=new ArrayList<Double>();			
-		Rhr=new ArrayList<Double>();			
-		Ihr=new ArrayList<Double>();			
-		ET0=new ArrayList<Double>();         
-		Ihrschedule=new ArrayList<Integer>();
 		//Ihrschedule1=new ArrayList<Integer>();
 		/*edit data for the soil type table */
-		HashMap<String,Double> sand=new HashMap<String, Double>(8);
-		sand.put("MAD", 0.5);
-		sand.put("Porosity", 0.44);
-		sand.put("Bulk Density", 1.48);
-		sand.put("FC", 0.08);
-		sand.put("WP", 0.02);
-		sand.put("theta", 0.42);
-		sand.put("psi", 4.95);
-		sand.put("K", 11.78);
-		soil.put("Sand",sand);
-		HashMap<String,Double> sandyLoam=new HashMap<String, Double>(8);
-		sandyLoam.put("MAD", 0.5);
-		sandyLoam.put("Porosity", 0.45);
-		sandyLoam.put("Bulk Density", 1.45);
-		sandyLoam.put("FC", 0.16);
-		sandyLoam.put("WP", 0.06);
-		sandyLoam.put("theta", 0.41);
-		sandyLoam.put("psi", 11.01);
-		sandyLoam.put("K", 1.09);
-		soil.put("Sandy loam",sandyLoam);
-		HashMap<String,Double> loam=new HashMap<String, Double>(8);
-		loam.put("MAD", 0.5);
-		loam.put("Porosity", 0.46);
-		loam.put("Bulk Density", 1.43);
-		loam.put("FC", 0.26);
-		loam.put("WP", 0.08);
-		loam.put("theta", 0.43);
-		loam.put("psi", 8.89);
-		loam.put("K", 0.34);
-		soil.put("Loam",loam);
-		HashMap<String,Double> siltLoam=new HashMap<String, Double>(8);
-		siltLoam.put("MAD", 0.5);
-		siltLoam.put("Porosity", 0.5);
-		siltLoam.put("Bulk Density", 1.32);
-		siltLoam.put("FC", 0.31);
-		siltLoam.put("WP", 1.10);
-		siltLoam.put("theta", 0.49);
-		siltLoam.put("psi", 16.68);
-		siltLoam.put("K", 0.65);
-		soil.put("Silt loam",siltLoam);
-		HashMap<String,Double> clayLoam=new HashMap<String, Double>(8);
-		clayLoam.put("MAD", 0.4);
-		clayLoam.put("Porosity", 0.46);
-		clayLoam.put("Bulk Density", 1.43);
-		clayLoam.put("FC", 0.34);
-		clayLoam.put("WP", 0.14);
-		clayLoam.put("theta", 0.31);
-		clayLoam.put("psi", 20.88);
-		clayLoam.put("K", 0.10);
-		soil.put("Clay loam",clayLoam);
-		HashMap<String,Double> clay=new HashMap<String, Double>(8);
-		clay.put("MAD", 0.3);
-		clay.put("Porosity", 0.48);
-		clay.put("Bulk Density", 1.37);
-		clay.put("FC", 0.37);
-		clay.put("WP", 0.16);
-		clay.put("theta", 0.39);
-		clay.put("psi", 31.63);
-		clay.put("K", 0.03);
-		soil.put("Clay",clay);
-		
-		/*edit data for the Kc value table*/
-		HashMap<String,Double> northFlorida=new HashMap<String,Double>(12);
-		northFlorida.put("1", 0.35);
-		northFlorida.put("2", 0.35);
-		northFlorida.put("3", 0.55);		
-		northFlorida.put("4", 0.80);
-		northFlorida.put("5", 0.90);
-		northFlorida.put("6", 0.75);
-		northFlorida.put("7", 0.70);
-		northFlorida.put("8", 0.70);
-		northFlorida.put("9", 0.75);
-		northFlorida.put("10", 0.70);
-		northFlorida.put("11", 0.60);
-		northFlorida.put("12", 0.45);
-		Kc.put("North Florida",northFlorida);
-		HashMap<String,Double> centerFlorida=new HashMap<String,Double>(12);
-		centerFlorida.put("1", 0.45);
-		centerFlorida.put("2", 0.45);
-		centerFlorida.put("3", 0.65);		
-		centerFlorida.put("4", 0.80);
-		centerFlorida.put("5", 0.90);
-		centerFlorida.put("6", 0.75);
-		centerFlorida.put("7", 0.70);
-		centerFlorida.put("8", 0.70);
-		centerFlorida.put("9", 0.75);
-		centerFlorida.put("10", 0.70);
-		centerFlorida.put("11", 0.60);
-		centerFlorida.put("12", 0.45);
-		Kc.put("Central Florida",centerFlorida);
-		HashMap<String,Double> southFlorida=new HashMap<String,Double>(12);
-		southFlorida.put("1", 0.71);
-		southFlorida.put("2", 0.79);
-		southFlorida.put("3", 0.78);		
-		southFlorida.put("4", 0.86);
-		southFlorida.put("5", 0.99);
-		southFlorida.put("6", 0.86);
-		southFlorida.put("7", 0.86);
-		southFlorida.put("8", 0.90);
-		southFlorida.put("9", 0.87);
-		southFlorida.put("10", 0.86);
-		southFlorida.put("11", 0.84);
-		southFlorida.put("12", 0.71);
-		Kc.put("South Florida",southFlorida);
-		
 		this.setStartDate();
 		this.setEndDate();
 		this.stnID = this.getNearByFawnStnID(this.getLocationByzipCode(zipcode));
@@ -217,49 +100,7 @@ public class baseData {
 			
 			throw new IOException(e.getMessage());
 			
-		}
-		
-		//ET0.add(0.0);
-		//Ihrschedule1.add(0);
-		//set the value of Ihrschedule
-		
-		
-		//get et value
-		
-		/*
-		try{
-			
-			File csv = new File("time-base-trial.csv");
-			BufferedReader br =new BufferedReader(new FileReader(csv));
-			br.readLine();
-			int i =1;
-			while(br.ready()&&i<=168){
-				
-				String line = br.readLine();
-				String item[] = line.split(",");
-				double ihr = Double.parseDouble(item[5]);
-				//Ihr.add(ihr);
-				ET0.add(Double.parseDouble(item[7]));
-				//Ihrschedule1.add(Integer.parseInt(item[10]));
-				
-				i++;
-			}
-			br.close();
-			
-			
-		}catch (FileNotFoundException e) { 
-		      e.printStackTrace(); 
-		} catch (IOException e) { 
-		      e.printStackTrace(); 
-		}
-		
-		System.out.println("finish read file");
-		//for(int i =0;i<169;i++){
-			
-			//System.out.println(i+","+Ihrschedule.get(i)+","+Ihrschedule1.get(i));
-			
-		//}
-		*/	
+		}	
 	}
 	
 	/**
@@ -406,7 +247,7 @@ public class baseData {
 	 */
 	public void requestETData(String stnID) throws Exception{
 		
-		this.postETRequest2ExternalServer(stnID);
+		this.postETRequest2ExternalServer(ETdataServerURL,stnID);
 		
 	}
 	/**
@@ -416,9 +257,9 @@ public class baseData {
 	 * @throws ParseException 
 	 * @throws Exception
 	 */
-	public void postETRequest2ExternalServer(String stnID) throws IOException, JSONException, ParseException{
+	public void postETRequest2ExternalServer(String serverURL,String stnID) throws IOException, JSONException, ParseException{
 		
-		URL url = new URL(ETdataServerURL+stnID);
+		URL url = new URL(serverURL+stnID);
 		logger.log(Level.INFO,ETdataServerURL+stnID);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		//System.out.println(connection.getDoInput());
@@ -430,9 +271,6 @@ public class baseData {
 		//connection.setRequestProperty("Content-Encoding", "gzip");
 		//connection.setRequestProperty("Content-Length", "541");
 		connection.setUseCaches(false);
-		//System.out.println(connection.getInputStream());
-		//BufferedReader in1 = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		//System.out.println(in1.readLine());
 		
 		/*
 		 * Important difference to get ET data
@@ -452,50 +290,33 @@ public class baseData {
 		for(int i = 0; i < 169; i++){	
 			ET0.add(-1.0);	
 		}
-		
-		long time1  = this.startDate.getTime().getTime();
-		
+		long time1  = this.startDate.getTime().getTime();	
 		for(int i = 0 ; i<jsonarray.length();i++){
 			
 			long time2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonarray.getJSONObject(i).getString("dt_hr")).getTime();
-			
 			long diff = time2 - time1;
-			
 			long index = (diff / (60 * 60 * 1000)) ;
-			
 			ET0.set((int)index,jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")/10.0);
 			
 		}
 		in.close();
 		connection.disconnect();
+		//check and modify hourly ET data
 		if(jsonarray.length()<169){
-			
-			//check and modify hourly ET data
-			for(int i = 0; i<jsonarray.length();i++){
-						
-				if(ET0.get(i) == -1.0){
-							
-					if(i == 0){
-								
-						ET0.set(i, 0.0);
-								
-					}else{
-								
-						ET0.set(i, ET0.get(i-1));
-								
-					}
-							
-							
-				}
-						
-			}
-			
-			adjust = true;
-		}
-		
-		
-	
+			for(int i = 0; i<jsonarray.length();i++){		
+				if(ET0.get(i) == -1.0){		
+					if(i == 0){			
+						ET0.set(i, 0.0);					
+					}else{			
+						ET0.set(i, ET0.get(i-1));					
+					}				
+				}					
+			}	
+			adjustET = true;
+		}	
 	}
+	
+	
 	/**
 	 * build rain request parameters
 	 * @param fromDate start Date
@@ -550,35 +371,35 @@ public class baseData {
 			
 		}
 		DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-		Calendar cal1 = Calendar.getInstance();
+		Calendar startTime = Calendar.getInstance();
 		 
-		cal1.add(Calendar.DATE,-14);
-		cal1.set(Calendar.DAY_OF_WEEK,Calendar.SATURDAY);
-		cal1.set(Calendar.HOUR_OF_DAY, 23);
-	    cal1.set(Calendar.MINUTE, 0);
-	    cal1.set(Calendar.SECOND, 0);
-		cal1.set(Calendar.MILLISECOND, 0);
+		startTime.add(Calendar.DATE,-14);
+		startTime.set(Calendar.DAY_OF_WEEK,Calendar.SATURDAY);
+		startTime.set(Calendar.HOUR_OF_DAY, 23);
+		startTime.set(Calendar.MINUTE, 0);
+		startTime.set(Calendar.SECOND, 0);
+		startTime.set(Calendar.MILLISECOND, 0);
 
 		
 		for(int i = 0; i < 169; i++){
 		  
 			this.Rhr.add(0.0);
-			this.Date.add(df.format(cal1.getTime()));
-			this.Year.add(String.valueOf(cal1.get(Calendar.YEAR)));
-			this.Month.add(String.valueOf(cal1.get(Calendar.MONTH)+1));
-			this.Hour.add(String.valueOf(cal1.get(Calendar.HOUR_OF_DAY)));
-			cal1.add(Calendar.HOUR_OF_DAY, 1);
+			this.Date.add(df.format(startTime.getTime()));
+			this.Year.add(String.valueOf(startTime.get(Calendar.YEAR)));
+			this.Month.add(String.valueOf(startTime.get(Calendar.MONTH)+1));
+			this.Hour.add(String.valueOf(startTime.get(Calendar.HOUR_OF_DAY)));
+			startTime.add(Calendar.HOUR_OF_DAY, 1);
 	    }
 		  
-		long time1 = this.startDate.getTime().getTime();
+		long startDateTime = this.startDate.getTime().getTime();
 		BigDecimal multiplicand = new BigDecimal(0.0);
 		BigDecimal multiplier = new BigDecimal(2.54);
 		int count = 0;
 		while(in.ready()){
 			
 		 	String[] inputs = in.readLine().split(",");
-		 	long time2 = new Date(inputs[1].replace("\"", "")).getTime();
-		 	long diff = time2-time1;
+		 	long time = new Date(inputs[1].replace("\"", "")).getTime();
+		 	long diff = time-startDateTime;
 		 	long index = (diff/(60*60*1000));	
 		  	this.Rhr.set((int)index,inputs[2].equals("N/A") ? 0.0 : multiplicand.valueOf(Double.parseDouble(inputs[2].replace("\"",""))).multiply(multiplier).doubleValue());
 		  	count++;
@@ -610,10 +431,9 @@ public class baseData {
 		connection.disconnect();
 		if(count<169){
 			
-			throw new IOException("Estimated FAWN Rainfall Data. This is an adjusted result !");
+			adjustRain = true;
 		}
 	}
-	
 	/**
 	 * rainsum for one week
 	 * @return rainsum
@@ -645,16 +465,14 @@ public class baseData {
 		Rhr.remove(0);
 		Ihr.remove(0);
 		ET0.remove(0);
-		Ihrschedule.remove(0);
-		
-		
+		Ihrschedule.remove(0);	
 	}
-	
+	 
 	public static void main(String args[]) throws Exception{
 		String[] days = {"1","2","3"};
 		String[] hours = {"0","1","2"};
 		
-		baseData bd = new baseData("32608", days, hours, 1.0);
+		BaseData bd = new BaseData("32608", days, hours, 1.0);
 		//bd.requestRainData(bd.startDate, bd.endDate, "32608");
 		System.out.println(bd.Rhr.size());
 		
@@ -663,24 +481,3 @@ public class baseData {
 	
 
 }
-/*
-String str = in.readLine();
-System.out.println(str);
-StringBuilder sb = new StringBuilder();
-sb.append("{\"ET\":");
-sb.append(str);
-sb.append("}");
-String json = sb.toString();
-System.out.println(json);
-JSONObject jsonobject = new JSONObject(json);
-JSONArray jsonarray = jsonobject.getJSONArray("ET");
-//System.out.println("jsonarray length: "+jsonarray.length());
-logger.log(Level.INFO, String.valueOf(jsonarray.length()));
-for(int i =0;i<jsonarray.length();i++){
-	logger.log(Level.INFO,String.valueOf(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")));
-	//System.out.println(jsonarray.getJSONObject(i).getDouble("et_FAO56_mm"));
-	
-}
-
-in.close();
-*/

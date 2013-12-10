@@ -19,9 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.project.model.ETControllerModel;
-import com.project.model.timeBasedModel;
-import com.project.model.timeBasedRainSensorModel;
-import com.project.model.timeBasedSoilSensorModel;
+import com.project.model.TimeBasedModel;
+import com.project.model.TimeBasedRainSensorModel;
+import com.project.model.TimeBasedSoilSensorModel;
 import com.project.po.Data;
 import com.project.po.DataBase;
 import com.project.po.Util;
@@ -33,14 +33,14 @@ import com.project.po.Util;
  * @author Dawei Jia
  * controller for unsubscribe weeklyreport and changesecret createsecret
  */
-public class controllerServlet extends HttpServlet{
+public class ControllerServlet extends HttpServlet{
 	
-	private static final Logger logger = Logger.getLogger(controllerServlet.class.getCanonicalName());
-	@Override
+	private static final Logger logger = Logger.getLogger(ControllerServlet.class.getCanonicalName());
+	
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		super.doGet(req, resp);
+		//super.doGet(req, resp);
 		
 		PrintWriter out = resp.getWriter();
 		String path = req.getServletPath();
@@ -79,7 +79,7 @@ public class controllerServlet extends HttpServlet{
 								if(system.equals("Time-based")){
 								
 									logger.log(Level.INFO, "Time-based");
-									timeBasedModel tbm = new timeBasedModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
+									TimeBasedModel tbm = new TimeBasedModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
 									tbm.calculation();
 									tbm.getB().startDate.add(Calendar.DATE, 1);
 									String startDate = df.format(tbm.getB().startDate.getTime());
@@ -111,7 +111,7 @@ public class controllerServlet extends HttpServlet{
 									
 									logger.log(Level.INFO, "Time-based with rain sensor");
 						
-									timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getRainsettings(),data.getDays(),data.getHours(),data.getIrriDepth());
+									TimeBasedRainSensorModel tbrsm = new TimeBasedRainSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getRainsettings(),data.getDays(),data.getHours(),data.getIrriDepth());
 									tbrsm.calculation();
 									tbrsm.getB().startDate.add(Calendar.DATE, 1);
 									String startDate = df.format(tbrsm.getB().startDate.getTime());
@@ -144,7 +144,7 @@ public class controllerServlet extends HttpServlet{
 								
 									logger.log(Level.INFO, "Time-based with soil moisture sensor");
 
-									timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getSoilthreshold(),data.getDays(),data.getHours(),data.getIrriDepth());
+									TimeBasedSoilSensorModel tbssm = new TimeBasedSoilSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getSoilthreshold(),data.getDays(),data.getHours(),data.getIrriDepth());
 									tbssm.calculation();
 									tbssm.getB().startDate.add(Calendar.DATE, 1);
 									String startDate = df.format(tbssm.getB().startDate.getTime());
@@ -243,7 +243,7 @@ public class controllerServlet extends HttpServlet{
 						
 						data.setChoice("no");
 						db.insertIntoDataBase(data);
-						out.println("You have unsubsribed successfully");
+						out.println("You have unsubscribed successfully");
 						
 					}else{
 						
@@ -344,7 +344,7 @@ public class controllerServlet extends HttpServlet{
 						if(system.equals("Time-based")){
 							
 							logger.log(Level.INFO, "Time-based");
-							timeBasedModel tbm = new timeBasedModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
+							TimeBasedModel tbm = new TimeBasedModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
 							tbm.calculation();
 							tbm.getB().startDate.add(Calendar.DATE, 1);
 							String startDate = df.format(tbm.getB().startDate.getTime());
@@ -376,7 +376,7 @@ public class controllerServlet extends HttpServlet{
 									
 							logger.log(Level.INFO, "Time-based with rain sensor");
 						
-							timeBasedRainSensorModel tbrsm = new timeBasedRainSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getRainsettings(),data.getDays(),data.getHours(),data.getIrriDepth());
+							TimeBasedRainSensorModel tbrsm = new TimeBasedRainSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getRainsettings(),data.getDays(),data.getHours(),data.getIrriDepth());
 							tbrsm.calculation();
 							tbrsm.getB().startDate.add(Calendar.DATE, 1);
 							String startDate = df.format(tbrsm.getB().startDate.getTime());
@@ -409,7 +409,7 @@ public class controllerServlet extends HttpServlet{
 								
 							logger.log(Level.INFO, "Time-based with soil moisture sensor");
 
-							timeBasedSoilSensorModel tbssm = new timeBasedSoilSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getSoilthreshold(),data.getDays(),data.getHours(),data.getIrriDepth());
+							TimeBasedSoilSensorModel tbssm = new TimeBasedSoilSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getSoilthreshold(),data.getDays(),data.getHours(),data.getIrriDepth());
 							tbssm.calculation();
 							tbssm.getB().startDate.add(Calendar.DATE, 1);
 							String startDate = df.format(tbssm.getB().startDate.getTime());

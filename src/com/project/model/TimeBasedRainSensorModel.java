@@ -1,11 +1,9 @@
 package com.project.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
-
 /**
  * Created with MyEclipse
  * User : Dawei Jia
@@ -13,20 +11,12 @@ import com.google.appengine.labs.repackaged.org.json.JSONObject;
  * @author Dawei Jia
  *
  */
-public class timeBasedSoilSensorModel extends timeBasedModel{
+public class TimeBasedRainSensorModel extends TimeBasedModel{
 	
 	
-	private double soilThreshold;
-	private ArrayList<Double> Ihrsoil;		//WB = Rhr +Ihrsoil
-	
-	
-	public double getSoilThreshold() {
-		return soilThreshold;
-	}
-
-	public ArrayList<Double> getIhrsoil() {
-		return Ihrsoil;
-	}
+	private double rainsettings;
+	private ArrayList<Double> rainSum;    //rainSum for last 24hours
+	private ArrayList<Double> IhrRain;	  //WB = Rhr +IhrRain
 	/**
 	 * Constructor Method
 	 * @param soilType
@@ -34,31 +24,40 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 	 * @param rootDepth
 	 * @param zipcode
 	 * @param unit
-	 * @param soilthreshold
+	 * @param rainsettings
 	 * @param days
 	 * @param hours
 	 * @param irriDepth
 	 * @throws Exception
 	 */
-	public timeBasedSoilSensorModel(String soilType, double area,
-			double rootDepth, String zipcode, String unit, double soilthreshold,String[] days, String[] hours, Double irriDepth) throws Exception {
-			
-		super(soilType,area,rootDepth,zipcode,unit,days,hours, irriDepth);
-		this.soilThreshold = soilthreshold;
-		Ihrsoil = new ArrayList<Double>();
-		// TODO Auto-generated constructor stub
+	public TimeBasedRainSensorModel(String soilType, double area, double rootDepth, String zipcode, String unit, double rainsettings,String[] days, String[] hours, Double irriDepth) throws Exception{
+		
+		super(soilType,area,rootDepth,zipcode,unit,days, hours,irriDepth);
+		this.rainsettings = rainsettings;
+		rainSum = new ArrayList<Double>();
+		IhrRain = new ArrayList<Double>();
+	}
+	
+	public double getRainsettings() {
+		return rainsettings;
+	}
+
+	public ArrayList<Double> getRainSum() {
+		return rainSum;
+	}
+
+	public ArrayList<Double> getIhrRain() {
+		return IhrRain;
 	}
 	/**
-	 * calculation in time based soil sensor model
+	 * calculation method in time based rain sensor model
 	 * override method in time based model
 	 */
 	public void calculation(){
 		
-		b.removeInitialValue();
-		
-		HashMap<String, Double> SOIL=b.soil.get(this.getSoilType());
 		//this.setWB(new ArrayList<Double>());
 		
+		b.removeInitialValue();
 		for(int i =this.getStartIrrigationHour();i<=this.getLastIrrigationHour();i++){
 			
 			//calculate the ET
@@ -67,22 +66,36 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 			this.getET().add(et*kc);
 			
 			
-			//calculation the Ihrsoil
-			if(this.getSWC().get(i-1)>this.soilThreshold*SOIL.get("FC")*this.getRootDepth()){
-			
-				this.Ihrsoil.add(0.0);
+			if(i<24){
+				
+				this.rainSum.add(super.b.Rhr.get(i-1));
 				
 			}else{
 				
-				this.Ihrsoil.add(this.b.Ihr.get(i-1));
-				this.getB().IrriWeek +=this.b.Ihr.get(i-1);
+				double sum=0;
+				for(int j=i-24;j<i;j++){
+					
+					sum+=super.b.Rhr.get(j);
+										
+				}
+				this.rainSum.add(sum);
+				
 			}
-			double wb=this.b.Rhr.get(i-1)+this.Ihrsoil.get(i-1);
+			if(this.rainSum.get(i-1)>this.rainsettings){
+				
+				
+				this.IhrRain.add(0.0);
+				
+			}
+			else{
+				this.IhrRain.add(super.b.Ihr.get(i-1));
+				this.getB().IrriWeek +=b.Ihr.get(i-1);
+			}
+			double wb=this.b.Rhr.get(i-1)+this.IhrRain.get(i-1);
 			this.getWB().add(wb);
 			super.calculation(i);
 			
 		}
-		
 		System.out.println("finish !");
 		int i =0;
 		for(String hour: b.Hour){
@@ -110,32 +123,31 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 		System.out.println("iLostWeek " +this.iLostWeek);
 		
 		//calculate the water stress day
-		//calculate the water stress day
 		double swcSum = 0.0;
 		for(int j =1;j<this.getSWC().size();j++){
 			if(j%24 != 0){
-								
+						
 				swcSum +=this.getSWC().get(j);
-								
-								
+						
+						
 			}else{
 				swcSum +=this.getSWC().get(j);
 				swcSum /=24.0;
 				//System.out.println("swc : "+swcSum);
 				if(swcSum < this.averW){
-									
+							
 					this.wStressDays++;
 				}
 				swcSum = 0.0;
-								
+						
 			}
-							
-							
+					
+					
 		}
 		/*
 		JSONObject resultJSON = new JSONObject();
 		try{
-			resultJSON.append("Hour", b.Hour).append("Rhr", b.Rhr).append("Ihrsoil",this.Ihrsoil)
+			resultJSON.append("Hour", b.Hour).append("Rhr", b.Rhr).append("rainSum", this.rainSum).append("IhrRain", this.IhrRain)
 			.append("ET", this.getET()).append("WB", this.getWB()).append("SWC", this.getSWC()).append("DELTA",this.getDelta())
 			.append("F", this.getF()).append("rateF", this.getRateF()).append("Q", this.getQ()).append("InF",this.getInF()).append("PERC",this.getPERC())
 			.append("Loss",this.getLoss()).append("PerLoss",this.getPerLoss()).append("wLostHr",this.getwLostHr()).append("wLostDay",this.getwLostDay())
@@ -146,9 +158,9 @@ public class timeBasedSoilSensorModel extends timeBasedModel{
 			e.printStackTrace();
 		}
 		*/
-		//return resultJSON ; 
+		//return resultJSON;
+		//super.calculation();
+		
 	}
 	
-	
-
 }

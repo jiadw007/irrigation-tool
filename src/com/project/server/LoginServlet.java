@@ -18,7 +18,7 @@ import com.google.appengine.api.users.UserServiceFactory;
  * @author Dawei Jia
  *
  */
-public class loginServlet extends HttpServlet{
+public class LoginServlet extends HttpServlet{
 	
 	
 	/**
