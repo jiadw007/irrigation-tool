@@ -253,67 +253,22 @@ public class BaseData extends EnviromentData{
 	/**
 	 * post request to server to get hourly ET data for last week
 	 * @param stnID fawn station ID
-	 * @throws JSONException 
-	 * @throws ParseException 
 	 * @throws Exception
 	 */
-	public void postETRequest2ExternalServer(String serverURL,String stnID) throws IOException, JSONException, ParseException{
+	public void postETRequest2ExternalServer(String serverURL,String stnID) throws Exception{
 		
-		URL url = new URL(serverURL+stnID);
-		logger.log(Level.INFO,ETdataServerURL+stnID);
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		//System.out.println(connection.getDoInput());
-		connection.setDoOutput(true);
-		connection.setDoInput(true);
-		connection.setRequestMethod("GET");
-		connection.setRequestProperty("Content-Type", "text/plain");
-		connection.setRequestProperty("charset", "utf-8");
-		//connection.setRequestProperty("Content-Encoding", "gzip");
-		//connection.setRequestProperty("Content-Length", "541");
-		connection.setUseCaches(false);
-		
+
+		HttpURLConnection connection = Util.createUrlConnection(serverURL+stnID, "text/plain","", "GET");
 		/*
 		 * Important difference to get ET data
 		 * One for GAE, the other for local test 
 		 */
 		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
 		//BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
-		
-		String str = in.readLine();
-		JSONArray jsonarray = new JSONArray(str);
-		logger.log(Level.INFO, "Total number of ET Data is : " + String.valueOf(jsonarray.length()));
-		
-		/*
-		 * store ET data according to index, check missing data
-		 * Total number is 169 
-		 */
-		for(int i = 0; i < 169; i++){	
-			ET0.add(-1.0);	
-		}
-		long time1  = this.startDate.getTime().getTime();	
-		for(int i = 0 ; i<jsonarray.length();i++){
-			
-			long time2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonarray.getJSONObject(i).getString("dt_hr")).getTime();
-			long diff = time2 - time1;
-			long index = (diff / (60 * 60 * 1000)) ;
-			ET0.set((int)index,jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")/10.0);
-			
-		}
+		this.setETData(in);
 		in.close();
 		connection.disconnect();
-		//check and modify hourly ET data
-		if(jsonarray.length()<169){
-			for(int i = 0; i<jsonarray.length();i++){		
-				if(ET0.get(i) == -1.0){		
-					if(i == 0){			
-						ET0.set(i, 0.0);					
-					}else{			
-						ET0.set(i, ET0.get(i-1));					
-					}				
-				}					
-			}	
-			adjustET = true;
-		}	
+		
 	}
 	
 	
@@ -348,22 +303,57 @@ public class BaseData extends EnviromentData{
 	 */
 	public void postRainRequest2ExternalServer(String serverUrl, String postParams) throws Exception{
 		
-		URL url = new URL(serverUrl);
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setDoOutput(true);
-		connection.setDoInput(true);
-		connection.setInstanceFollowRedirects(false);
-		connection.setRequestMethod("POST");
-		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		connection.setRequestProperty("charset", "utf-8");
-		connection.setRequestProperty("Content-Length", ""+ Integer.toString(postParams.getBytes().length));
-		connection.setUseCaches(false);
+
+		HttpURLConnection connection = Util.createUrlConnection(serverUrl, "application/x-www-form-urlencoded",postParams, "POST");
 		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
 		//System.out.println(connection.getOutputStream());
 		wr.writeBytes(postParams);
 		wr.flush();
 		wr.close();
 		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		this.setRainData(in);
+		in.close();
+		connection.disconnect();
+		
+	
+	}
+	/**
+	 * rainsum for one week
+	 * @return rainsum
+	 */
+	
+	public Double getRainFallPerWeek(){
+		
+		BigDecimal rainsum = new BigDecimal(0.0);
+		BigDecimal divisor = new BigDecimal(2.54);
+		BigDecimal dividend = new BigDecimal(0.0);
+		for(int i =0;i<168;i++){
+			
+			rainsum = rainsum.add(divisor.valueOf(this.Rhr.get(i)));
+			//System.out.println(this.Rhr.get(i)+","+rainsum);
+		}
+		//rainsum = (double) (Math.round(rainsum*100)/100);
+		return rainsum.divide(divisor,2).doubleValue();
+		
+	}
+	/**
+	 * remove initial value for output convenience, since more attributes don't have initial vale 
+	 */
+	public void removeInitialValue(){
+		
+		Date.remove(0);
+		Year.remove(0);
+		Month.remove(0);
+		Hour.remove(0);
+		Rhr.remove(0);
+		Ihr.remove(0);
+		ET0.remove(0);
+		Ihrschedule.remove(0);	
+	}
+	public void setRainData(BufferedReader in) throws IOException{
+		
+	
+		
 		for(int i= 1;i<=24;i++){
 			
 			String str = in.readLine();
@@ -406,68 +396,51 @@ public class BaseData extends EnviromentData{
 		  
 		}
  
-		
-		/*
-		BigDecimal multiplicand = new BigDecimal(0.0);
-		BigDecimal multiplier = new BigDecimal(2.54);
-		while(in.ready()){
-			
-			
-			
-		   String[] inputs = in.readLine().split(",");
-			
-		   this.Date.add(inputs[1].replace("\"", ""));
-		    Date date = new Date(inputs[1].replace("\"", ""));
-		    this.Year.add(String.valueOf(date.getYear()+1900));
-		    this.Month.add(String.valueOf(date.getMonth()+1));
-		    this.Hour.add(String.valueOf(date.getHours()));
-		
-		    this.Rhr.add(inputs[2].equals("N/A") ? 0.0 : multiplicand.valueOf(Double.parseDouble(inputs[2].replace("\"",""))).multiply(multiplier).doubleValue());
-		    //System.out.println(Double.parseDouble(inputs[2].replace("\"", ""))*2.54);
-		}
-		*/
 		logger.log(Level.INFO, "Total number of Rain Data is : " + count);
-		in.close();
-		connection.disconnect();
 		if(count<169){
 			
 			adjustRain = true;
 		}
-	}
-	/**
-	 * rainsum for one week
-	 * @return rainsum
-	 */
-	
-	public Double getRainFallPerWeek(){
 		
-		BigDecimal rainsum = new BigDecimal(0.0);
-		BigDecimal divisor = new BigDecimal(2.54);
-		BigDecimal dividend = new BigDecimal(0.0);
-		for(int i =0;i<168;i++){
-			
-			rainsum = rainsum.add(divisor.valueOf(this.Rhr.get(i)));
-			//System.out.println(this.Rhr.get(i)+","+rainsum);
+	}
+	public void setETData(BufferedReader in) throws Exception{
+		
+		String str = in.readLine();
+		JSONArray jsonarray = new JSONArray(str);
+		logger.log(Level.INFO, "Total number of ET Data is : " + String.valueOf(jsonarray.length()));
+		
+		/*
+		 * store ET data according to index, check missing data
+		 * Total number is 169 
+		 */
+		for(int i = 0; i < 169; i++){	
+			ET0.add(-1.0);	
 		}
-		//rainsum = (double) (Math.round(rainsum*100)/100);
-		return rainsum.divide(divisor,2).doubleValue();
+		long time1  = this.startDate.getTime().getTime();	
+		for(int i = 0 ; i<jsonarray.length();i++){
+			
+			long time2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonarray.getJSONObject(i).getString("dt_hr")).getTime();
+			long diff = time2 - time1;
+			long index = (diff / (60 * 60 * 1000)) ;
+			ET0.set((int)index,jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")/10.0);
+			
+		}
+		//check and modify hourly ET data
+		if(jsonarray.length()<169){
+			for(int i = 0; i<jsonarray.length();i++){		
+				if(ET0.get(i) == -1.0){		
+					if(i == 0){			
+						ET0.set(i, 0.0);					
+					}else{			
+						ET0.set(i, ET0.get(i-1));					
+					}				
+				}					
+			}	
+			adjustET = true;
+		}	
+		
 		
 	}
-	/**
-	 * remove initial value for output convenience, since more attributes don't have initial vale 
-	 */
-	public void removeInitialValue(){
-		
-		Date.remove(0);
-		Year.remove(0);
-		Month.remove(0);
-		Hour.remove(0);
-		Rhr.remove(0);
-		Ihr.remove(0);
-		ET0.remove(0);
-		Ihrschedule.remove(0);	
-	}
-	 
 	public static void main(String args[]) throws Exception{
 		String[] days = {"1","2","3"};
 		String[] hours = {"0","1","2"};

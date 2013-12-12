@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -21,6 +22,7 @@ import java.util.zip.GZIPInputStream;
 
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
+import com.project.model.TimeBasedModel;
 import com.project.server.CalculateServlet;
 
 import javax.servlet.ServletException;
@@ -157,18 +159,8 @@ public class Util{
 	 */
 	public static String postRequest2ExternalServer(String serverURL,
 			String postParas) throws IOException {
-		URL url = new URL(serverURL);
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setDoOutput(true);
-		connection.setDoInput(true);
-		connection.setInstanceFollowRedirects(false);
-		connection.setRequestMethod("POST");
-		connection.setRequestProperty("Content-Type",
-				"application/x-www-form-urlencoded");
-		connection.setRequestProperty("charset", "utf-8");
-		connection.setRequestProperty("Content-Length",
-				"" + Integer.toString(postParas.getBytes().length));
-		connection.setUseCaches(false);
+		
+		HttpURLConnection connection = Util.createUrlConnection(serverURL, "application/x-www-form-urlencoded", postParas, "POST");
 		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
 		wr.writeBytes(postParas);
 		wr.flush();
@@ -193,40 +185,115 @@ public class Util{
 	}
 	
 	
-	public static Cookie[] createCookies(String name, String waterLoss, String iLoss, String wstressDays,String rainfall, String stn,String startDate, String endDate,String irriWeek){
+	public static Cookie[] createCookies(String name, TimeBasedModel tbm){
 		
 		Cookie[] results = new Cookie[8];
 		System.out.println("Create Cookies !");
-		results[0] = new Cookie(name+"_waterLoss",waterLoss);
+		results[0] = new Cookie(name+"_waterLoss",String.valueOf(tbm.getwLostWeek()));
 		results[0].setMaxAge(60*60);
 		results[0].setPath("/");
-		results[1] = new Cookie(name+"_iLoss",iLoss);
+		results[1] = new Cookie(name+"_iLoss",String.valueOf(tbm.getiLostWeek()));
 		results[1].setMaxAge(60*60);
 		results[1].setPath("/");
-		results[2] = new Cookie(name+"_wStressDays", wstressDays);
+		results[2] = new Cookie(name+"_wStressDays", String.valueOf(tbm.getwStressDays()));
 		results[2].setMaxAge(60*60);
 		results[2].setPath("/");
-		results[3] = new Cookie("rainfall",rainfall);
+		results[3] = new Cookie("rainfall",String.valueOf(tbm.getB().getRainFallPerWeek()));
 		results[3].setMaxAge(60*60);
 		results[3].setPath("/");
-		results[4] = new Cookie("fawnName", stn);
+		results[4] = new Cookie("fawnName", tbm.getLocation().getFawnStnName());
 		results[4].setMaxAge(60*60);
 		results[4].setPath("/");
-		results[5] = new Cookie("startDate",startDate);
+		results[5] = new Cookie("startDate",DateFormat.getDateInstance().format(tbm.getB().startDate.getTime()));
 		results[5].setMaxAge(60*60);
 		results[5].setPath("/");
-		results[6] = new Cookie("endDate",endDate);
+		results[6] = new Cookie("endDate",DateFormat.getDateInstance().format(tbm.getB().endDate.getTime()));
 		results[6].setMaxAge(60*60);
 		results[6].setPath("/");
-		System.out.println("irri: "+irriWeek);
-		results[7] = new Cookie(name+"_irriWeek",irriWeek);
+		System.out.println("irri: "+String.valueOf(tbm.getB().IrriWeek));
+		results[7] = new Cookie(name+"_irriWeek",String.valueOf(tbm.getB().IrriWeek));
 		results[7].setMaxAge(60*60);
 		results[7].setPath("/");
 		return results;
 	}
 	
+	public static Double processCm2Inch(Double value){
+		
+		BigDecimal dividend = new BigDecimal(value);
+		BigDecimal divisor = new BigDecimal(2.54);
+		
+		return dividend.divide(divisor, 2).doubleValue();
+	} 
 	
+	public static Cookie[] calculateLossProcess(String name, TimeBasedModel tbm){
+		
+		System.out.println(tbm.getRootDepth());
+		System.out.println(tbm.getUnit());
+		System.out.println(tbm.getArea());
+		System.out.println(tbm.getSoilType());
+		System.out.println(tbm.getB().IrriWeek);
+		tbm.getLocation().print();
+		tbm.calculation();
+		/*
+		 * store results in cookies and response
+		 */
+		tbm.getB().startDate.add(Calendar.DATE, 1);
+		if(tbm.getUnit().equals("Metric")){
+			
+			
+			tbm.getB().IrriWeek = Util.processCm2Inch(tbm.getB().IrriWeek);
+			System.out.println("After: "+tbm.getB().IrriWeek);		
+					
+		}
+		Cookie[] results = Util.createCookies(name, tbm);
+		return results;
+	}
+	public static String buildWeeklyReportResult(DateFormat df, TimeBasedModel tbm){
+		
+		tbm.calculation();
+		tbm.getB().startDate.add(Calendar.DATE, 1);
+		String startDate = df.format(tbm.getB().startDate.getTime());
+		String endDate = df.format(tbm.getB().endDate.getTime());
+		String waterLoss = String.valueOf(tbm.getwLostWeek());
+		String iLoss = String.valueOf(tbm.getiLostWeek());
+		String rainfall = String.valueOf(tbm.getB().getRainFallPerWeek());
+		//int wStressDays = tbm.getwStressDays();
+		String fawnName = tbm.getLocation().getFawnStnName();
+		//double fawnDistance = tbm.getLocation().distance;
+		double irriDepth = 0.0;
+		if(tbm.getUnit().equals("Metric")){
+
+			irriDepth = Util.processCm2Inch(tbm.getB().IrriWeek);
+			
+		}else{
+			
+			irriDepth = tbm.getB().IrriWeek;
+			
+		}
+		return startDate+","+endDate+","+waterLoss+","+iLoss+"%,"+fawnName+","+rainfall+","+String.valueOf(irriDepth);
+		
+		
+	}
 	
+	public static HttpURLConnection createUrlConnection(String serverURL, String contentType, String postParas, String method) throws IOException{
+		
+		URL url = new URL(serverURL);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setDoOutput(true);
+		connection.setDoInput(true);
+		connection.setInstanceFollowRedirects(false);
+		connection.setRequestMethod(method);
+		connection.setRequestProperty("Content-Type",
+				contentType);
+		connection.setRequestProperty("charset", "utf-8");
+		connection.setRequestProperty("Content-Length",
+				"" + Integer.toString(postParas.getBytes().length));
+		connection.setUseCaches(false);
+		
+		return connection;
+		
+		
+	}
 	public static void main(String arghhs[]) throws NoSuchAlgorithmException, UnsupportedEncodingException, ServletException{
 		
 		Util util = new Util();

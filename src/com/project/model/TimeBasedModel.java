@@ -17,6 +17,7 @@ import java.util.HashMap;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
+import com.project.po.Data;
 import com.project.po.Location;
 import com.project.po.BaseData;
 /***
@@ -29,7 +30,7 @@ import com.project.po.BaseData;
 public class TimeBasedModel {
 	
 	
-	protected static BaseData b;  
+	protected BaseData b;  
 	private int startIrrigationHour = 1;
 	private int lastIrrigationHour = 168;
 	private String soilType;  // get from user input
@@ -200,7 +201,7 @@ public class TimeBasedModel {
 
 
 	
-	public static BaseData getB() {
+	public  BaseData getB() {
 		return b;
 	}
 
@@ -312,28 +313,28 @@ public class TimeBasedModel {
 	 * @throws Exception
 	 * All parameters got from calculateServlet
 	 */
-	public TimeBasedModel(String soiltype, Double area, Double rootDepth,String zipcode, String unit,String days[],String hours[], double irriDepth) throws Exception{
+	public TimeBasedModel(Data data) throws Exception{
 		
-		b = new BaseData(zipcode,days,hours,irriDepth);
-		this.soilType = soiltype;
-		this.unit = unit;
+		b = new BaseData(data.getZipcode(),data.getDays(),data.getHours(),data.getIrriDepth());
+		this.soilType = data.getSoilType();
+		this.unit = data.getUnit();
 		/*
 		 * unit conversion
 		 */
 		if(unit.equals("English")){
 			
-			this.area = (double) (Math.round(area*4046.85*100000)/100000);
-			this.rootDepth = (double) rootDepth *2.54;
+			this.area = (double) (Math.round(data.getArea()*4046.85*100000)/100000);
+			this.rootDepth = (double) data.getRootDepth() *2.54;
 			
 			
 		}else{
 			
-			this.area = area;
-			this.rootDepth = rootDepth;
+			this.area = data.getArea();
+			this.rootDepth = data.getRootDepth();
 			
 		}
 		//get the fawn station information
-		this.location = b.getLocationByzipCode(zipcode);
+		this.location = b.getLocationByzipCode(data.getZipcode());
 		//for(int i =0;i<b.Rhr.size();i++){
 			
 			//double wb=b.Rhr.get(i)+b.Ihr.get(i);
@@ -566,24 +567,7 @@ public class TimeBasedModel {
 			
 			
 		}
-		
-		
-		/*
-		JSONObject resultJSON = new JSONObject();
-		try{
-			resultJSON.append("Hour", b.Hour).append("ET", this.ET).append("WB", this.WB).append("SWC", this.SWC)
-			.append("F", this.F).append("rateF", this.rateF).append("Q", this.Q).append("InF",this.InF).append("PERC",this.PERC)
-			.append("Loss",this.Loss).append("PerLoss",this.PerLoss).append("wLostHr",this.wLostHr).append("wLostDay",this.wLostDay)
-			.append("iLostHr",this.iLostHr).append("iLostDay",this.iLostDay);			
 			
-		}catch(JSONException e){
-			
-			e.printStackTrace();
-		}
-		*/
-		//return resultJSON ;
-		
-		
 	}
 
 	/**

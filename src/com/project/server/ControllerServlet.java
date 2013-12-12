@@ -79,133 +79,33 @@ public class ControllerServlet extends HttpServlet{
 								if(system.equals("Time-based")){
 								
 									logger.log(Level.INFO, "Time-based");
-									TimeBasedModel tbm = new TimeBasedModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
-									tbm.calculation();
-									tbm.getB().startDate.add(Calendar.DATE, 1);
-									String startDate = df.format(tbm.getB().startDate.getTime());
-									String endDate = df.format(tbm.getB().endDate.getTime());
-									Double waterLoss = tbm.getwLostWeek();
-									Double iLoss = tbm.getiLostWeek();
-									Double rainfall = tbm.getB().getRainFallPerWeek();
-									//int wStressDays = tbm.getwStressDays();
-									String fawnName = tbm.getLocation().getFawnStnName();
-									//double fawnDistance = tbm.getLocation().distance;
-									double irriDepth = 0.0;
-									if(data.getUnit().equals("Metric")){
-										
-										BigDecimal dividend = new BigDecimal(tbm.getB().IrriWeek);
-										BigDecimal divisor = new BigDecimal(2.54);
-										irriDepth = dividend.divide(divisor, 2).doubleValue();
-										
-									}else{
-										
-										irriDepth = tbm.getB().IrriWeek;
-										
-									}
-									
-									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-									//results.put("Time-based", startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
-									results.put("Time-based", startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+fawnName+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+									TimeBasedModel tbm = new TimeBasedModel(data);
+									results.put("Time-based", Util.buildWeeklyReportResult(df, tbm));
 			
 								}else if(system.equals("Time-based with rain sensor")){
 									
 									logger.log(Level.INFO, "Time-based with rain sensor");
 						
-									TimeBasedRainSensorModel tbrsm = new TimeBasedRainSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getRainsettings(),data.getDays(),data.getHours(),data.getIrriDepth());
-									tbrsm.calculation();
-									tbrsm.getB().startDate.add(Calendar.DATE, 1);
-									String startDate = df.format(tbrsm.getB().startDate.getTime());
-									String endDate = df.format(tbrsm.getB().endDate.getTime());
-									Double waterLoss = tbrsm.getwLostWeek();
-									Double iLoss = tbrsm.getiLostWeek();
-									Double rainfall = tbrsm.getB().getRainFallPerWeek();
-									//int wStressDays = tbrsm.getwStressDays();
-									String fawnName = tbrsm.getLocation().getFawnStnName();
-									//double fawnDistance = tbrsm.getLocation().distance;
-									double irriDepth = 0.0;
-									if(data.getUnit().equals("Metric")){
-												
-										BigDecimal dividend = new BigDecimal(tbrsm.getB().IrriWeek);
-										BigDecimal divisor = new BigDecimal(2.54);
-										irriDepth = dividend.divide(divisor, 2).doubleValue();
-												
-									}else{
-												
-										irriDepth = tbrsm.getB().IrriWeek;
-												
-									}
+									TimeBasedRainSensorModel tbrsm = new TimeBasedRainSensorModel(data);
 									
-									
-									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-									//results.put("Time-based with rain sensor",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
-									results.put("Time-based with rain sensor", startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+fawnName+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+									results.put("Time-based with rain sensor", Util.buildWeeklyReportResult(df, tbrsm));
 								
 								}else if(system.equals("Time-based with soil moisture sensor")){
 								
 									logger.log(Level.INFO, "Time-based with soil moisture sensor");
 
-									TimeBasedSoilSensorModel tbssm = new TimeBasedSoilSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getSoilthreshold(),data.getDays(),data.getHours(),data.getIrriDepth());
-									tbssm.calculation();
-									tbssm.getB().startDate.add(Calendar.DATE, 1);
-									String startDate = df.format(tbssm.getB().startDate.getTime());
-									String endDate = df.format(tbssm.getB().endDate.getTime());
-									Double waterLoss = tbssm.getwLostWeek();
-									Double iLoss = tbssm.getiLostWeek();
-									Double rainfall = tbssm.getB().getRainFallPerWeek();
-									//int wStressDays = tbssm.getwStressDays();
-									String fawnName = tbssm.getLocation().getFawnStnName();
-									//double fawnDistance = tbssm.getLocation().distance;
-									double irriDepth = 0.0;
-									if(data.getUnit().equals("Metric")){
-												
-										BigDecimal dividend = new BigDecimal(tbssm.getB().IrriWeek);
-										BigDecimal divisor = new BigDecimal(2.54);
-										irriDepth = dividend.divide(divisor, 2).doubleValue();
-												
-									}else{
-												
-										irriDepth = tbssm.getB().IrriWeek;
-												
-									}
-									
-									
-									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-									//results.put("Time-based with soil moisture sensor",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
-									results.put("Time-based with soil moisture sensor",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+fawnName+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+									TimeBasedSoilSensorModel tbssm = new TimeBasedSoilSensorModel(data);
+			
+									results.put("Time-based with soil moisture sensor",Util.buildWeeklyReportResult(df, tbssm));
 									
 								
 								}else{
 								
 									logger.log(Level.INFO, "Evaprtranspiration Controller");
-
-									ETControllerModel etcm = new ETControllerModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
-									etcm.calculation();
-									etcm.getB().startDate.add(Calendar.DATE, 1);
-									String startDate = df.format(etcm.getB().startDate.getTime());
-									String endDate = df.format(etcm.getB().endDate.getTime());
-									Double waterLoss = etcm.getwLostWeek();
-									Double iLoss = etcm.getiLostWeek();
-									Double rainfall = etcm.getB().getRainFallPerWeek();
-									//int wStressDays = etcm.getwStressDays();
-									String fawnName = etcm.getLocation().getFawnStnName();
-									//double fawnDistance = etcm.getLocation().distance;
-									double irriDepth = 0.0;
-									if(data.getUnit().equals("Metric")){
-												
-										BigDecimal dividend = new BigDecimal(etcm.getB().IrriWeek);
-										BigDecimal divisor = new BigDecimal(2.54);
-										irriDepth = dividend.divide(divisor, 2).doubleValue();
-												
-									}else{
-												
-										irriDepth = etcm.getB().IrriWeek;
-												
-									}
 									
+									ETControllerModel etcm = new ETControllerModel(data);		
 									
-									//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-									//results.put("ET_Controller",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
-									results.put("ET_Controller",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+fawnName+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+									results.put("ET_Controller",Util.buildWeeklyReportResult(df, etcm));
 								
 								}//end_if
 														
@@ -344,140 +244,34 @@ public class ControllerServlet extends HttpServlet{
 						if(system.equals("Time-based")){
 							
 							logger.log(Level.INFO, "Time-based");
-							TimeBasedModel tbm = new TimeBasedModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
-							tbm.calculation();
-							tbm.getB().startDate.add(Calendar.DATE, 1);
-							String startDate = df.format(tbm.getB().startDate.getTime());
-							String endDate = df.format(tbm.getB().endDate.getTime());
-							Double waterLoss = tbm.getwLostWeek();
-							Double iLoss = tbm.getiLostWeek();
-							Double rainfall = tbm.getB().getRainFallPerWeek();
-							//int wStressDays = tbm.getwStressDays();
-							String fawnName = tbm.getLocation().getFawnStnName();
-							//double fawnDistance = tbm.getLocation().distance;
-							double irriDepth = 0.0;
-							if(data.getUnit().equals("Metric")){
-										
-								BigDecimal dividend = new BigDecimal(tbm.getB().IrriWeek);
-								BigDecimal divisor = new BigDecimal(2.54);
-								irriDepth = dividend.divide(divisor, 2).doubleValue();
-										
-							}else{
-										
-								irriDepth = tbm.getB().IrriWeek;
-										
-							}
+							TimeBasedModel tbm = new TimeBasedModel(data);
 							System.out.println("email_1");		
-							//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-							//results.put("Time-based", startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
-							results.put("Time-based", startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+fawnName+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+							results.put("Time-based", Util.buildWeeklyReportResult(df, tbm));
 			
 						}else if(system.equals("Time-based with rain sensor")){
 									
 							logger.log(Level.INFO, "Time-based with rain sensor");
 						
-							TimeBasedRainSensorModel tbrsm = new TimeBasedRainSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getRainsettings(),data.getDays(),data.getHours(),data.getIrriDepth());
-							tbrsm.calculation();
-							tbrsm.getB().startDate.add(Calendar.DATE, 1);
-							String startDate = df.format(tbrsm.getB().startDate.getTime());
-							String endDate = df.format(tbrsm.getB().endDate.getTime());
-							Double waterLoss = tbrsm.getwLostWeek();
-							Double iLoss = tbrsm.getiLostWeek();
-							Double rainfall = tbrsm.getB().getRainFallPerWeek();
-							//int wStressDays = tbrsm.getwStressDays();
-							String fawnName = tbrsm.getLocation().getFawnStnName();
-							//double fawnDistance = tbrsm.getLocation().distance;
-							double irriDepth = 0.0;
-							if(data.getUnit().equals("Metric")){
-										
-								BigDecimal dividend = new BigDecimal(tbrsm.getB().IrriWeek);
-								BigDecimal divisor = new BigDecimal(2.54);
-								irriDepth = dividend.divide(divisor, 2).doubleValue();
-										
-							}else{
-										
-								irriDepth = tbrsm.getB().IrriWeek;
-										
-							}
-									
+							TimeBasedRainSensorModel tbrsm = new TimeBasedRainSensorModel(data);	
 							System.out.println("email_2");
-							//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-							//results.put("Time-based with rain sensor",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
-							results.put("Time-based with rain sensor", startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+fawnName+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+							results.put("Time-based with rain sensor", Util.buildWeeklyReportResult(df, tbrsm));
 								
 						}else if(system.equals("Time-based with soil moisture sensor")){
 								
 							logger.log(Level.INFO, "Time-based with soil moisture sensor");
 
-							TimeBasedSoilSensorModel tbssm = new TimeBasedSoilSensorModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getSoilthreshold(),data.getDays(),data.getHours(),data.getIrriDepth());
-							tbssm.calculation();
-							tbssm.getB().startDate.add(Calendar.DATE, 1);
-							String startDate = df.format(tbssm.getB().startDate.getTime());
-							String endDate = df.format(tbssm.getB().endDate.getTime());
-							Double waterLoss = tbssm.getwLostWeek();
-							Double iLoss = tbssm.getiLostWeek();
-							Double rainfall = tbssm.getB().getRainFallPerWeek();
-							//int wStressDays = tbssm.getwStressDays();
-							String fawnName = tbssm.getLocation().getFawnStnName();
-							//double fawnDistance = tbssm.getLocation().distance;
-							double irriDepth = 0.0;
-							if(data.getUnit().equals("Metric")){
-										
-								BigDecimal dividend = new BigDecimal(tbssm.getB().IrriWeek);
-								BigDecimal divisor = new BigDecimal(2.54);
-								irriDepth = dividend.divide(divisor, 2).doubleValue();
-										
-							}else{
-										
-								irriDepth = tbssm.getB().IrriWeek;
-										
-							}
-									
+							TimeBasedSoilSensorModel tbssm = new TimeBasedSoilSensorModel(data);	
 							System.out.println("email_3");	
-							//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-							//results.put("Time-based with soil moisture sensor",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
-							results.put("Time-based with soil moisture sensor",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+fawnName+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
+							results.put("Time-based with soil moisture sensor",Util.buildWeeklyReportResult(df, tbssm));
 									
 								
 						}else{
 								
 							logger.log(Level.INFO, "Evaprtranspiration Controller");
 
-							ETControllerModel etcm = new ETControllerModel(data.getSoilType(),data.getArea(),data.getRootDepth(),data.getZipcode(),data.getUnit(),data.getDays(),data.getHours(),data.getIrriDepth());
-							etcm.calculation();
-							etcm.getB().startDate.add(Calendar.DATE, 1);
-							String startDate = df.format(etcm.getB().startDate.getTime());
-							String endDate = df.format(etcm.getB().endDate.getTime());
-							Double waterLoss = etcm.getwLostWeek();
-							Double iLoss = etcm.getiLostWeek();
-							Double rainfall = etcm.getB().getRainFallPerWeek();
-							//int wStressDays = etcm.getwStressDays();
-							String fawnName = etcm.getLocation().getFawnStnName();
-							//double fawnDistance = etcm.getLocation().distance;
-							double irriDepth = 0.0;
-							//for(int i =0; i< etcm.getIhret().size(); i++){
-								
-								//System.out.print(etcm.getIhret().get(i)+",");
-								
-							//}
-							if(data.getUnit().equals("Metric")){
-									
-								BigDecimal dividend = new BigDecimal(etcm.getB().IrriWeek);
-								BigDecimal divisor = new BigDecimal(2.54);
-								irriDepth = dividend.divide(divisor, 2).doubleValue();
-								System.out.println("email4 : " + irriDepth);	
-										
-							}else{
-										
-								irriDepth = etcm.getB().IrriWeek;
-								System.out.println("email4 :" + irriDepth);		
-							}
-									
-							System.out.println("email_4");		
-							//sb.append("Time-based , "+String.valueOf(waterLoss)+" , "+String.valueOf(iLoss)+"% , "+String.valueOf(wStressDays)+" , "+String.valueOf(rainfall)+"\r\n");
-							//results.put("ET_Controller",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+String.valueOf(wStressDays)+","+fawnName+","+String.valueOf(fawnDistance)+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
-							results.put("ET_Controller",startDate+","+endDate+","+String.valueOf(waterLoss)+","+String.valueOf(iLoss)+"%,"+fawnName+","+String.valueOf(rainfall)+","+String.valueOf(irriDepth));
-								
+							ETControllerModel etcm = new ETControllerModel(data);
+	
+							results.put("ET_Controller",Util.buildWeeklyReportResult(df, etcm));						
 						}//end_if
 														
 					}//end_for

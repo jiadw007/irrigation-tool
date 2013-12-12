@@ -283,7 +283,10 @@ public class DataBase {
 		String choice = (String ) result.getProperty("choice");
 		try{
 			
-			Data data = new Data(email,unit,zipcode,soilType,rootDepth,area,systemSelection,days,hours,choice,rainsettings,soilthreshold,irriDepth);
+			Data data = new Data(email,unit,zipcode,soilType,
+					             rootDepth, area, systemSelection,
+					             days, hours, rainsettings,
+					             soilthreshold, irriDepth, choice);
 			return data;
 		}catch(Exception e){
 			

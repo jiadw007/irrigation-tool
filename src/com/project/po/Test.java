@@ -281,3 +281,115 @@ public class Test {
 	}
 
 }
+
+//csv file output
+/*
+resp.setContentType("text/csv");
+
+String disposition = "attachment;fileName=time-base-result.csv";
+resp.setHeader("Content-Disposition", disposition);
+//resp.sendRedirect("/results.html");
+//out = resp.getWriter();
+
+//ut.print("sdsdf");
+//out.write(resultJSON.toString());
+out.println("Hour,Rhr(cm),Ihr(cm),ET0(cm),ET(cm),WB(cm),SWC(cm),DELTA(cm),F(cm),rateF(cm),Q(cm),Inf,PERC,Loss(cm3),PerLoss,wLostHr(cm3),wLostDay(cm3),iLostHr,iLostDay");
+for(int i =0;i<tbm.getB().Hour.size();i++){
+	
+out.println(tbm.getB().Hour.get(i)+","+tbm.getB().Rhr.get(i)+","+tbm.getB().Ihr.get(i)+","+tbm.getB().ET0.get(i)+","+tbm.getET().get(i)+","+tbm.getWB().get(i)+","+tbm.getSWC().get(i+1)+","+tbm.getDelta().get(i)+","
+	        +tbm.getF().get(i)+","+tbm.getRateF().get(i)+","+tbm.getQ().get(i)+","
+	        +tbm.getInF().get(i)+","+tbm.getPERC().get(i)+","+tbm.getLoss().get(i)+","+tbm.getPerLoss().get(i)+","+tbm.getwLostHr().get(i)+","
+	        +tbm.getwLostDay().get(i)+","+tbm.getiLostHr().get(i)+","+tbm.getiLostDay().get(i));
+	
+}
+out.flush();
+out.close();
+*/
+/*
+resp.setContentType("text/csv");
+String disposition = "attachment;fileName=rain-sensor-result.csv";
+resp.setHeader("Content-Disposition", disposition);
+//out = resp.getWriter();
+//ut.print("sdsdf");
+//out.write(resultJSON.toString());
+out.println("Hour,Rhr(cm),Ihr(cm),ET0(cm),RainSum(cm),IhrRain(cm),ET(cm),WB(cm),SWC(cm),DELTA(cm),F(cm),rateF(cm),Q,Inf,PERC,Loss(cm),PerLoss,wLostHr(cm3),wLostDay(cm3),iLostHr,iLostDay");
+for(int i =0;i<tbrsm.getB().Hour.size();i++){
+		
+	out.println(tbrsm.getB().Hour.get(i)+","+tbrsm.getB().Rhr.get(i)+","+tbrsm.getB().Ihr.get(i)+","+tbrsm.getB().ET0.get(i)+","+tbrsm.getRainSum().get(i)+","+tbrsm.getIhrRain().get(i)+","+tbrsm.getET().get(i)+","+tbrsm.getWB().get(i)+","+tbrsm.getSWC().get(i+1)+","+tbrsm.getDelta().get(i)+","
+		        +tbrsm.getF().get(i)+","+tbrsm.getRateF().get(i)+","+tbrsm.getQ().get(i)+","
+		        +tbrsm.getInF().get(i)+","+tbrsm.getPERC().get(i)+","+tbrsm.getLoss().get(i)+","+tbrsm.getPerLoss().get(i)+","+tbrsm.getwLostHr().get(i)+","
+		        +tbrsm.getwLostDay().get(i)+","+tbrsm.getiLostHr().get(i)+","+tbrsm.getiLostDay().get(i));
+		
+}
+out.flush();
+out.close();
+*/
+
+/*
+resp.setContentType("text/csv");
+String disposition = "attachment;fileName=soil-sensor-result.csv";
+resp.setHeader("Content-Disposition", disposition);
+//out = resp.getWriter();
+	
+//ut.print("sdsdf");
+//out.write(resultJSON.toString());
+out.println("Hour,Rhr(cm),Ihr(cm),ET0(cm),IhrSoil(cm),ET(cm),WB(cm),SWC(cm),DELTA(cm),F(cm),rateF(cm),Q,Inf,PERC,Loss(cm3),PerLoss,wLostHr(cm3),wLostDay(cm3),iLostHr,iLostDay");
+for(int i =0;i<tbssm.getB().Hour.size();i++){
+		
+	out.println(tbssm.getB().Hour.get(i)+","+tbssm.getB().Rhr.get(i)+","+tbssm.getB().Ihr.get(i)+","+tbssm.getB().ET0.get(i)+","+tbssm.getIhrsoil().get(i)+","+tbssm.getET().get(i)+","+tbssm.getWB().get(i)+","+tbssm.getSWC().get(i+1)+","+tbssm.getDelta().get(i)+","
+		        +tbssm.getF().get(i)+","+tbssm.getRateF().get(i)+","+tbssm.getQ().get(i)+","
+		        +tbssm.getInF().get(i)+","+tbssm.getPERC().get(i)+","+tbssm.getLoss().get(i)+","+tbssm.getPerLoss().get(i)+","+tbssm.getwLostHr().get(i)+","
+		        +tbssm.getwLostDay().get(i)+","+tbssm.getiLostHr().get(i)+","+tbssm.getiLostDay().get(i));
+		
+}
+out.flush();
+out.close();						
+*/
+/*
+for(int i =0;i<168;i++){
+		
+	System.out.print(etcm.getRe().get(i)+",");
+		
+}
+*/
+/*
+resp.setContentType("text/csv");
+String disposition = "attachment;fileName=ET-controller-result.csv";
+resp.setHeader("Content-Disposition", disposition);
+//out = resp.getWriter();
+	
+//ut.print("sdsdf");
+//out.write(resultJSON.toString());
+out.println("Hour,Rhr(cm),Ihr(cm),ET0(cm),Re,Ihrshcdule,ET,Ick1,Ick2,AWRSTEP1,AWRSTEP2,AWR,Ihret,WB(cm),SWC(cm),DELTA(cm),F(cm),rateF(cm),Q,Inf,PERC,Loss(cm3),PerLoss,wLostHr(cm3),wLostDay(cm3),iLostHr,iLostDay");
+for(int i =0;i<etcm.getB().Hour.size();i++){
+		
+	out.println(etcm.getB().Hour.get(i)+","+etcm.getB().Rhr.get(i)+","+etcm.getB().Ihr.get(i)+","+etcm.getRe().get(i)+","+etcm.getB().ET0.get(i)+","+etcm.getB().Ihrschedule.get(i)+","+etcm.getET().get(i)+","+etcm.getIck1().get(i)+","+etcm.getIck2().get(i)+","+etcm.getAWRstep1().get(i)+","+etcm.getAWRstep2().get(i)+","+etcm.getAWR().get(i)+","+etcm.getIhret().get(i)+","+etcm.getWB().get(i)+","+etcm.getSWC().get(i+1)+","+etcm.getDelta().get(i)+","
+		        +etcm.getF().get(i)+","+etcm.getRateF().get(i)+","+etcm.getQ().get(i)+","
+		        +etcm.getInF().get(i)+","+etcm.getPERC().get(i)+","+etcm.getLoss().get(i)+","+etcm.getPerLoss().get(i)+","+etcm.getwLostHr().get(i)+","
+		        +etcm.getwLostDay().get(i)+","+etcm.getiLostHr().get(i)+","+etcm.getiLostDay().get(i));
+		
+}
+out.flush();
+out.close();
+*/	
+
+
+/*
+BigDecimal multiplicand = new BigDecimal(0.0);
+BigDecimal multiplier = new BigDecimal(2.54);
+while(in.ready()){
+	
+	
+	
+   String[] inputs = in.readLine().split(",");
+	
+   this.Date.add(inputs[1].replace("\"", ""));
+    Date date = new Date(inputs[1].replace("\"", ""));
+    this.Year.add(String.valueOf(date.getYear()+1900));
+    this.Month.add(String.valueOf(date.getMonth()+1));
+    this.Hour.add(String.valueOf(date.getHours()));
+
+    this.Rhr.add(inputs[2].equals("N/A") ? 0.0 : multiplicand.valueOf(Double.parseDouble(inputs[2].replace("\"",""))).multiply(multiplier).doubleValue());
+    //System.out.println(Double.parseDouble(inputs[2].replace("\"", ""))*2.54);
+}
+*/

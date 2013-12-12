@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
+import com.project.po.Data;
 /**
  * Created with MyEclipse
  * User : Dawei Jia
@@ -15,8 +16,8 @@ public class TimeBasedRainSensorModel extends TimeBasedModel{
 	
 	
 	private double rainsettings;
-	private ArrayList<Double> rainSum;    //rainSum for last 24hours
-	private ArrayList<Double> IhrRain;	  //WB = Rhr +IhrRain
+	private ArrayList<Double> rainSum = new ArrayList<Double>();    //rainSum for last 24hours
+	private ArrayList<Double> IhrRain = new ArrayList<Double>();	  //WB = Rhr +IhrRain
 	/**
 	 * Constructor Method
 	 * @param soilType
@@ -30,10 +31,10 @@ public class TimeBasedRainSensorModel extends TimeBasedModel{
 	 * @param irriDepth
 	 * @throws Exception
 	 */
-	public TimeBasedRainSensorModel(String soilType, double area, double rootDepth, String zipcode, String unit, double rainsettings,String[] days, String[] hours, Double irriDepth) throws Exception{
+	public TimeBasedRainSensorModel(Data data) throws Exception{
 		
-		super(soilType,area,rootDepth,zipcode,unit,days, hours,irriDepth);
-		this.rainsettings = rainsettings;
+		super(data);
+		this.rainsettings = data.getRainsettings();
 		rainSum = new ArrayList<Double>();
 		IhrRain = new ArrayList<Double>();
 	}
@@ -64,8 +65,7 @@ public class TimeBasedRainSensorModel extends TimeBasedModel{
 			double kc=b.Kc.get(this.getLocation().getZone()).get(b.Month.get(i-1));
 			double et=b.ET0.get(i-1);
 			this.getET().add(et*kc);
-			
-			
+					
 			if(i<24){
 				
 				this.rainSum.add(super.b.Rhr.get(i-1));
@@ -144,22 +144,6 @@ public class TimeBasedRainSensorModel extends TimeBasedModel{
 					
 					
 		}
-		/*
-		JSONObject resultJSON = new JSONObject();
-		try{
-			resultJSON.append("Hour", b.Hour).append("Rhr", b.Rhr).append("rainSum", this.rainSum).append("IhrRain", this.IhrRain)
-			.append("ET", this.getET()).append("WB", this.getWB()).append("SWC", this.getSWC()).append("DELTA",this.getDelta())
-			.append("F", this.getF()).append("rateF", this.getRateF()).append("Q", this.getQ()).append("InF",this.getInF()).append("PERC",this.getPERC())
-			.append("Loss",this.getLoss()).append("PerLoss",this.getPerLoss()).append("wLostHr",this.getwLostHr()).append("wLostDay",this.getwLostDay())
-			.append("iLostHr",this.getiLostHr()).append("iLostDay",this.getiLostDay());			
-			
-		}catch(JSONException e){
-			
-			e.printStackTrace();
-		}
-		*/
-		//return resultJSON;
-		//super.calculation();
 		
 	}
 	
