@@ -19,9 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.project.model.ETControllerModel;
-import com.project.model.TimeBasedModel;
-import com.project.model.TimeBasedRainSensorModel;
-import com.project.model.TimeBasedSoilSensorModel;
+import com.project.model.Hydrology;
+import com.project.model.SystemGeneratorFactory;
+import com.project.po.BaseData;
 import com.project.po.Data;
 import com.project.po.DataBase;
 import com.project.po.Util;
@@ -32,6 +32,12 @@ import com.project.po.Util;
  * Date : 11/19/2013
  * @author Dawei Jia
  * controller for unsubscribe weeklyreport and changesecret createsecret
+ * irrigation-tool.appspot.com/weeklyReport
+ * irrigation-tool.appspot.com/unsubscribe
+ * irrigation-tool.appspot.com/emailtest
+ * irrigation-tool.appspot.com/changeSecret
+ * irrigation-tool.appspot.com/createSecret
+ * irrigatoin-tool.appspot.com/tooltest
  */
 public class ControllerServlet extends HttpServlet{
 	
@@ -68,46 +74,17 @@ public class ControllerServlet extends HttpServlet{
 						continue;	
 					}else{
 						try{
-							
+							BaseData b = new BaseData(data.getZipcode(),data.getDays(),data.getHours(),data.getIrriDepth());
 							logger.log(Level.INFO, "Calculating " + email +" 's water use");
 							//StringBuilder sb = new StringBuilder();
 							Hashtable<String,String> results = new Hashtable<String,String>();
 							//sb.append("Technology , waterLoss(gallons) , waterLossPercentgae , waterStressDays , rainfall(inch)\r\n");
 							String[] systemSelection = data.getSystemSelection();
 							for(String system : systemSelection){
-							
-								if(system.equals("Time-based")){
 								
-									logger.log(Level.INFO, "Time-based");
-									TimeBasedModel tbm = new TimeBasedModel(data);
-									results.put("Time-based", Util.buildWeeklyReportResult(df, tbm));
-			
-								}else if(system.equals("Time-based with rain sensor")){
-									
-									logger.log(Level.INFO, "Time-based with rain sensor");
-						
-									TimeBasedRainSensorModel tbrsm = new TimeBasedRainSensorModel(data);
-									
-									results.put("Time-based with rain sensor", Util.buildWeeklyReportResult(df, tbrsm));
-								
-								}else if(system.equals("Time-based with soil moisture sensor")){
-								
-									logger.log(Level.INFO, "Time-based with soil moisture sensor");
-
-									TimeBasedSoilSensorModel tbssm = new TimeBasedSoilSensorModel(data);
-			
-									results.put("Time-based with soil moisture sensor",Util.buildWeeklyReportResult(df, tbssm));
-									
-								
-								}else{
-								
-									logger.log(Level.INFO, "Evaprtranspiration Controller");
-									
-									ETControllerModel etcm = new ETControllerModel(data);		
-									
-									results.put("ET_Controller",Util.buildWeeklyReportResult(df, etcm));
-								
-								}//end_if
+								logger.log(Level.INFO, system);
+								Hydrology hydrology = SystemGeneratorFactory.createModel(system, data, b);
+								results.put(system, Util.buildWeeklyReportResult(df, hydrology));
 														
 							}//end_for
 							
@@ -151,9 +128,7 @@ public class ControllerServlet extends HttpServlet{
 						out.println("Sorry. We can not find your record. Please contact webmaster@fawn.ifas.ufl.edu");
 						
 					}
-					
-					
-					
+							
 				}else{
 					
 					logger.log(Level.INFO, "User token doesn't match: "+ email + "," + token +"," + timestamp);
@@ -165,10 +140,7 @@ public class ControllerServlet extends HttpServlet{
 				
 				e.printStackTrace();
 				
-			}
-			
-			
-			
+			}			
 		}else if(path.contains("/changeSecret")){
 			
 			// http://1.irrigation-tool.appspot.com/changeSecret?old=xxxx&new=xxxx
@@ -182,8 +154,7 @@ public class ControllerServlet extends HttpServlet{
 			}else{
 				
 				oldSecret = oldSecret.trim();
-				newSecret = newSecret.trim();
-				
+				newSecret = newSecret.trim();			
 			}
 			try{
 				
@@ -203,16 +174,12 @@ public class ControllerServlet extends HttpServlet{
 			}catch(Exception e){
 				
 				e.printStackTrace();
-				out.println("update failed");
-				
-			}
-			
-			
-			
+				out.println("update failed");		
+			}			
 		}else if(path.contains("createSecret")){
 			
 			DataBase db = new DataBase("Secret");
-			db.replace("secret", "secret", "jiadw007");
+			db.replace("secret", "secret", "Aa12345678");
 			
 			logger.log(Level.INFO, "create secret !");
 			out.println("finish create secret ! ");
@@ -225,7 +192,7 @@ public class ControllerServlet extends HttpServlet{
 			DataBase db = new DataBase("User");
 			Data data = db.fetch("jiadw007@gmail.com");
 			//System.out.println(records.size());
-
+			
 			String choice = data.getChoice();
 			if(choice.equals("no")){
 						
@@ -233,7 +200,7 @@ public class ControllerServlet extends HttpServlet{
 					
 			}else{
 				try{
-							
+					BaseData b = new BaseData(data.getZipcode(),data.getDays(),data.getHours(),data.getIrriDepth());		
 					logger.log(Level.INFO, "Calculating " + "jiadw007@gmail.com" +" 's water use");
 					//StringBuilder sb = new StringBuilder();
 					Hashtable<String,String> results = new Hashtable<String,String>();
@@ -241,38 +208,9 @@ public class ControllerServlet extends HttpServlet{
 					String[] systemSelection = data.getSystemSelection();
 					for(String system : systemSelection){
 						
-						if(system.equals("Time-based")){
-							
-							logger.log(Level.INFO, "Time-based");
-							TimeBasedModel tbm = new TimeBasedModel(data);
-							System.out.println("email_1");		
-							results.put("Time-based", Util.buildWeeklyReportResult(df, tbm));
-			
-						}else if(system.equals("Time-based with rain sensor")){
-									
-							logger.log(Level.INFO, "Time-based with rain sensor");
-						
-							TimeBasedRainSensorModel tbrsm = new TimeBasedRainSensorModel(data);	
-							System.out.println("email_2");
-							results.put("Time-based with rain sensor", Util.buildWeeklyReportResult(df, tbrsm));
-								
-						}else if(system.equals("Time-based with soil moisture sensor")){
-								
-							logger.log(Level.INFO, "Time-based with soil moisture sensor");
-
-							TimeBasedSoilSensorModel tbssm = new TimeBasedSoilSensorModel(data);	
-							System.out.println("email_3");	
-							results.put("Time-based with soil moisture sensor",Util.buildWeeklyReportResult(df, tbssm));
-									
-								
-						}else{
-								
-							logger.log(Level.INFO, "Evaprtranspiration Controller");
-
-							ETControllerModel etcm = new ETControllerModel(data);
-	
-							results.put("ET_Controller",Util.buildWeeklyReportResult(df, etcm));						
-						}//end_if
+						logger.log(Level.INFO, system);
+						Hydrology hydrology = SystemGeneratorFactory.createModel(system, data, b);
+						results.put(system, Util.buildWeeklyReportResult(df, hydrology));
 														
 					}//end_for
 							
@@ -285,8 +223,43 @@ public class ControllerServlet extends HttpServlet{
 					logger.log(Level.WARNING, e.getMessage());
 				}
 			}
+		}else if(path.contains("tooltest")){
+			
+			DataBase db = new DataBase("User");
+			Data data = db.fetch("jiadw007@gmail.com");
+			out.println("Getting user's settings information from database... Example: jiadw007@gmail.com<br/>");
+			try{
+				
+				BaseData b = new BaseData(data.getZipcode(),data.getDays(),data.getHours(),data.getIrriDepth());
+				out.println("Calculating " + "jiadw007@gmail.com" +" 's water use...<br/>");
+				//Hashtable<String,String> results = new Hashtable<String,String>();
+				//StringBuilder sb = new StringBuilder();
+				//sb.append("Technology , waterLoss(gallons) , waterLossPercentgae , waterStressDays , rainfall(inch)\r\n");
+				String[] systemSelection = data.getSystemSelection();
+				for(String system : systemSelection){		
+					out.println("Calculate " + system + " model... <br />");
+					String[] result = {};
+					Hydrology hydrology = SystemGeneratorFactory.createModel(system, data, b);
+					out.println("Finish calculation in Time-based model ! <br />");
+					//System.out.println("email_time_based");		
+					result = Util.buildWeeklyReportResult(df, hydrology).split(",");
+					out.println("<b>"+system+" model:</b><br/>");
+					out.println("Start Date: " + result[0] + "<br />End Date: " + result[1] + "<br />");
+					out.println("Water Loss: "+ result[2] + "<br />Percentage Loss: " + result[3] + "<br />");
+					out.println("Fawn station name: " + result[4] + "<br />");
+					out.println("Rain fall weekly: " + result[5] + "<br />");
+					out.println("Irrigatoin applied: " + result[6] + "<br />");													
+				}//end_for
+				
+			}catch(Exception e){
+				out.println("Error message: "+e.getMessage()+"<br />");		
+				e.printStackTrace();
+				logger.log(Level.WARNING, e.getMessage());
+			}
+			
+			
 		}//end_if
 		
-	}
+}
 
 }

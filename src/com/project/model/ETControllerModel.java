@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
+import com.project.po.BaseData;
 import com.project.po.Data;
 /**
  * Created with MyEcplise
@@ -13,7 +14,7 @@ import com.project.po.Data;
  * @author Dawei Jia
  *
  */
-public class ETControllerModel extends TimeBasedModel{
+public class ETControllerModel extends Hydrology{
 	
 	
 	private ArrayList<Double> Ihret = new ArrayList<Double>();
@@ -23,24 +24,17 @@ public class ETControllerModel extends TimeBasedModel{
 	private ArrayList<Double> AWR = new ArrayList<Double>();
 	private ArrayList<Double> AWRstep1 = new ArrayList<Double>();
 	private ArrayList<Integer> AWRstep2 = new ArrayList<Integer>();
+
 	//private ArrayList<Double> AWRstep3;
 	/**
-	 * Constructor Method
-	 * @param soilType
-	 * @param area
-	 * @param rootDepth
-	 * @param zipcode
-	 * @param unit
-	 * @param days
-	 * @param hours
-	 * @param irriDepth
-	 * @throws Exception
-	 * set initial value in ET0 ET AWR AWRstep1 AWRstep2 Ick1 Ick2 Ihret
 	 * 
+	 * @param data
+	 * @param b
+	 * @throws Exception
 	 */
-	public ETControllerModel(Data data) throws Exception {
+	public ETControllerModel(Data data,BaseData b) throws Exception {
 		// TODO Auto-generated constructor stub
-		super(data);
+		super(data,b);
 		double kc = b.Kc.get(this.getLocation().getZone()).get(b.Month.get(0));
 		double et0 = b.ET0.get(0);
 		this.getET().add(kc*et0);
@@ -49,7 +43,7 @@ public class ETControllerModel extends TimeBasedModel{
 		this.AWRstep2.add(0);
 		this.Ick1.add(0);
 		this.Ick2.add(0);
-		
+		this.getB().setInitialValue();
 		HashMap<String,Double> SOIL = b.soil.get(this.getSoilType());
 		if(b.Rhr.get(0)>(this.getRootDepth()*SOIL.get("FC")-this.getSWC().get(0))){
 			
@@ -63,6 +57,7 @@ public class ETControllerModel extends TimeBasedModel{
 			
 		}
 		this.Ihret.add(0.0);
+		this.getB().irriWeek = 0.0;
 		
 	}
 	public ArrayList<Double> getIhret() {
@@ -139,7 +134,7 @@ public class ETControllerModel extends TimeBasedModel{
 			if(Ick1.get(i) + Ick2.get(i) == 2){
 				
 				this.Ihret.add(this.AWR.get(i-1));
-				b.IrriWeek += this.AWR.get(i-1);
+				this.getB().irriWeek += this.AWR.get(i-1);
 			}else{
 				
 				this.Ihret.add(0.0);
@@ -184,7 +179,7 @@ public class ETControllerModel extends TimeBasedModel{
 			super.calculationET(i);
 			
 		}
-		System.out.println("finish !");
+		System.out.println("finish calculatoin!");
 		//remove initial value
 		b.removeInitialValue();
 		this.AWR.remove(0);

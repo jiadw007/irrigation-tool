@@ -40,7 +40,14 @@ public class BaseData extends EnviromentData{
 	public static String dataServerURL = "http://fawn.ifas.ufl.edu/data/reports/?res";
 	public static String ETdataServerURL = "http://test.fawn.ifas.ufl.edu/controller.php/lastWeekET/json/";
 	public static ZipCode zipcodes = new ZipCode();
-	
+	public Double Ihr_et = 0.0;
+	public Double ET0_et = 0.0;
+	public Double Rhr_et = 0.0;
+	public String Month_et = "";
+	public String Hour_et = "";
+	public String Date_et = "";
+	public String Year_et = "";
+	public Integer Ihrschedule_et = 0;
 	public ArrayList<Double> Ihr = new ArrayList<Double>();
 	public ArrayList<Double> ET0 = new ArrayList<Double>();
 	public ArrayList<Double> Rhr = new ArrayList<Double>();
@@ -49,7 +56,6 @@ public class BaseData extends EnviromentData{
 	public ArrayList<String> Date = new ArrayList<String>();
 	public ArrayList<String> Year = new ArrayList<String>();
 	public ArrayList<Integer> Ihrschedule = new ArrayList<Integer>();
-	public double IrriWeek = 0.0;
 	//public ArrayList<Integer> Ihrschedule1;
 	public Calendar startDate;
 	public Calendar endDate;
@@ -57,7 +63,7 @@ public class BaseData extends EnviromentData{
 	public boolean adjustET = false;
 	public boolean adjustRain = false;
 	private static final Logger logger = Logger.getLogger(BaseData.class.getName());
-	
+	public Double irriWeek;
 	
 	/**
 	 * Constructor method 
@@ -95,6 +101,7 @@ public class BaseData extends EnviromentData{
 			}
 			this.requestRainData(startDate, endDate, stnID);
 			this.requestETData(this.stnID);
+			this.removeInitialValue();
 			
 		}catch(IOException e){
 			
@@ -341,15 +348,35 @@ public class BaseData extends EnviromentData{
 	 */
 	public void removeInitialValue(){
 		
-		Date.remove(0);
-		Year.remove(0);
-		Month.remove(0);
-		Hour.remove(0);
-		Rhr.remove(0);
-		Ihr.remove(0);
-		ET0.remove(0);
-		Ihrschedule.remove(0);	
+		
+		this.Date_et = Date.remove(0);
+		this.Year_et = Year.remove(0);
+		this.Month_et = Month.remove(0);
+		this.Hour_et = Hour.remove(0);
+		this.Rhr_et = Rhr.remove(0);
+		this.Ihr_et = Ihr.remove(0);
+		this.ET0_et = ET0.remove(0);
+		this.Ihrschedule_et = Ihrschedule.remove(0);	
 	}
+	
+	public void setInitialValue(){
+		
+		this.Date.add(0, Date_et);
+		this.Year.add(0, Year_et);
+		this.Month.add(0, Month_et);
+		this.Hour.add(0, Hour_et);
+		this.Rhr.add(0, Rhr_et);
+		this.Ihr.add(0, Ihr_et);
+		this.ET0.add(0, ET0_et);
+		this.Ihrschedule.add(0, Ihrschedule_et);
+		
+		
+	}
+	/**
+	 * set last week rain data
+	 * @param in
+	 * @throws IOException
+	 */
 	public void setRainData(BufferedReader in) throws IOException{
 		
 	
@@ -403,6 +430,11 @@ public class BaseData extends EnviromentData{
 		}
 		
 	}
+	/**
+	 * set last week ET data
+	 * @param in
+	 * @throws Exception
+	 */
 	public void setETData(BufferedReader in) throws Exception{
 		
 		String str = in.readLine();

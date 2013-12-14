@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
+import com.project.po.BaseData;
 import com.project.po.Data;
 
 /**
@@ -14,7 +15,7 @@ import com.project.po.Data;
  * @author Dawei Jia
  *
  */
-public class TimeBasedSoilSensorModel extends TimeBasedModel{
+public class TimeBasedSoilSensorModel extends Hydrology{
 	
 	
 	private double soilThreshold;
@@ -28,23 +29,19 @@ public class TimeBasedSoilSensorModel extends TimeBasedModel{
 	public ArrayList<Double> getIhrsoil() {
 		return Ihrsoil;
 	}
+	
+
 	/**
-	 * Constructor Method
-	 * @param soilType
-	 * @param area
-	 * @param rootDepth
-	 * @param zipcode
-	 * @param unit
-	 * @param soilthreshold
-	 * @param days
-	 * @param hours
-	 * @param irriDepth
+	 * 
+	 * @param data
+	 * @param b
 	 * @throws Exception
 	 */
-	public TimeBasedSoilSensorModel(Data data) throws Exception {
+	public TimeBasedSoilSensorModel(Data data, BaseData b) throws Exception {
 			
-		super(data);
+		super(data, b);
 		this.soilThreshold = data.getSoilthreshold();
+		this.getB().irriWeek = 0.0;
 		// TODO Auto-generated constructor stub
 	}
 	/**
@@ -52,8 +49,6 @@ public class TimeBasedSoilSensorModel extends TimeBasedModel{
 	 * override method in time based model
 	 */
 	public void calculation(){
-		
-		b.removeInitialValue();
 		
 		HashMap<String, Double> SOIL=b.soil.get(this.getSoilType());
 		//this.setWB(new ArrayList<Double>());
@@ -74,7 +69,7 @@ public class TimeBasedSoilSensorModel extends TimeBasedModel{
 			}else{
 				
 				this.Ihrsoil.add(this.b.Ihr.get(i-1));
-				this.getB().IrriWeek +=this.b.Ihr.get(i-1);
+				this.getB().irriWeek +=this.b.Ihr.get(i-1);
 			}
 			double wb=this.b.Rhr.get(i-1)+this.Ihrsoil.get(i-1);
 			this.getWB().add(wb);
@@ -82,7 +77,7 @@ public class TimeBasedSoilSensorModel extends TimeBasedModel{
 			
 		}
 		
-		System.out.println("finish !");
+		System.out.println("finish calculation!");
 		this.calculateWaterLoss();
 	}
 	

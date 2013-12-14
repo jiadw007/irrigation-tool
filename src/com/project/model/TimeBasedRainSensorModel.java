@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
+import com.project.po.BaseData;
 import com.project.po.Data;
 /**
  * Created with MyEclipse
@@ -12,31 +13,25 @@ import com.project.po.Data;
  * @author Dawei Jia
  *
  */
-public class TimeBasedRainSensorModel extends TimeBasedModel{
+public class TimeBasedRainSensorModel extends Hydrology{
 	
 	
 	private double rainsettings;
 	private ArrayList<Double> rainSum = new ArrayList<Double>();    //rainSum for last 24hours
 	private ArrayList<Double> IhrRain = new ArrayList<Double>();	  //WB = Rhr +IhrRain
 	/**
-	 * Constructor Method
-	 * @param soilType
-	 * @param area
-	 * @param rootDepth
-	 * @param zipcode
-	 * @param unit
-	 * @param rainsettings
-	 * @param days
-	 * @param hours
-	 * @param irriDepth
+	 * 
+	 * @param data
+	 * @param bd
 	 * @throws Exception
 	 */
-	public TimeBasedRainSensorModel(Data data) throws Exception{
+	public TimeBasedRainSensorModel(Data data, BaseData bd) throws Exception{
 		
-		super(data);
+		super(data,bd);
 		this.rainsettings = data.getRainsettings();
 		rainSum = new ArrayList<Double>();
 		IhrRain = new ArrayList<Double>();
+		this.getB().irriWeek = 0.0;
 	}
 	
 	public double getRainsettings() {
@@ -50,15 +45,13 @@ public class TimeBasedRainSensorModel extends TimeBasedModel{
 	public ArrayList<Double> getIhrRain() {
 		return IhrRain;
 	}
+
 	/**
 	 * calculation method in time based rain sensor model
 	 * override method in time based model
 	 */
 	public void calculation(){
 		
-		//this.setWB(new ArrayList<Double>());
-		
-		b.removeInitialValue();
 		for(int i =this.getStartIrrigationHour();i<=this.getLastIrrigationHour();i++){
 			
 			//calculate the ET
@@ -88,15 +81,15 @@ public class TimeBasedRainSensorModel extends TimeBasedModel{
 				
 			}
 			else{
-				this.IhrRain.add(super.b.Ihr.get(i-1));
-				this.getB().IrriWeek +=b.Ihr.get(i-1);
+				this.IhrRain.add(this.b.Ihr.get(i-1));
+				this.getB().irriWeek +=b.Ihr.get(i-1);
 			}
 			double wb=this.b.Rhr.get(i-1)+this.IhrRain.get(i-1);
 			this.getWB().add(wb);
 			super.calculation(i);
 			
 		}
-		System.out.println("finish !");
+		System.out.println("finish calculation!");
 		this.calculateWaterLoss();
 		
 	}

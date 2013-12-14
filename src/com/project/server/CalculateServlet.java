@@ -29,9 +29,12 @@ import com.project.po.Util;
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
 import com.project.model.ETControllerModel;
+import com.project.model.Hydrology;
+import com.project.model.SystemGeneratorFactory;
 import com.project.model.TimeBasedModel;
 import com.project.model.TimeBasedRainSensorModel;
 import com.project.model.TimeBasedSoilSensorModel;
+import com.project.po.BaseData;
 import com.project.po.Data;
 import com.project.po.DataBase;
 /**
@@ -58,8 +61,6 @@ public class CalculateServlet extends HttpServlet{
 		PrintWriter out = resp.getWriter();
 		Cookie[] cookie = req.getCookies();
 		String choice = req.getParameter("correspondence");
-		boolean adjustETflag = false;
-		boolean adjustRainflag = false;
 		Cookie cookie1 = new Cookie("choice",choice);
 		cookie1.setMaxAge(7*24*60*60);
 		cookie1.setPath("/");
@@ -72,109 +73,30 @@ public class CalculateServlet extends HttpServlet{
 			Data data = new Data(cookie,choice);
 			DataBase db = new DataBase("User");
 			db.insertIntoDataBase(data);
-			/*
-			 * unit conversion
-			 */
-			if(data.getUnit().equals("English")){
-				
-				data.setIrriDepth(data.getIrriDepth() * 2.54);
-				
-			}
 			System.out.println(data.getIrriDepth());
+			BaseData b = new BaseData(data.getZipcode(),data.getDays(),data.getHours(),data.getIrriDepth());
 			/*
 			 * compute for all models 
 			 */
+			
 			for (String system : data.getSystemSelection()){
 				
-				if (system.equals("Time-based")){
+				Cookie[] results = {};
+				Hydrology hydrology = SystemGeneratorFactory.createModel(system,data, b);
+				results = Util.calculateLossProcess(Util.SYSTEM.get(system),hydrology);
+				for(Cookie result : results){
 					
-					System.out.println("Time-based");
-					TimeBasedModel tbm = new TimeBasedModel(data);
-					if(!adjustETflag&&tbm.getB().adjustET){
-						
-						adjustETflag = true;
-					}
-					if(!adjustRainflag&&tbm.getB().adjustRain){
-						
-						adjustRainflag = true;
-					}
-					
-					Cookie[] results = Util.calculateLossProcess("time_base",tbm);
-					
-					for(Cookie result : results){
-						
-						resp.addCookie(result);
-						
-					}		
-				}else if(system.equals("Time-based with rain sensor")){
-					
-					System.out.println("Time-based with rain sensor");
-						
-					TimeBasedRainSensorModel tbrsm = new TimeBasedRainSensorModel(data);
-					if(!adjustETflag&&tbrsm.getB().adjustET){
-						
-						adjustETflag = true;
-					}
-					if(!adjustRainflag&&tbrsm.getB().adjustRain){
-						
-						adjustRainflag = true;
-					}
-					Cookie[] results = Util.calculateLossProcess("rain_sensor",tbrsm);
-					for(Cookie result : results){			
-						resp.addCookie(result);				
-					}	
-					
-				}else if(system.equals("Time-based with soil moisture sensor")){
-					
-					System.out.println("Time-based with soil moisture sensor");
-					
-					TimeBasedSoilSensorModel tbssm = new TimeBasedSoilSensorModel(data);
-					
-					if(!adjustETflag&&tbssm.getB().adjustET){
-						
-						adjustETflag = true;
-					}
-					if(!adjustRainflag&&tbssm.getB().adjustRain){
-						
-						adjustRainflag = true;
-					}
-					
-					Cookie[] results = Util.calculateLossProcess("soil_sensor",tbssm);
-					
-					for(Cookie result : results){
-						resp.addCookie(result);			
-					}
-	
-				}else{
-					
-					System.out.println("Evapotranspiration Controller");
-					
-					ETControllerModel etcm = new ETControllerModel(data);
-					
-					if(!adjustETflag&&etcm.getB().adjustET){
-						
-						adjustETflag = true;
-					}
-					if(!adjustRainflag&&etcm.getB().adjustRain){
-						
-						adjustRainflag = true;
-					}	
-					Cookie[] results = Util.calculateLossProcess("et_controller",etcm);			
-					for(Cookie result : results){		
-						resp.addCookie(result);			
-					}							
-				}
+					resp.addCookie(result);			
+				}				
+			}	
+
+			if(b.adjustRain){
 				
+				throw new IOException(" Estimated FAWN Rain Data. This is the adjusted result ! ");	
 			}
-			if(adjustRainflag){
+			if(b.adjustET){
 				
-				throw new IOException(" Estimated FAWN Rain Data. This is the adjusted result ! ");
-				
-			}
-			if(adjustETflag){
-				
-				throw new IOException(" Estimated FAWN ET Data. This is the adjusted result ! ");
-				
+				throw new IOException(" Estimated FAWN ET Data. This is the adjusted result ! ");			
 			}
 			
 		}catch(Exception e){
@@ -184,11 +106,9 @@ public class CalculateServlet extends HttpServlet{
 			errorflag.setMaxAge(60*60);
             errorflag.setPath("/");
             resp.addCookie(errorflag);
-		}
-		
+		}	
 		resp.sendRedirect("/results.html");
-		
-		
+			
 	}
 	
 }

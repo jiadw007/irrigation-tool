@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.TimeZone;
 import java.util.logging.Level;
@@ -22,7 +23,8 @@ import java.util.zip.GZIPInputStream;
 
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
-import com.project.model.TimeBasedModel;
+import com.project.model.Hydrology;
+import com.project.model.SystemGeneratorFactory;
 import com.project.server.CalculateServlet;
 
 import javax.servlet.ServletException;
@@ -40,6 +42,15 @@ public class Util{
 	public static TimeZone timeZoneUsed = TimeZone.getTimeZone("America/New_York");
 	public static int EMAIL_INTRO = 0;
 	public static int EMAIL_WEEKLY_REPORT = 1;
+	public static HashMap<String,String> SYSTEM = new HashMap<String,String>();
+	static{
+		
+		SYSTEM.put(SystemGeneratorFactory.TIME_BASED, "time_base");
+		SYSTEM.put(SystemGeneratorFactory.RAIN_SENSOR, "rain_sensor");
+		SYSTEM.put(SystemGeneratorFactory.SOIL_SENSOR,"soil_sensor");
+		SYSTEM.put(SystemGeneratorFactory.ET_CONTROLLER, "et_controller");
+		
+	}
 	private static final Logger logger = Logger.getLogger(CalculateServlet.class.getCanonicalName());
 	
 	/**
@@ -136,7 +147,7 @@ public class Util{
 				
 				urlParameters.append("&percentage_water_not_used_soil_sensor=" + percentage +"&gallon_water_not_used_soil_sensor=" + waterLoss +"&irriDepth_soil_sensor=" + irriDepth);
 				
-			}else if(technology.equals("ET_Controller")){
+			}else if(technology.equals("Evapotranspiration Controller")){
 				System.out.println("parameter: "+irriDepth);
 				urlParameters.append("&percentage_water_not_used_et=" + percentage +"&gallon_water_not_used_et=" + waterLoss+"&irriDepth_et=" + irriDepth);
 				
@@ -184,39 +195,48 @@ public class Util{
 		return response.toString();
 	}
 	
-	
-	public static Cookie[] createCookies(String name, TimeBasedModel tbm){
+	/**
+	 * creake result cookies for calculation model
+	 * @param name
+	 * @param hydrology
+	 * @return cookies
+	 */
+	public static Cookie[] createCookies(String name, Hydrology hydrology){
 		
 		Cookie[] results = new Cookie[8];
 		System.out.println("Create Cookies !");
-		results[0] = new Cookie(name+"_waterLoss",String.valueOf(tbm.getwLostWeek()));
+		results[0] = new Cookie(name+"_waterLoss",String.valueOf(hydrology.getwLostWeek()));
 		results[0].setMaxAge(60*60);
 		results[0].setPath("/");
-		results[1] = new Cookie(name+"_iLoss",String.valueOf(tbm.getiLostWeek()));
+		results[1] = new Cookie(name+"_iLoss",String.valueOf(hydrology.getiLostWeek()));
 		results[1].setMaxAge(60*60);
 		results[1].setPath("/");
-		results[2] = new Cookie(name+"_wStressDays", String.valueOf(tbm.getwStressDays()));
+		results[2] = new Cookie(name+"_wStressDays", String.valueOf(hydrology.getwStressDays()));
 		results[2].setMaxAge(60*60);
 		results[2].setPath("/");
-		results[3] = new Cookie("rainfall",String.valueOf(tbm.getB().getRainFallPerWeek()));
+		results[3] = new Cookie("rainfall",String.valueOf(hydrology.getB().getRainFallPerWeek()));
 		results[3].setMaxAge(60*60);
 		results[3].setPath("/");
-		results[4] = new Cookie("fawnName", tbm.getLocation().getFawnStnName());
+		results[4] = new Cookie("fawnName", hydrology.getLocation().getFawnStnName());
 		results[4].setMaxAge(60*60);
 		results[4].setPath("/");
-		results[5] = new Cookie("startDate",DateFormat.getDateInstance().format(tbm.getB().startDate.getTime()));
+		results[5] = new Cookie("startDate",DateFormat.getDateInstance().format(hydrology.getB().startDate.getTime()));
 		results[5].setMaxAge(60*60);
 		results[5].setPath("/");
-		results[6] = new Cookie("endDate",DateFormat.getDateInstance().format(tbm.getB().endDate.getTime()));
+		results[6] = new Cookie("endDate",DateFormat.getDateInstance().format(hydrology.getB().endDate.getTime()));
 		results[6].setMaxAge(60*60);
 		results[6].setPath("/");
-		System.out.println("irri: "+String.valueOf(tbm.getB().IrriWeek));
-		results[7] = new Cookie(name+"_irriWeek",String.valueOf(tbm.getB().IrriWeek));
+		System.out.println("irri: "+String.valueOf(hydrology.getB().irriWeek));
+		results[7] = new Cookie(name+"_irriWeek",String.valueOf(hydrology.getB().irriWeek));
 		results[7].setMaxAge(60*60);
 		results[7].setPath("/");
 		return results;
 	}
-	
+	/**
+	 * unit conversion
+	 * @param value
+	 * @return double value
+	 */
 	public static Double processCm2Inch(Double value){
 		
 		BigDecimal dividend = new BigDecimal(value);
@@ -224,57 +244,76 @@ public class Util{
 		
 		return dividend.divide(divisor, 2).doubleValue();
 	} 
-	
-	public static Cookie[] calculateLossProcess(String name, TimeBasedModel tbm){
+	/**
+	 * calculate process in calculate servlet
+	 * @param name
+	 * @param hydrology
+	 * @return
+	 */
+	public static Cookie[] calculateLossProcess(String name, Hydrology hydrology){
 		
-		System.out.println(tbm.getRootDepth());
-		System.out.println(tbm.getUnit());
-		System.out.println(tbm.getArea());
-		System.out.println(tbm.getSoilType());
-		System.out.println(tbm.getB().IrriWeek);
-		tbm.getLocation().print();
-		tbm.calculation();
+		System.out.println(hydrology.getRootDepth());
+		System.out.println(hydrology.getUnit());
+		System.out.println(hydrology.getArea());
+		System.out.println(hydrology.getSoilType());
+		System.out.println(hydrology.getB().irriWeek);
+		hydrology.getLocation().print();
+		hydrology.calculation();
 		/*
 		 * store results in cookies and response
 		 */
-		tbm.getB().startDate.add(Calendar.DATE, 1);
-		if(tbm.getUnit().equals("Metric")){
+		hydrology.getB().startDate.add(Calendar.DATE, 1);
+		if(hydrology.getUnit().equals("Metric")){
 			
-			
-			tbm.getB().IrriWeek = Util.processCm2Inch(tbm.getB().IrriWeek);
-			System.out.println("After: "+tbm.getB().IrriWeek);		
+			System.out.println("Before conversion: " +hydrology.getB().irriWeek);
+			hydrology.getB().irriWeek = Util.processCm2Inch(hydrology.getB().irriWeek);
+			System.out.println("After: "+hydrology.getB().irriWeek);		
 					
 		}
-		Cookie[] results = Util.createCookies(name, tbm);
+		Cookie[] results = Util.createCookies(name, hydrology);
 		return results;
 	}
-	public static String buildWeeklyReportResult(DateFormat df, TimeBasedModel tbm){
+	/**
+	 * create weekly report result for one model
+	 * @param df
+	 * @param hydrology
+	 * @return
+	 */
+	public static String buildWeeklyReportResult(DateFormat df, Hydrology hydrology){
 		
-		tbm.calculation();
-		tbm.getB().startDate.add(Calendar.DATE, 1);
-		String startDate = df.format(tbm.getB().startDate.getTime());
-		String endDate = df.format(tbm.getB().endDate.getTime());
-		String waterLoss = String.valueOf(tbm.getwLostWeek());
-		String iLoss = String.valueOf(tbm.getiLostWeek());
-		String rainfall = String.valueOf(tbm.getB().getRainFallPerWeek());
-		//int wStressDays = tbm.getwStressDays();
-		String fawnName = tbm.getLocation().getFawnStnName();
-		//double fawnDistance = tbm.getLocation().distance;
+		hydrology.calculation();
+		hydrology.getB().startDate.add(Calendar.DATE, 1);
+		String startDate = df.format(hydrology.getB().startDate.getTime());
+		String endDate = df.format(hydrology.getB().endDate.getTime());
+		String waterLoss = String.valueOf(hydrology.getwLostWeek());
+		String iLoss = String.valueOf(hydrology.getiLostWeek());
+		String rainfall = String.valueOf(hydrology.getB().getRainFallPerWeek());
+		//int wStressDays = hydrology.getwStressDays();
+		String fawnName = hydrology.getLocation().getFawnStnName();
+		//double fawnDistance = hydrology.getLocation().distance;
 		double irriDepth = 0.0;
-		if(tbm.getUnit().equals("Metric")){
-
-			irriDepth = Util.processCm2Inch(tbm.getB().IrriWeek);
+		if(hydrology.getUnit().equals("Metric")){
+			
+			irriDepth = Util.processCm2Inch(hydrology.getB().irriWeek);
 			
 		}else{
 			
-			irriDepth = tbm.getB().IrriWeek;
+			irriDepth = hydrology.getB().irriWeek;
 			
 		}
 		return startDate+","+endDate+","+waterLoss+","+iLoss+"%,"+fawnName+","+rainfall+","+String.valueOf(irriDepth);
 		
 		
 	}
-	
+	/**
+	 * create http url connection
+	 * @param serverURL
+	 * @param contentType
+	 * @param postParas
+	 * @param method
+	 * @return
+	 * @throws IOException
+	 */
 	public static HttpURLConnection createUrlConnection(String serverURL, String contentType, String postParas, String method) throws IOException{
 		
 		URL url = new URL(serverURL);

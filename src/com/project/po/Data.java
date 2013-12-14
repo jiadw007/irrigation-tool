@@ -120,7 +120,14 @@ public class Data {
 			}
 		
 		}
-		
+		/*
+		 * unit conversion
+		 */
+		if(this.getUnit().equals("English")){
+			
+			this.setIrriDepth(this.getIrriDepth() * 2.54);
+			
+		}
 		this.choice = choice;
 		StringBuilder system = new StringBuilder();
 		for(String sys : this.systemSelection){
