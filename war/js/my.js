@@ -455,6 +455,9 @@ $(document).ready(function(){
 		}
 		$.cookie("unit4","",{expires : -1});
 		//$.cookie("unit2","",{expires: -1});
+	}else{
+		
+		$.cookie("unit4","",{expires:-1});
 	}
 	$("#patternRadio1").click(function(){
 		

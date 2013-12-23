@@ -74,7 +74,7 @@ public class NewtonMethod {
             {  
                 System.out.println("the derivate in the iterative process is 0!");  
                 return false;  
-            }  
+            }
             x1=x0-func(x0)/dfunc(x0);	//the Newton method calculation
             //System.out.println(x0);
             //System.out.println(x1);
@@ -93,5 +93,6 @@ public class NewtonMethod {
         System.out.println("the iterative times exceeds the initial setting, and we do not find the result !");  
         return false;
     }
-
+    
 }
+    

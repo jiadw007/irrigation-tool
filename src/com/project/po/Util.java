@@ -112,7 +112,7 @@ public class Util{
 		//parameters not used : ranking links techonology 
 		StringBuilder urlParameters = new StringBuilder();
 		String timestamp = Long.toString(System.nanoTime());
-		String app = "UrbanIrrigationVersion2";
+		String app = "UrbanIrrigationWeeklyReport";
 		String email_token = createToken(timestamp, app);
 		String unsubscribe_token = createToken(timestamp, email);
 		//get common result attributes

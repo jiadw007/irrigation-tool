@@ -26,7 +26,7 @@ public class Data {
 	private String[] days = {};
 	private String[] hours = {};
 	//private String[] minutes;
-	
+	private int irriDuration = 0;
 	private double rainsettings = 0.0;
 	private double soilthreshold = 0.0;
 	private double irriDepth =0.0;
@@ -39,7 +39,7 @@ public class Data {
 	
 	public Data(Cookie[] cookie, String choice) throws IOException{
 		
-		int irriDuration =0;
+		
 		String isystem = "";
 		for(int i = 0; i< cookie.length; i++){
 			
@@ -86,26 +86,23 @@ public class Data {
 			}else if(cookie[i].getName().equals("irriDuration")){
 				
 				irriDuration = Integer.parseInt(cookie[i].getValue());
-				
+				System.out.println(irriDuration);
 			}else if(cookie[i].getName().equals("isystem")){
 				
 				isystem = URLDecoder.decode(cookie[i].getValue(),"UTF-8");
 				
 				if(isystem.equals("micro-irrigation-head")){
 					
-					irriDepth = 0.25 * irriDuration/60;
+					this.irriDepth = 0.25;
 					
 				}else if(isystem.equals("fixed-irrigation-head")){
 					
-					irriDepth = 1.5 * irriDuration/60;
+					System.out.println("fixed-irrigation-head");
+					this.irriDepth = 1.5;
 					
-				}else if(isystem.equals("gear-driven-irrigation-head")){
+				}else{
 					
-					irriDepth = 0.5 * irriDuration/60;
-					
-				}else if(isystem.equals("impact-irrigation-head")){
-					
-					irriDepth = 0.5 * irriDuration/60;
+					this.irriDepth = 0.5;
 					
 				}
 				
@@ -120,14 +117,18 @@ public class Data {
 			}
 		
 		}
+		
+		if(this.irriDuration != 0) this.irriDepth = this.irriDepth * (this.irriDuration / 60.0);
 		/*
 		 * unit conversion
 		 */
-		if(this.getUnit().equals("English")){
+		if(this.getUnit().equals("Metric") && this.irriDuration != 0){
 			
 			this.setIrriDepth(this.getIrriDepth() * 2.54);
 			
 		}
+		System.out.println("irriDepth is : " + this.irriDepth);
+		
 		this.choice = choice;
 		StringBuilder system = new StringBuilder();
 		for(String sys : this.systemSelection){

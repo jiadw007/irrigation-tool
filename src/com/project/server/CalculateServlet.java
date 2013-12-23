@@ -73,6 +73,14 @@ public class CalculateServlet extends HttpServlet{
 			Data data = new Data(cookie,choice);
 			DataBase db = new DataBase("User");
 			db.insertIntoDataBase(data);
+			/*
+			 * unit conversion
+			 */
+			if(data.getUnit().equals("English")){
+				
+				data.setIrriDepth(data.getIrriDepth() * 2.54);
+				
+			}
 			System.out.println(data.getIrriDepth());
 			BaseData b = new BaseData(data.getZipcode(),data.getDays(),data.getHours(),data.getIrriDepth());
 			/*
