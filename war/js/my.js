@@ -463,13 +463,17 @@ $(document).ready(function(){
 		
 		$("#ISErrorText").remove();
 		$("#irriDurationErrorText").remove();
-		$("isystemErrorText").remove();
-		$("irrigationDepth").focus();
+		$("#isystemErrorText").remove();
+		$("#irrigationDepth").focus();
 		if($.cookie("unit")){
 			
 			if($.cookie("unit")=="English"){
-				
-				$("#irrigationUnit").text("inch");
+				if($.cookie("irriDepth")){
+					
+				}else {
+					$("#irrigationDepth").val(0.5);
+				}
+				$("#irrigationUnit").html("&nbsp;&nbsp;inch");
 			}
 		}
 		
@@ -670,6 +674,7 @@ $(document).ready(function(){
 		
 			if($.cookie("time_base_waterLoss")){
 				var str="Time-based";
+				//alert($.cookie("time_base_irriWeek"));
 				var $p=$("<h4>"+str+"   &nbsp;:</h4><p>Irrigation water losses: <b>"+$.cookie("time_base_waterLoss")+"</b> gallons or <b>"+$.cookie("time_base_iLoss")+"%</b></p><p>Number of water stress days: <b>"+$.cookie("time_base_wStressDays")+"</b></p><p>Weekly rainfall: <b>"+$.cookie("rainfall")+"</b> inches</p><p>The sum of irrigation for one week: <b>"+$.cookie("time_base_irriWeek")+"</b> inches</p><br/>");
 				$("#result").append($p);
 				//$.cookie("time_base_waterLoss","",{ expires: -1});

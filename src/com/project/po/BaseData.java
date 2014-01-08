@@ -51,6 +51,7 @@ public class BaseData extends EnviromentData{
 	public ArrayList<Double> Ihr = new ArrayList<Double>();
 	public ArrayList<Double> ET0 = new ArrayList<Double>();
 	public ArrayList<Double> Rhr = new ArrayList<Double>();
+	
 	public ArrayList<String> Month = new ArrayList<String>();   
 	public ArrayList<String> Hour = new ArrayList<String>();
 	public ArrayList<String> Date = new ArrayList<String>();
@@ -332,14 +333,14 @@ public class BaseData extends EnviromentData{
 	public Double getRainFallPerWeek(){
 		
 		BigDecimal rainsum = new BigDecimal(0.0);
-		BigDecimal divisor = new BigDecimal(2.54);
-		BigDecimal dividend = new BigDecimal(0.0);
+		BigDecimal divisor = new BigDecimal("2.54");
 		for(int i =0;i<168;i++){
 			
-			rainsum = rainsum.add(divisor.valueOf(this.Rhr.get(i)));
+			rainsum = rainsum.add(BigDecimal.valueOf(this.Rhr.get(i)));
 			//System.out.println(this.Rhr.get(i)+","+rainsum);
 		}
 		//rainsum = (double) (Math.round(rainsum*100)/100);
+		System.out.println("weekly rainfall: " + rainsum.divide(divisor,2).doubleValue());
 		return rainsum.divide(divisor,2).doubleValue();
 		
 	}
@@ -409,17 +410,19 @@ public class BaseData extends EnviromentData{
 	    }
 		  
 		long startDateTime = this.startDate.getTime().getTime();
-		BigDecimal multiplicand = new BigDecimal(0.0);
-		BigDecimal multiplier = new BigDecimal(2.54);
+		
+		BigDecimal multiplier = new BigDecimal("2.54");
+		multiplier.setScale(5);
 		int count = 0;
 		while(in.ready()){
 			
 		 	String[] inputs = in.readLine().split(",");
 		 	long time = new Date(inputs[1].replace("\"", "")).getTime();
 		 	long diff = time-startDateTime;
-		 	long index = (diff/(60*60*1000));	
-		  	this.Rhr.set((int)index,inputs[2].equals("N/A") ? 0.0 : multiplicand.valueOf(Double.parseDouble(inputs[2].replace("\"",""))).multiply(multiplier).doubleValue());
-		  	count++;
+		 	long index = (diff/(60*60*1000));
+		 	this.Rhr.set((int)index,inputs[2].equals("N/A") ? 0.0 : BigDecimal.valueOf(Double.parseDouble(inputs[2].replace("\"",""))).multiply(multiplier).doubleValue());
+		  	
+		 	count++;
 		  
 		}
  

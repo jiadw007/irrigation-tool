@@ -2,6 +2,7 @@ package com.project.po;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 
 import javax.servlet.http.Cookie;
@@ -117,8 +118,15 @@ public class Data {
 			}
 		
 		}
-		
-		if(this.irriDuration != 0) this.irriDepth = this.irriDepth * (this.irriDuration / 60.0);
+		if(this.irriDuration != 0) {
+			
+			BigDecimal multiplicand = new BigDecimal(this.irriDepth);
+			BigDecimal dividend = new BigDecimal(this.irriDuration);
+			BigDecimal divisor = new BigDecimal("60.0");
+			
+			this.irriDepth = dividend.divide(divisor,2).multiply(multiplicand).doubleValue();
+			
+		}
 		/*
 		 * unit conversion
 		 */

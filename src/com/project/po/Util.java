@@ -240,7 +240,7 @@ public class Util{
 	public static Double processCm2Inch(Double value){
 		
 		BigDecimal dividend = new BigDecimal(value);
-		BigDecimal divisor = new BigDecimal(2.54);
+		BigDecimal divisor = new BigDecimal("2.54");
 		
 		return dividend.divide(divisor, 2).doubleValue();
 	} 
@@ -263,13 +263,10 @@ public class Util{
 		 * store results in cookies and response
 		 */
 		hydrology.getB().startDate.add(Calendar.DATE, 1);
-		if(hydrology.getUnit().equals("Metric")){
-			
-			System.out.println("Before conversion: " +hydrology.getB().irriWeek);
-			hydrology.getB().irriWeek = Util.processCm2Inch(hydrology.getB().irriWeek);
-			System.out.println("After: "+hydrology.getB().irriWeek);		
-					
-		}
+		
+		System.out.println("Before conversion: " +hydrology.getB().irriWeek);
+		hydrology.getB().irriWeek = Util.processCm2Inch(hydrology.getB().irriWeek);
+		System.out.println("After: "+hydrology.getB().irriWeek);		
 		Cookie[] results = Util.createCookies(name, hydrology);
 		return results;
 	}
@@ -292,15 +289,9 @@ public class Util{
 		String fawnName = hydrology.getLocation().getFawnStnName();
 		//double fawnDistance = hydrology.getLocation().distance;
 		double irriDepth = 0.0;
-		if(hydrology.getUnit().equals("Metric")){
+		
+		irriDepth = Util.processCm2Inch(hydrology.getB().irriWeek);
 			
-			irriDepth = Util.processCm2Inch(hydrology.getB().irriWeek);
-			
-		}else{
-			
-			irriDepth = hydrology.getB().irriWeek;
-			
-		}
 		return startDate+","+endDate+","+waterLoss+","+iLoss+"%,"+fawnName+","+rainfall+","+String.valueOf(irriDepth);
 		
 		
