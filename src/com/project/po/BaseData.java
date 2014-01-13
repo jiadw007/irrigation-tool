@@ -61,8 +61,7 @@ public class BaseData extends EnviromentData{
 	public Calendar startDate;
 	public Calendar endDate;
 	public String stnID;
-	public boolean adjustET = false;
-	public boolean adjustRain = false;
+	
 	private static final Logger logger = Logger.getLogger(BaseData.class.getName());
 	public Double irriWeek;
 	
@@ -427,10 +426,7 @@ public class BaseData extends EnviromentData{
 		}
  
 		logger.log(Level.INFO, "Total number of Rain Data is : " + count);
-		if(count<169){
-			
-			adjustRain = true;
-		}
+		
 		
 	}
 	/**
@@ -471,7 +467,7 @@ public class BaseData extends EnviromentData{
 					}				
 				}					
 			}	
-			adjustET = true;
+			
 		}	
 		
 		

@@ -98,15 +98,6 @@ public class CalculateServlet extends HttpServlet{
 				}				
 			}	
 
-			if(b.adjustRain){
-				
-				throw new IOException(" Estimated FAWN Rain Data. This is the adjusted result ! ");	
-			}
-			if(b.adjustET){
-				
-				throw new IOException(" Estimated FAWN ET Data. This is the adjusted result ! ");			
-			}
-			
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.log(Level.SEVERE, e.getMessage());

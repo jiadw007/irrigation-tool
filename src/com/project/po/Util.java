@@ -205,7 +205,7 @@ public class Util{
 		
 		Cookie[] results = new Cookie[8];
 		System.out.println("Create Cookies !");
-		results[0] = new Cookie(name+"_waterLoss",String.valueOf(hydrology.getwLostWeek()));
+		results[0] = new Cookie(name+"_waterLoss",String.valueOf((long)hydrology.getwLostWeek()));
 		results[0].setMaxAge(60*60);
 		results[0].setPath("/");
 		results[1] = new Cookie(name+"_iLoss",String.valueOf(hydrology.getiLostWeek()));
@@ -282,7 +282,7 @@ public class Util{
 		hydrology.getB().startDate.add(Calendar.DATE, 1);
 		String startDate = df.format(hydrology.getB().startDate.getTime());
 		String endDate = df.format(hydrology.getB().endDate.getTime());
-		String waterLoss = String.valueOf(hydrology.getwLostWeek());
+		String waterLoss = String.valueOf((int)hydrology.getwLostWeek());
 		String iLoss = String.valueOf(hydrology.getiLostWeek());
 		String rainfall = String.valueOf(hydrology.getB().getRainFallPerWeek());
 		//int wStressDays = hydrology.getwStressDays();
