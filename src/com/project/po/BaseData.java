@@ -452,8 +452,15 @@ public class BaseData extends EnviromentData{
 			
 			long time2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(jsonarray.getJSONObject(i).getString("dt_hr")).getTime();
 			long diff = time2 - time1;
-			long index = (diff / (60 * 60 * 1000)) ;
-			ET0.set((int)index,jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")/10.0);
+            /*Problems happen when EDT starts. Just for that week.
+             * Fix bugs by checking diff
+             */
+            if(diff < 0)
+                continue;
+            else{
+                long index = (diff / (60 * 60 * 1000)) ;
+                ET0.set((int)index,jsonarray.getJSONObject(i).getDouble("et_FAO56_mm")/10.0);
+            }
 			
 		}
 		//check and modify hourly ET data
