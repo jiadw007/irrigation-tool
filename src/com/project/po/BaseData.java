@@ -27,6 +27,9 @@ import java.util.logging.Logger;
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
+
+import javax.net.ssl.HttpsURLConnection;
+
 /**
  * Create with MyEclipse
  * User: Dawei Jia
@@ -36,9 +39,9 @@ import com.google.appengine.labs.repackaged.org.json.JSONObject;
  */
 public class BaseData extends EnviromentData{
 	
-	public static String mailServerURL = "http://fawn.ifas.ufl.edu/mail/send.php";
-	public static String dataServerURL = "http://fawn.ifas.ufl.edu/data/reports/?res";
-	public static String ETdataServerURL = "http://test.fawn.ifas.ufl.edu/controller.php/lastWeekET/json/";
+	public static String mailServerURL = "https://fawn.ifas.ufl.edu/mail/send.php";
+	public static String dataServerURL = "https://fawn.ifas.ufl.edu/data/reports/?res";
+	public static String ETdataServerURL = "https://fawn.ifas.ufl.edu/controller.php/lastWeekET/json/";
 	public static ZipCode zipcodes = new ZipCode();
 	public Double Ihr_et = 0.0;
 	public Double ET0_et = 0.0;
@@ -82,7 +85,8 @@ public class BaseData extends EnviromentData{
 		this.setEndDate();
 		this.stnID = this.getNearByFawnStnID(this.getLocationByzipCode(zipcode));
 		System.out.println("stnID : " +this.stnID);
-		
+		System.out.println(startDate);
+		System.out.print(endDate);
 		try{
 			
 			for(int i =0;i<169;i++){
@@ -106,7 +110,7 @@ public class BaseData extends EnviromentData{
 		}catch(IOException e){
 			
 			throw new IOException(e.getMessage());
-			
+
 		}	
 	}
 	
@@ -240,11 +244,11 @@ public class BaseData extends EnviromentData{
 		String urlParameter = this.buildRainRequest(startDate, endDate, stnID);
 		postRainRequest2ExternalServer(dataServerURL, urlParameter);
 		
-		//for(int i =0;i<169;i++){
-			
-			//System.out.println(this.Date.get(i)+","+this.Year.get(i)+","+this.Month.get(i)+","+this.Hour.get(i)+","+this.Rhr.get(i));
-				
-		//}
+//		for(int i =0;i<169;i++){
+//
+//			System.out.println(this.Date.get(i)+","+this.Year.get(i)+","+this.Month.get(i)+","+this.Hour.get(i)+","+this.Rhr.get(i));
+//
+//		}
 		
 	}
 	/**
@@ -265,13 +269,15 @@ public class BaseData extends EnviromentData{
 	public void postETRequest2ExternalServer(String serverURL,String stnID) throws Exception{
 		
 
-		HttpURLConnection connection = Util.createUrlConnection(serverURL+stnID, "text/plain","", "GET");
+		HttpURLConnection connection = Util.createUrlConnection(serverURL+stnID, "application/json","", "GET");
 		/*
 		 * Important difference to get ET data
 		 * One for GAE, the other for local test 
 		 */
 		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
-		//BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
+//		BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
+		System.out.println("######");
+//		System.out.println(in.readLine());
 		this.setETData(in);
 		in.close();
 		connection.disconnect();
@@ -313,7 +319,7 @@ public class BaseData extends EnviromentData{
 
 		HttpURLConnection connection = Util.createUrlConnection(serverUrl, "application/x-www-form-urlencoded",postParams, "POST");
 		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-		//System.out.println(connection.getOutputStream());
+		System.out.println(connection.getOutputStream());
 		wr.writeBytes(postParams);
 		wr.flush();
 		wr.close();
@@ -378,9 +384,7 @@ public class BaseData extends EnviromentData{
 	 * @throws IOException
 	 */
 	public void setRainData(BufferedReader in) throws IOException{
-		
-	
-		
+
 		for(int i= 1;i<=24;i++){
 			
 			String str = in.readLine();
@@ -437,6 +441,7 @@ public class BaseData extends EnviromentData{
 	public void setETData(BufferedReader in) throws Exception{
 		
 		String str = in.readLine();
+		System.out.println(str);
 		JSONArray jsonarray = new JSONArray(str);
 		logger.log(Level.INFO, "Total number of ET Data is : " + String.valueOf(jsonarray.length()));
 		

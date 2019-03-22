@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="irrigation-tool:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/irrigation_tool_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="irrigation-tool" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="lib" />
+          <element id="library" level="project" name="java-json" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="irrigation-tool/web/Web" />
+      <element id="javaee-facet-resources" facet="irrigation-tool/web/Web2" />
+    </root>
+  </artifact>
+</component>

@@ -4,7 +4,7 @@ import java.util.Comparator;
 /**
  * Created with MyEclipse
  * User : Dawei Jia
- * Date :¡¡09/19/2013
+ * Date :09/19/2013
  * @author Dawei Jia
  * Location to store geographical information for user location and nearest fawn station location
  */
@@ -45,7 +45,7 @@ public class Location implements Comparator<Location>{
 	/**
 	 * Compare distance between two objects
 	 */
-	@Override
+
 	public int compare(Location o1, Location o2) {
 		// TODO Auto-generated method stub
 		if(o1.distance == o2.distance){

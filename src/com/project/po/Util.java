@@ -21,12 +21,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
+import com.google.appengine.api.urlfetch.FetchOptions;
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
 import com.project.model.Hydrology;
 import com.project.model.SystemGeneratorFactory;
 import com.project.server.CalculateServlet;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 /**
@@ -306,7 +308,8 @@ public class Util{
 	 * @throws IOException
 	 */
 	public static HttpURLConnection createUrlConnection(String serverURL, String contentType, String postParas, String method) throws IOException{
-		
+
+		System.out.println(serverURL);
 		URL url = new URL(serverURL);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setDoOutput(true);

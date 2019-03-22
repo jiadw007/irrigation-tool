@@ -78,7 +78,7 @@ public class NewtonMethod {
             x1=x0-func(x0)/dfunc(x0);	//the Newton method calculation
             //System.out.println(x0);
             //System.out.println(x1);
-            if(Math.abs(x1-x0)<precision && Math.abs(func(x1))<precision)                                               //´ïµ½Ô¤ÉèµÄ½áÊøÌõ¼þ   
+            if(Math.abs(x1-x0)<precision && Math.abs(func(x1))<precision)                                               //ï¿½ïµ½Ô¤ï¿½ï¿½Ä½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   
             {  
                 this.setResult(x1);                            //x[0] is the result
                 //System.out.println("root is :"+this.result);
