@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Virtual Lawn provides you with the ability to test different types of irrigation technologies in a virtual environment.">
+    <meta name="author" content="Florida Automated Weather Network">
+    <link rel="shortcut icon" href="favicon.png">
+
+    <title>My Virtual Lawn</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/virtual-lawn.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../..js/html5shiv.js"></script>
+      <script src="../..js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Your Virtual Lawn!</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+          <ul id="additionalbar" class="nav navbar-nav">
+          
+          <li><a style="cursor:pointer" href="/logout" >Logout</a></li>
+          
+          </ul>
+        </div><!-- /.nav-collapse -->
+      </div><!-- /.container -->
+    </div><!-- /.navbar -->
+
+    <div class="container">
+
+      <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-xs-12 col-sm-9">
+          <p class="pull-right visible-xs">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+          </p>
+          <div class="jumbotron">
+            <h2>Welcome to Your Virtual Lawn!</h2>
+            <p>This web tool provides you with the ability to test different types of irrigation technologies in a virtual environment.</p>
+            
+            <p>Clicking on each of the examples below to see a picture and description of each type of irrigation.</p>
+          </div>
+          
+          
+          <div class="row">
+            <div class="col-6 col-sm-6 col-lg-6 well well-sm equal-height">
+              <h4>Time-Based Irrigation</h4>
+			  <a data-toggle="modal" href="#Time-Based" class="btn btn-primary btn-large">More Information</a>
+      
+			  <!-- Time-Based Modal -->
+			  <div class="modal fade" id="Time-Based" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			      <div class="modal-content">
+			        <div class="modal-header">
+			          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			          <h4 class="modal-title">Time-Based Irrigation Information</h4>
+			        </div>
+			        <div class="modal-body">
+			        <img src="images/time-based-images.jpg" alt="time-based-images" width="226" height="99">
+			          <p>Uses an automatic timer and schedules irrigation for specific times and days</p>
+			          
+			          <h4>Time-based irrigation resources</h4>
+
+						<p><b>Operation of residential irrigation controllers</b><br />
+						<a href="http://edis.ifas.ufl.edu/ae220" target="_blank">http://edis.ifas.ufl.edu/ae220</a></p>
+					
+						<p><b>Video</b><br />
+						<a href="http://youtu.be/igbJ1yHSqTM">http://youtu.be/igbJ1yHSqTM</a><br />
+						<a href="http://abe.ufl.edu/mdukes/controllers/video-irrigation-controllers.shtml" target="_blank">http://abe.ufl.edu/mdukes/controllers/video-irrigation-controllers.shtml</a></p>
+
+			          
+
+			        </div>
+			        <div class="modal-footer">
+			          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			        </div>
+			      </div><!-- /.modal-content -->
+			    </div><!-- /.modal-dialog -->
+			  </div>
+            </div>
+           
+            <div class="col-6 col-sm-6 col-lg-6 well well-sm equal-height">
+              <h4>Time-Based With a Rain Sensor</h4>
+			  <a data-toggle="modal" href="#rain-sensor" class="btn btn-primary btn-large">More Information</a>
+      
+			  <!-- Time-Based Modal -->
+			  <div class="modal fade" id="rain-sensor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			      <div class="modal-content">
+			        <div class="modal-header">
+			          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			          <h4 class="modal-title">Time-Based With a Rain Sensor Information</h4>
+			        </div>
+			        <div class="modal-body">
+						<img src="images/time-based-sensor-images.png" alt="time-based-sensor-images" width="239" height="98">
+			         <p>Uses an automatic timer with a rain sensor that will disable irrigation if sufficient rainfall occurs.</p>
+			         <h4>Time-based with rain sensor irrigation resources</h4>
+						<p><b>Residential irrigation system rainfall shutoff devices</b><br />
+						<a href="http://edis.ifas.ufl.edu/ae221" target="_blank">http://edis.ifas.ufl.edu/ae221</a></p>
+						
+						<p><b>Video</b><br />
+						<a href="http://abe.ufl.edu/mdukes/controllers/video-rain-sensors.shtml" target="_blank">http://abe.ufl.edu/mdukes/controllers/video-rain-sensors.shtml</a></p>
+
+			        </div>
+			        <div class="modal-footer">
+			          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			        </div>
+			      </div><!-- /.modal-content -->
+			    </div><!-- /.modal-dialog -->
+			  </div>
+            </div>
+
+
+            <div class="col-6 col-sm-6 col-lg-6 well well-sm equal-height">
+              <h4>Time-Based With a Soil Moisture Sensor</h4>
+			  <a data-toggle="modal" href="#soil-moisture" class="btn btn-primary btn-large">More Information</a>
+      
+			  <!-- Time-Based Modal -->
+			  <div class="modal fade" id="soil-moisture" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			      <div class="modal-content">
+			        <div class="modal-header">
+			          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			          <h4 class="modal-title">Time-Based With a Soil Moisture Sensor Information</h4>
+			        </div>
+			        <div class="modal-body">
+			         <img src="images/time-based-soil-mosture-images.jpg" alt="time-based-soil-mosture-images" width="246" height="97">
+			         <p>Uses an automatic timer with a soil moisture sensor. The sensor measures soil moisture and reports to the controller if too wet; if too wet, irrigation does not occur. </p>
+					 
+					 <h4>Time-based with soil moisture sensor irrigation resources</h4>
+
+					<p><b>Smart irrigation controllers: how do soil moisture sensor (SMS) irrigation controllers work?</b><br />
+					<a href="http://edis.ifas.ufl.edu/ae437" target="_blank">http://edis.ifas.ufl.edu/ae437</a></p>
+					
+					<p><b>Video</b><br />
+					<a href="http://abe.ufl.edu/mdukes/controllers/video-soil-moisture-controllers.shtml" target="_blank">http://abe.ufl.edu/mdukes/controllers/video-soil-moisture-controllers.shtml</a></p>
+
+
+			        </div>
+			        <div class="modal-footer">
+			          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			        </div>
+			      </div><!-- /.modal-content -->
+			    </div><!-- /.modal-dialog -->
+			  </div>
+            </div>
+
+
+            <div class="col-6 col-sm-6 col-lg-6 well well-sm equal-height">
+              <h4>Evapotranspiration Controllers</h4>
+			  <a data-toggle="modal" href="#evapo-cont" class="btn btn-primary btn-large">More Information</a>
+      
+			  <!-- Time-Based Modal -->
+			  <div class="modal fade" id="evapo-cont" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			      <div class="modal-content">
+			        <div class="modal-header">
+			          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			          <h4 class="modal-title">Evapotranspiration Controllers Information</h4>
+			        </div>
+			        <div class="modal-body">
+						<img src="images/evap.png" alt="evap" width="241" height="102">
+			         <p>Uses weather measurements to estimate evapotranspiration. The estimated evapotranspiration losses are used to determine an irrigation schedule.</p>
+			         <h4>Evapotranspiration controller irrigation resources</h4>
+					 	<p><b>Smart irrigation controllers: operation of evapotranspiration-based controllers</b><br />
+						<a href="http://edis.ifas.ufl.edu/ae446" target="_blank">http://edis.ifas.ufl.edu/ae446</a></p>
+						
+						<p><b>Video</b><br />
+						<a href="http://abe.ufl.edu/mdukes/controllers/video-weather-based-controllers.shtml" target="_blank">http://abe.ufl.edu/mdukes/controllers/video-weather-based-controllers.shtml</a></p>
+
+			        </div>
+			        <div class="modal-footer">
+			          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			        </div>
+			      </div><!-- /.modal-content -->
+			    </div><!-- /.modal-dialog -->
+			  </div>
+            </div>
+
+
+
+          </div><!--/row-->
+        </div><!--/span-->
+
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+          <div class="well sidebar-nav">
+            <ul class="nav">
+              <li>Navigation</li>
+              <li class="highlight"><a href="index.html">Welcome</a></li>
+              <li><a href="introduction.html">Introduction</a></li>
+              <li class="active"><a href="/login">Login/Signup</a></li>
+              
+              <li class="inactive">Tool</li>
+              <li class="inactive"><a href="form-1.html">Step 1</a></li>
+              <li class="inactive"><a href="form-2.html">Step 2</a></li>
+              <li class="inactive"><a href="form-3.html">Step 3</a></li>
+              
+              <li class="tool"><a href="rain-sensor-detail.html">Rain Sensor Detail</a></li>
+              <li class="tool"><a href="soil-moisture-settings.html">Soil Moisture Settings</a></li>
+              <li class="tool"><a href="irrigation-system.html">Irrigation System</a></li>
+              <li class="tool"><a href="irrigation-schedule.html">Irrigation Schedule</a></li>
+              <li class="tool"><a href="correspondence.html">Correspondence</a></li>
+
+              
+              
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p>&copy; Company 2013</p>
+      </footer>
+
+    </div><!--/.container-->
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="js/holder.js"></script>
+<script src="js/my.js"></script>
+<script src="js/application.js"></script>  </body>
+</html>

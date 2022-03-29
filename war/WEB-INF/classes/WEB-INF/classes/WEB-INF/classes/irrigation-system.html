@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="favicon.png">
+
+    <title>My Virtual Lawn</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/virtual-lawn.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../..js/html5shiv.js"></script>
+      <script src="../..js/respond.min.js"></script>
+    <![endif]-->
+    
+
+</head>
+
+  <body>
+    <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Your Virtual Lawn!</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+          <ul id="additionalbar" class="nav navbar-nav">
+          
+          <li><a style="cursor:pointer" href="/logout" >Logout</a></li>
+          
+          </ul>
+        </div><!-- /.nav-collapse -->
+      </div><!-- /.container -->
+    </div><!-- /.navbar -->
+
+    <div class="container">
+		<h2>Irrigation System</h2>
+
+      <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-xs-12 col-sm-9">
+          <p class="pull-right visible-xs">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+          </p>
+          
+          <div class="row">
+			  
+			  <div class="well well-lg">
+
+
+			  <form class="form-horizontal" role="form">
+			  <h4 id="IS">Enter Irrigation Depth or Select Irrigation System <a href="#" data-toggle="tooltip" title="This is the pattern for your irrigation amount applied in each event" class="tips">?</a></h4>
+			  
+			  <hr />
+			  <div class="radio">
+			  <label>
+			  <input type="radio" name="patternRadios" id="patternRadio1">Enter irrigation depth amount
+			  </label>
+			  </div>
+			  <input type="text" class="form-control" id="irrigationDepth" placeholder="Irrigation Depth/Amount" value="1.27" />
+			  <label id="irrigationUnit">&nbsp;&nbsp;cm</label>			  
+			<div class="radio">
+          <label>
+          <input type="radio" name="patternRadios" id="patternRadio2">Select Irrigation System Type
+          </label>
+          
+          </div>
+          <div class="row" id="irrigation-system">
+          <div class="col-lg-10">
+          		<hr />
+			      Enter Irrigation Duration
+			    <input type="text" class="form-control" id="irrigationDuration" placeholder="Irrigation Duration" />
+			    <label id="durationUnit">mins</label>	
+          </div>
+          <div class="col-xs-8">
+         
+			  <ul class="list-group">
+			
+			    
+			 
+			   
+			    
+			  
+				<li class="list-group-item">
+				<div class="checkbox" >
+				
+					
+					  <label>
+					    <input type="radio" name="irrigation-system" value="micro-irrigation-head">
+					    <img src="images/multi-stream.png" alt="multi-stream" id="rotaryHead_button" title="multi-stream" height=20px width=20px>
+					    <label id = "microHead">&nbsp;&nbsp;Micro Irrigation Head (0.25 in per hour)</label>
+					    
+					  </label>
+					</div>
+				</li>
+				<li class="list-group-item"><div class="checkbox">
+					  <label>
+					    <input type="radio" name="irrigation-system" value="fixed-irrigation-head">
+					   <img src="images/spray.png" alt="spray" id="rotaryHead_button" title="spray" height=20px width=20px>
+					   <label id = "fixedHead">&nbsp;&nbsp;Fixed Irrigation Head (1.5 in per hour)</label>
+					   
+					  </label>
+					</div>
+				</li>
+				<li class="list-group-item"><div class="checkbox">
+					   <label>
+					    <input type="radio" name="irrigation-system" value="gear-driven-irrigation-head">
+					    <img src="images/gear.png" alt="gear" id="rotaryHead_button" title="gear" height=20px width=20px>
+					    <label id = "gearHead">&nbsp;&nbsp;Gear Driven Irrigation Head (0.5 in per hour)</label>
+					    
+					  </label>
+					</div>
+				</li>
+				<li class="list-group-item"><div class="checkbox">
+					  <label>
+					    <input type="radio" name="irrigation-system" value="impact-irrigation-head">
+					    <img src="images/impact.png" alt="impact" id="rotaryHead_button" title="impact" height=20px width=20px>
+					    <label id="impactHead">&nbsp;&nbsp;Impact Irrigation Head (0.5 in per hour)</label>
+					    
+					  </label>
+					</div>
+				</li>
+			</ul>
+			
+          </div> 
+          
+          </div>
+		  <p id="patternError" class="errorText2"></p>
+	<hr />
+			    
+			    <button id="step4" type="button" class="btn btn-primary">Next</button>
+			</form>
+			
+
+			  </div>
+
+
+
+
+          </div><!--/row-->
+        </div><!--/span-->
+
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+          <div class="well sidebar-nav">
+            <ul class="nav">
+              <li>Navigation</li>
+              <li><a href="index.html">Welcome</a></li>
+              <li><a href="introduction.html">Introduction</a></li>
+              <li class="active"><a href="/login">Login/Signup</a></li>
+              
+              <li>Tool</li>
+              <li><a href="form-1.html">Step 1</a></li>
+              <li><a href="form-2.html">Step 2</a></li>
+              <li><a href="form-3.html">Step 3</a></li> 
+              <li><a href="rain-sensor-detail.html">Rain Sensor Detail</a></li>
+              <li><a href="soil-moisture-settings.html">Soil Moisture Settings</a></li>
+              <li class="highlight"><a href="irrigation-system.html">Irrigation System</a></li>
+              <li><a href="irrigation-schedule.html">Irrigation Schedule</a></li>
+              <li><a href="correspondence.html">Correspondence</a></li>
+              
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p>&copy; Company 2013</p>
+      </footer>
+
+    </div><!--/.container-->
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="js/my.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="js/bootstrap.min.js"></script>
+ </body>
+</html>

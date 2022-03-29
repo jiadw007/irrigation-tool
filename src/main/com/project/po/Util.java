@@ -10,6 +10,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -222,13 +223,15 @@ public class Util{
 		results[4] = new Cookie("fawnName", hydrology.getLocation().getFawnStnName());
 		results[4].setMaxAge(60*60);
 		results[4].setPath("/");
-		results[5] = new Cookie("startDate",DateFormat.getDateInstance().format(hydrology.getB().startDate.getTime()));
+
+		SimpleDateFormat SDFormat
+				= new SimpleDateFormat("MM/dd/yyyy");
+		results[5] = new Cookie("startDate",SDFormat.format(hydrology.getB().startDate.getTime()));
 		results[5].setMaxAge(60*60);
 		results[5].setPath("/");
-		results[6] = new Cookie("endDate",DateFormat.getDateInstance().format(hydrology.getB().endDate.getTime()));
+		results[6] = new Cookie("endDate",SDFormat.format(hydrology.getB().endDate.getTime()));
 		results[6].setMaxAge(60*60);
 		results[6].setPath("/");
-		System.out.println("irri: "+String.valueOf(hydrology.getB().irriWeek));
 		results[7] = new Cookie(name+"_irriWeek",String.valueOf(hydrology.getB().irriWeek));
 		results[7].setMaxAge(60*60);
 		results[7].setPath("/");

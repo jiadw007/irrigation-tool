@@ -5,30 +5,20 @@ package com.project.po;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Date;
-import java.util.Locale;
 import java.util.zip.GZIPInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.google.appengine.labs.repackaged.org.json.JSONArray;
-import com.google.appengine.labs.repackaged.org.json.JSONException;
-import com.google.appengine.labs.repackaged.org.json.JSONObject;
 
-import javax.net.ssl.HttpsURLConnection;
+import com.google.appengine.labs.repackaged.org.json.JSONArray;
 
 /**
  * Create with MyEclipse
@@ -37,8 +27,8 @@ import javax.net.ssl.HttpsURLConnection;
  * @author Dawei Jia
  * basic data for computation model in Irrigation tool
  */
-public class BaseData extends EnviromentData{
-	
+public class BaseData extends EnviromentData {
+
 	public static String mailServerURL = "https://fawn.ifas.ufl.edu/mail/send.php";
 	public static String dataServerURL = "https://fawn.ifas.ufl.edu/data/reports/?res";
 	public static String ETdataServerURL = "https://fawn.ifas.ufl.edu/controller.php/lastWeekET/json/";
