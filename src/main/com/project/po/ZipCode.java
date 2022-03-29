@@ -1,4 +1,4 @@
-package com.project.po;
+package com;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,7 +35,7 @@ public class ZipCode {
 		try{
 			//File file =new File(zippath);
 			//System.out.println(file);
-			FileInputStream fstream = new FileInputStream("./zips.txt");
+			FileInputStream fstream = new FileInputStream("zips.txt");
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 			
@@ -60,7 +60,7 @@ public class ZipCode {
 		
 		try{
 			
-			FileInputStream fstream = new FileInputStream("./fawn_zips.txt");
+			FileInputStream fstream = new FileInputStream("fawn_zips.txt");
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 			while(br.ready()){

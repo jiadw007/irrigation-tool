@@ -82,7 +82,7 @@ public class CalculateServlet extends HttpServlet{
 				
 			}
 			System.out.println(data.getIrriDepth());
-			System.out.println("!!!!!!");
+//			System.out.println("!!!!!!");
 			BaseData b = new BaseData(data.getZipcode(),data.getDays(),data.getHours(),data.getIrriDepth());
 			/*
 			 * compute for all models 

@@ -12,7 +12,6 @@
         </element>
       </element>
       <element id="javaee-facet-resources" facet="irrigation-tool/web/Web" />
-      <element id="javaee-facet-resources" facet="irrigation-tool/web/Web2" />
     </root>
   </artifact>
 </component>

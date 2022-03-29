@@ -274,9 +274,10 @@ public class BaseData extends EnviromentData{
 		 * Important difference to get ET data
 		 * One for GAE, the other for local test 
 		 */
-		BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
-//		BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
-		System.out.println("######");
+		//BufferedReader in =new BufferedReader(new InputStreamReader(connection.getInputStream()));  //for GAE
+		BufferedReader in =new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));    //for local test
+//		System.out.println("######");
+		System.out.println("Locally");
 //		System.out.println(in.readLine());
 		this.setETData(in);
 		in.close();
